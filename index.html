@@ -1012,7 +1012,45 @@ input, textarea { font-family: inherit; }
 .log-card.skip       { background: #0f1d4a; color: #ff4444; border: 1px solid #4a69bd; }
 
 /* CARDS — Base */
-.p10-card { width: var(--card-width); height: var(--card-height); border-radius: 9px; position: relative; overflow: hidden; flex-shrink: 0; font-family: 'Segoe UI', Tahoma, Arial, sans-serif; display: block; transition: transform 0.2s var(--ease-out-smooth), box-shadow 0.2s; }
+.p10-card {
+  width: var(--card-width); height: var(--card-height);
+  border-radius: 9px; position: relative; overflow: hidden; flex-shrink: 0;
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif; display: block;
+  transition: transform 0.2s var(--ease-out-smooth), box-shadow 0.2s;
+  /* ✨ جلد ورق واقعي: طبقة أساس + إطار داخلي + ظل خارجي */
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,0.28), transparent 55%),
+    radial-gradient(circle at 70% 85%, rgba(0,0,0,0.10), transparent 60%),
+    #fafaf5;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.55),
+    inset 0 0 0 2.5px rgba(0,0,0,0.14),
+    inset 0 1px 0 rgba(255,255,255,0.7),
+    0 3px 8px rgba(0,0,0,0.42),
+    0 1px 0 rgba(255,255,255,0.12);
+}
+/* ✨ إطار داخلي أبيض رقيق فوق أي تصميم */
+.p10-card[class*="face-"]::before {
+  content: '';
+  position: absolute; inset: 4px;
+  border-radius: 5px;
+  border: 1px solid rgba(255,255,255,0.42);
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.10);
+  pointer-events: none; z-index: 7;
+}
+/* ✨ حبيبات ورق خفيفة (Noise) */
+.p10-card[class*="face-"]::after {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: 9px;
+  background-image:
+    radial-gradient(circle at 15% 30%, rgba(0,0,0,0.04) 0 1px, transparent 1px),
+    radial-gradient(circle at 65% 70%, rgba(0,0,0,0.035) 0 1px, transparent 1px),
+    radial-gradient(circle at 45% 12%, rgba(255,255,255,0.10) 0 1px, transparent 1px);
+  background-size: 7px 7px, 11px 11px, 13px 13px;
+  opacity: 0.55; pointer-events: none; z-index: 6;
+  mix-blend-mode: overlay;
+}
 .p10-card .tl-corner, .p10-card .br-corner { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; z-index: 10; }
 .p10-card .tl-corner { top: 3px; left: 3px; }
 .p10-card .br-corner { bottom: 3px; right: 3px; transform: rotate(180deg); }
@@ -1033,11 +1071,30 @@ input, textarea { font-family: inherit; }
 .p10-card.face-diag-x { background: linear-gradient(135deg, var(--cc-l) 0 50%, transparent 50%) top left / 50% 50% no-repeat, linear-gradient(225deg, var(--cc) 0 50%, transparent 50%) top right / 50% 50% no-repeat, linear-gradient(45deg, var(--cc-d) 0 50%, transparent 50%) bottom left / 50% 50% no-repeat, linear-gradient(-45deg, var(--cc) 0 50%, transparent 50%) bottom right / 50% 50% no-repeat, #f8f8f8; border: 2px solid var(--cc-d); }
 .p10-card.face-h-bands { background: linear-gradient(180deg, var(--cc-d) 0 20%, var(--cc) 20% 40%, var(--cc-l) 40% 60%, var(--cc) 60% 80%, var(--cc-d) 80% 100%); border: 2px solid var(--cc-d); }
 .p10-card.face-v-stripes { background: repeating-linear-gradient(90deg, var(--cc) 0 12%, var(--cc-l) 12% 24%); border: 2px solid var(--cc-d); }
-.p10-card.face-pinwheel { background: conic-gradient(from 0deg at 50% 50%, var(--cc-d) 0deg 90deg, var(--cc) 90deg 180deg, var(--cc-l) 180deg 270deg, var(--cc) 270deg 360deg); border: 2px solid var(--cc-d); }
+/* مروحة دوّارة بـ 8 شفرات متباينة */
+.p10-card.face-pinwheel {
+  background: conic-gradient(from 0deg at 50% 50%,
+    var(--cc-d) 0deg 45deg, var(--cc-l) 45deg 90deg,
+    var(--cc) 90deg 135deg, var(--cc-d) 135deg 180deg,
+    var(--cc-l) 180deg 225deg, var(--cc) 225deg 270deg,
+    var(--cc-d) 270deg 315deg, var(--cc-l) 315deg 360deg);
+  border: 2px solid var(--cc-d);
+}
 .p10-card.face-sunburst { background: radial-gradient(circle, var(--cc-d) 0 15%, transparent 17%), repeating-conic-gradient(from 0deg at 50% 50%, var(--cc) 0deg 15deg, var(--cc-l) 15deg 30deg); border: 2px solid var(--cc-d); }
 .p10-card.face-center-diamond { background: linear-gradient(135deg, var(--cc-l) 0 50%, var(--cc) 50%), var(--cc-d); background-size: 100% 100%, 100% 100%; position: relative; border: 2px solid var(--cc-d); }
 .p10-card.face-center-diamond::before { content: ''; position: absolute; inset: 25% 30%; background: #fff; transform: rotate(45deg); box-shadow: 0 0 0 3px var(--cc-d); }
-.p10-card.face-chevron { background: repeating-linear-gradient(135deg, var(--cc) 0 6px, var(--cc-l) 6px 12px, var(--cc-d) 12px 18px); border: 2px solid var(--cc-d); }
+/* أسهم متتالية رأسية (V مكدّسة) — مختلفة تماماً عن الشرائط القطرية */
+.p10-card.face-chevron {
+  background:
+    linear-gradient(135deg, var(--cc-d) 25%, transparent 25%) 0 0 / 22px 22px no-repeat,
+    linear-gradient(225deg, var(--cc-d) 25%, transparent 25%) 100% 0 / 22px 22px no-repeat,
+    linear-gradient(135deg, transparent 70%, var(--cc) 70%) 0 0 / 22px 22px,
+    linear-gradient(225deg, transparent 70%, var(--cc-l) 70%) 0 0 / 22px 22px,
+    linear-gradient(180deg, var(--cc-l), var(--cc));
+  background-repeat: repeat, repeat, repeat, repeat, no-repeat;
+  background-size: 22px 22px, 22px 22px, 22px 22px, 22px 22px, 100% 100%;
+  border: 2px solid var(--cc-d);
+}
 .p10-card.face-ripple { background: radial-gradient(circle at 50% 50%, var(--cc-d) 0 12%, var(--cc-l) 12% 24%, var(--cc) 24% 36%, var(--cc-l) 36% 48%, var(--cc-d) 48% 60%, var(--cc) 60% 72%, var(--cc-l) 72% 84%, var(--cc-d) 84% 100%); border: 2px solid var(--cc-d); }
 .p10-card.face-honeycomb { background: radial-gradient(circle at 0 0, var(--cc-l) 0 30%, transparent 32%) 0 0 / 12px 12px, radial-gradient(circle at 50% 50%, var(--cc) 0 40%, transparent 42%) 0 0 / 12px 12px, var(--cc-d); border: 2px solid var(--cc-d); }
 .p10-card.face-triangle { background: linear-gradient(135deg, var(--cc-l) 0 50%, var(--cc) 50%), var(--cc-d); position: relative; border: 2px solid var(--cc-d); }
@@ -1046,7 +1103,19 @@ input, textarea { font-family: inherit; }
 .p10-card.face-cross-plus { background: linear-gradient(0deg, var(--cc) 0 35%, var(--cc-l) 35% 65%, var(--cc) 65% 100%), linear-gradient(90deg, var(--cc-d) 0 35%, transparent 35% 65%, var(--cc-d) 65% 100%), var(--cc); border: 2px solid var(--cc-d); }
 .p10-card.face-dot-grid { background: radial-gradient(circle, var(--cc-d) 0 18%, transparent 20%) 0 0 / 20% 20%, radial-gradient(circle, var(--cc-l) 0 18%, transparent 20%) 50% 50% / 20% 20%, var(--cc); border: 2px solid var(--cc-d); }
 .p10-card.face-grid-thick { background: linear-gradient(0deg, transparent 0 45%, var(--cc-d) 45% 55%, transparent 55% 100%), linear-gradient(90deg, transparent 0 45%, var(--cc-d) 45% 55%, transparent 55% 100%), var(--cc-l); background-size: 30% 30%, 30% 30%, 100% 100%; border: 3px solid var(--cc-d); }
-.p10-card.face-radial-line { background: repeating-conic-gradient(from 0deg at 50% 50%, var(--cc) 0deg 5deg, var(--cc-l) 5deg 10deg, var(--cc-d) 10deg 15deg, transparent 15deg 20deg), var(--cc); border: 2px solid var(--cc-d); }
+/* أشعة شمسية سميكة من المركز */
+.p10-card.face-radial-line {
+  background:
+    repeating-conic-gradient(from 0deg at 50% 50%,
+      var(--cc-d) 0deg 8deg, var(--cc) 8deg 16deg,
+      var(--cc-l) 16deg 24deg, var(--cc) 24deg 32deg);
+  border: 2px solid var(--cc-d);
+}
+.p10-card.face-radial-line .center-dot {
+  background: radial-gradient(circle, #fff 0 40%, var(--cc-l) 100%) !important;
+  border: 3px solid var(--cc-d) !important;
+  box-shadow: 0 0 14px rgba(0,0,0,0.6), inset 0 0 6px rgba(0,0,0,0.25) !important;
+}
 .p10-card.face-wavy-bands { background: radial-gradient(ellipse 50% 20% at 50% 15%, var(--cc) 0 100%, transparent 100%), radial-gradient(ellipse 50% 20% at 50% 40%, var(--cc-l) 0 100%, transparent 100%), radial-gradient(ellipse 50% 20% at 50% 65%, var(--cc-d) 0 100%, transparent 100%), radial-gradient(ellipse 50% 20% at 50% 90%, var(--cc) 0 100%, transparent 100%), #f8f8f8; border: 2px solid var(--cc-d); }
 .p10-card.face-diag-stripe { background: repeating-linear-gradient(45deg, var(--cc) 0 12.5%, var(--cc-l) 12.5% 25%, var(--cc-d) 25% 37.5%, var(--cc) 37.5% 50%); border: 2px solid var(--cc-d); }
 
@@ -2473,9 +2542,36 @@ function advancedToPhaseFormat(adv) {
   var runParity = (adv && adv.runConstraints && adv.runConstraints[0] && adv.runConstraints[0].parity) || 'any';
   var setC = []; for (var si = 0; si < sets.length; si++) setC.push({ parity: setParity });
   var runC = []; for (var ri = 0; ri < runs.length; ri++) runC.push({ parity: runParity });
+
+  // ✅ توليد وصف تلقائي من محتوى المرحلة
+  var autoParts = [];
+  if (adv && adv.groups) for (var ai = 0; ai < adv.groups.length; ai++) {
+    var ag = adv.groups[ai];
+    var aname = ag.kind === 'set' ? 'مجموعة' : (ag.kind === 'run' ? 'متتالية' : 'لون');
+    autoParts.push(aname + ' ' + ag.size);
+  }
+  var autoDesc = autoParts.join(' + ');
+  if (setParity === 'odd' || runParity === 'odd') autoDesc += ' • فردي';
+  else if (setParity === 'even' || runParity === 'even') autoDesc += ' • زوجي';
+
+  // ✅ إذا الوصف المخصص هو مجرد "مرحلة N" أو فارغ → استخدم التلقائي
+  var userDesc = (adv && adv.desc) ? String(adv.desc).trim() : '';
+  var isPlaceholder = !userDesc
+    || /^مرحلة\s*\d*\s*$/.test(userDesc)
+    || userDesc === 'مرحلة مخصصة';
+
+  var finalDesc;
+  if (isPlaceholder) {
+    finalDesc = autoDesc || 'مرحلة مخصصة';
+  } else if (autoDesc && userDesc !== autoDesc) {
+    finalDesc = userDesc + ' — ' + autoDesc;
+  } else {
+    finalDesc = userDesc || autoDesc || 'مرحلة مخصصة';
+  }
+
   return {
     sets: sets, runs: runs, color: color,
-    desc: (adv && adv.desc) || 'مرحلة مخصصة',
+    desc: finalDesc,
     constraints: {
       setConstraints: setC, runConstraints: runC,
       minTotalPoints: adv ? adv.minTotalPoints : 0,
@@ -2546,7 +2642,23 @@ function startNewRound(state, winnerId) {
   state.round++;
   if (app.mode === 'lan' && isHost()) broadcastToGuests({ type: 'roundScore', summary: summary });
   var modal = $('roundScoreModal');
-  if (!modal) { resetRoundForState(state, winnerId); return; }
+if (!modal) {
+  resetRoundForState(state, winnerId);
+  app.undoStack = [];
+  resetRenderCache(); previouslyRenderedMelds = {};
+  scheduleRender(); syncStateToPeers();
+  afterPaint(function() {
+    afterPaint(function() {
+      if (app.state !== state) return;
+      showRoundOverlay(state.round, function() {
+        if (app.state !== state) return;
+        resetRenderCache(); scheduleRender(); syncStateToPeers();
+        setTimeout(function() { if (app.state === state && !state.gameOver) startTurnIfNeeded(); }, 400);
+      });
+    });
+  });
+  return;
+}
   $('roundScoreWinner').innerHTML = '🏆 <b style="color:#f4b942">' + escapeHTML(summary.winnerName) + '</b> فاز بالجولة!';
   var html = '';
   for (var s = 0; s < summary.players.length; s++) {
@@ -2604,6 +2716,14 @@ function advanceTurn(state, skipCount) {
   app.undoStack = [];
   var np = state.players[state.turnIndex];
   if (np) pushActionLog(state, -1, 'turn', 'الدور على ' + escapeHTML(np.name));
+  /* ⛑️ شبكة أمان: لو اللاعب التالي يده فارغة → أعد فحص الفوز */
+  if (np && np.hand.length === 0) {
+    setTimeout(function() {
+      if (app.state === state && !state.gameOver) {
+        checkWinOrNewRound(state, state.turnIndex);
+      }
+    }, 50);
+  }
 }
 
 /* ============================================================
@@ -3071,7 +3191,7 @@ function findBestMeldsForPhase(hand, phaseObj) {
     for (var b = 0; b < rm.cards.length; b++) { var ix2 = avail.indexOf(rm.cards[b]); if (ix2 >= 0) avail.splice(ix2, 1); }
   }
   if (rC) { var cm = tryExtractColor(avail, rC); if (!cm) return null; melds.push(cm); }
-  return melds;
+  return melds.length > 0 ? melds : null;
 }
 function findBestHintForPhase(hand, phaseObj) {
   if (!phaseObj) return [];
@@ -3592,6 +3712,17 @@ function renderPhaseBox(player, hasLaid) {
   }
   var ph = list ? list[player.phase] : null;
   var desc = ph ? escapeHTML(ph.desc || '') : '';
+  var desc = ph ? escapeHTML(ph.desc || '') : '';
+
+// ✅ احتياطي: لو الوصف فارغ أو مجرد "مرحلة N"، ابنِه من المجموعات
+if (ph && (!desc || /^مرحلة\s*\d*\s*$/.test(desc))) {
+  var fallbackParts = [];
+  for (var fsi = 0; fsi < (ph.sets || []).length; fsi++)  fallbackParts.push('مجموعة ' + ph.sets[fsi]);
+  for (var fri = 0; fri < (ph.runs || []).length; fri++)  fallbackParts.push('متتالية ' + ph.runs[fri]);
+  if (ph.color) fallbackParts.push('لون ' + ph.color);
+  desc = fallbackParts.join(' + ');
+  if (!desc) desc = 'مرحلة مخصصة';
+}
   if (ph && ph.constraints) {
     var extras = [];
     if (ph.constraints.minTotalPoints) extras.push('≥ ' + ph.constraints.minTotalPoints);
@@ -5516,6 +5647,14 @@ function handleLossAchievements() {
 function startTurnIfNeeded() {
   var state = app.state; if (!state || state.gameOver) return;
   var cp = state.players[state.turnIndex]; if (!cp) return;
+
+  /* ⛑️ شبكة أمان: لو اللاعب الحالي يده فارغة والجولة لم تُنهَ → أعد الفحص */
+  if (cp.hand.length === 0) {
+    cancelCpuContext();
+    checkWinOrNewRound(state, state.turnIndex);
+    return;
+  }
+
   if (app.mode === 'cpu') { if (cp.isCPU) cpuTakeTurn(); }
   else if (app.mode === 'lan') { if (isHost() && cp.isCPU) cpuTakeTurn(); }
   else if (app.mode === 'pass') { if (cp.id !== app.viewerId) showPassOverlay(cp); }
@@ -5643,7 +5782,7 @@ var hasLaid = false;
     if (pers.key === 'trickster') layPatience = 0.15;
     if (pers.key === 'hunter') layPatience = 0.10;
   }
-  var shouldLay = melds && !hasLaid && (skill >= 5 ? true : Math.random() > getCpuLaySkipChance());
+  var shouldLay = melds && melds.length > 0 && !hasLaid && (skill >= 5 ? true : Math.random() > getCpuLaySkipChance());
   if (shouldLay) {
     if (melds) adjustWildPositions(melds, p);
     var allIds = [];
