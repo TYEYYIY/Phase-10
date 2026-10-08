@@ -74,7 +74,8 @@
       <button id="galleryBtn" type="button">🖼 معرض البطاقات</button>
       <button id="profileBtn" type="button">👤 ملفي الشخصي</button>
       <button id="tutorialBtn" type="button">🎓 تعليم سريع</button>
-      <button id="dailyChallengeBtn" class="daily-btn" type="button">🎯 التحدي اليومي<span class="daily-badge hidden" id="dailyBadge">NEW</span></button>
+<button id="aboutBtn" type="button">ℹ️ حول التطبيق</button>
+<button id="dailyChallengeBtn" class="daily-btn" type="button">🎯 التحدي اليومي<span class="daily-badge hidden" id="dailyBadge">NEW</span></button>
     </div>
   </div>
 
@@ -272,6 +273,54 @@
 <div id="nearWinAlert" class="near-win-alert hidden"></div>
   </div>
 
+  <div id="aboutScreen" class="screen setup-screen">
+    <h2>ℹ️ حول التطبيق</h2>
+    <div class="about-card">
+      <div class="about-logo">10</div>
+      <div class="about-title">TYEYYIY Phase 10</div>
+      <div class="about-subtitle">لعبة الورق الشهيرة — القواعد الرسمية</div>
+      <div class="about-row"><span class="albl">الإصدار</span><span class="aval" id="aboutVersion">—</span></div>
+      <div class="about-row"><span class="albl">تاريخ البناء</span><span class="aval" id="aboutBuildDate">—</span></div>
+      <div class="about-row"><span class="albl">المطوّر</span><span class="aval ar" id="aboutDev">TYEYYIY</span></div>
+      <div class="about-row"><span class="albl">الترخيص</span><span class="aval ar">مجاني للاستخدام الشخصي</span></div>
+    </div>
+    <div class="about-card">
+      <div style="font-size:12px;font-weight:900;color:var(--gold);text-align:right;margin-bottom:4px">📞 تواصل معي</div>
+      <a class="about-contact-btn" id="aboutContactEmail" href="#" target="_blank" rel="noopener">
+        <span class="ci">✉️</span>
+        <span class="ct">البريد الإلكتروني<span class="cv" id="aboutEmailVal">—</span></span>
+      </a>
+      <a class="about-contact-btn" id="aboutContactWhatsapp" href="#" target="_blank" rel="noopener">
+        <span class="ci">💬</span>
+        <span class="ct">واتساب<span class="cv" id="aboutWhatsappVal">—</span></span>
+      </a>
+      <a class="about-contact-btn" id="aboutContactGithub" href="#" target="_blank" rel="noopener">
+        <span class="ci">🐙</span>
+        <span class="ct">GitHub<span class="cv" id="aboutGithubVal">—</span></span>
+      </a>
+      <a class="about-contact-btn" id="aboutContactWebsite" href="#" target="_blank" rel="noopener">
+        <span class="ci">🌐</span>
+        <span class="ct">الموقع الرسمي<span class="cv" id="aboutWebsiteVal">—</span></span>
+      </a>
+    </div>
+    <div class="setup-actions">
+      <button class="btn-gold" id="aboutCheckUpdateBtn" type="button">🔄 التحقق من التحديثات</button>
+      <button class="btn-ghost" id="aboutBackBtn" type="button">← رجوع</button>
+    </div>
+  </div>
+
+</div>
+
+<div id="updateAvailable" class="hidden" role="alert">
+  <span class="uv-icon">🎉</span>
+  <div class="uv-text">
+    <div class="uv-title">يوجد تحديث جديد للعبة!</div>
+    <div class="uv-sub">إصدار جديد متوفر: <span class="uv-version">—</span></div>
+  </div>
+  <div class="uv-actions">
+    <button id="updateApplyBtn" type="button">تحديث الآن</button>
+    <button id="updateDismissBtn" type="button">لاحقاً</button>
+  </div>
 </div>
 
 <div id="roundOverlay" class="round-overlay hidden">
@@ -1061,28 +1110,50 @@ input, textarea { font-family: inherit; }
 .p10-card .center-num { font-size: 19px; font-weight: 900; line-height: 1; letter-spacing: -1px; }
 .p10-card .card-art { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 6; pointer-events: none; }
 
-.p10-card.col-red    { --cc: #e63946; --cc-l: #ff8b95; --cc-d: #8b0d17; --cc-s: rgba(230,57,70,0.15); }
-.p10-card.col-blue   { --cc: #4a7fc1; --cc-l: #8bc0ee; --cc-d: #10294b; --cc-s: rgba(74,127,193,0.15); }
-.p10-card.col-green  { --cc: #2a9d8f; --cc-l: #62dfd0; --cc-d: #053a34; --cc-s: rgba(42,157,143,0.15); }
-.p10-card.col-yellow { --cc: #f4b942; --cc-l: #ffe08a; --cc-d: #8f5e00; --cc-s: rgba(244,185,66,0.2); }
+.p10-card.col-red    { --cc: #ff3b4e; --cc-l: #ff8b95; --cc-d: #c21430; --cc-s: rgba(255,59,78,0.28); }
+.p10-card.col-blue   { --cc: #2e8bff; --cc-l: #7dbcff; --cc-d: #0a52cc; --cc-s: rgba(46,139,255,0.28); }
+.p10-card.col-green  { --cc: #12d17a; --cc-l: #6cf0b5; --cc-d: #069c56; --cc-s: rgba(18,209,122,0.28); }
+.p10-card.col-yellow { --cc: #ffcb1f; --cc-l: #ffe985; --cc-d: #d19000; --cc-s: rgba(255,203,31,0.32); }
 
 /* 17 FACE DESIGNS */
-.p10-card.face-quadrants { background: linear-gradient(90deg, var(--cc) 0 50%, var(--cc-l) 50% 100%) top / 100% 50% no-repeat, linear-gradient(90deg, var(--cc-d) 0 50%, var(--cc) 50% 100%) bottom / 100% 50% no-repeat; border: 2px solid var(--cc-d); }
-.p10-card.face-diag-x { background: linear-gradient(135deg, var(--cc-l) 0 50%, transparent 50%) top left / 50% 50% no-repeat, linear-gradient(225deg, var(--cc) 0 50%, transparent 50%) top right / 50% 50% no-repeat, linear-gradient(45deg, var(--cc-d) 0 50%, transparent 50%) bottom left / 50% 50% no-repeat, linear-gradient(-45deg, var(--cc) 0 50%, transparent 50%) bottom right / 50% 50% no-repeat, #f8f8f8; border: 2px solid var(--cc-d); }
-.p10-card.face-h-bands { background: linear-gradient(180deg, var(--cc-d) 0 20%, var(--cc) 20% 40%, var(--cc-l) 40% 60%, var(--cc) 60% 80%, var(--cc-d) 80% 100%); border: 2px solid var(--cc-d); }
-.p10-card.face-v-stripes { background: repeating-linear-gradient(90deg, var(--cc) 0 12%, var(--cc-l) 12% 24%); border: 2px solid var(--cc-d); }
-/* مروحة دوّارة بـ 8 شفرات متباينة */
-.p10-card.face-pinwheel {
-  background: conic-gradient(from 0deg at 50% 50%,
-    var(--cc-d) 0deg 45deg, var(--cc-l) 45deg 90deg,
-    var(--cc) 90deg 135deg, var(--cc-d) 135deg 180deg,
-    var(--cc-l) 180deg 225deg, var(--cc) 225deg 270deg,
-    var(--cc-d) 270deg 315deg, var(--cc-l) 315deg 360deg);
+/* 4 أرباع بلون واحد فقط مع تباين لطيف (بدون خطوط قطرية) */
+.p10-card.face-quadrants {
+  background:
+    linear-gradient(180deg, var(--cc) 0 50%, var(--cc-d) 50% 100%) left / 50% 100% no-repeat,
+    linear-gradient(180deg, var(--cc-l) 0 50%, var(--cc) 50% 100%) right / 50% 100% no-repeat;
   border: 2px solid var(--cc-d);
 }
-.p10-card.face-sunburst { background: radial-gradient(circle, var(--cc-d) 0 15%, transparent 17%), repeating-conic-gradient(from 0deg at 50% 50%, var(--cc) 0deg 15deg, var(--cc-l) 15deg 30deg); border: 2px solid var(--cc-d); }
+.p10-card.face-diag-x { background: linear-gradient(135deg, var(--cc-l) 0 50%, transparent 50%) top left / 50% 50% no-repeat, linear-gradient(225deg, var(--cc) 0 50%, transparent 50%) top right / 50% 50% no-repeat, linear-gradient(45deg, var(--cc-d) 0 50%, transparent 50%) bottom left / 50% 50% no-repeat, linear-gradient(-45deg, var(--cc) 0 50%, transparent 50%) bottom right / 50% 50% no-repeat, #f8f8f8; border: 2px solid var(--cc-d); }
+.p10-card.face-h-bands {
+  background: linear-gradient(180deg,
+    var(--cc) 0 20%, var(--cc-l) 20% 40%, var(--cc) 40% 60%,
+    var(--cc-l) 60% 80%, var(--cc) 80% 100%);
+  border: 2px solid var(--cc-d);
+}
+.p10-card.face-v-stripes {
+  background: repeating-linear-gradient(90deg,
+    var(--cc) 0 4%, var(--cc-l) 4% 8%, var(--cc) 8% 12%, var(--cc-l) 12% 16%);
+  border: 2px solid var(--cc-d);
+}
+.p10-card.face-pinwheel {
+  background: conic-gradient(from 0deg at 50% 50%,
+    var(--cc-l) 0deg 45deg, var(--cc) 45deg 90deg,
+    var(--cc-l) 90deg 135deg, var(--cc-d) 135deg 180deg,
+    var(--cc-l) 180deg 225deg, var(--cc) 225deg 270deg,
+    var(--cc-l) 270deg 315deg, var(--cc-d) 315deg 360deg);
+  border: 2px solid var(--cc-d);
+}
+/* شمس مشعّة بـ 36 شعاعاً رفيعاً */
+.p10-card.face-sunburst {
+  background:
+    radial-gradient(circle, #fff 0 11%, var(--cc-l) 11% 17%, transparent 17%),
+    repeating-conic-gradient(from 0deg at 50% 50%,
+      var(--cc-l) 0deg 5deg, var(--cc) 5deg 9deg, var(--cc-d) 9deg 10deg);
+  border: 2px solid var(--cc-d);
+}
 .p10-card.face-center-diamond { background: linear-gradient(135deg, var(--cc-l) 0 50%, var(--cc) 50%), var(--cc-d); background-size: 100% 100%, 100% 100%; position: relative; border: 2px solid var(--cc-d); }
-.p10-card.face-center-diamond::before { content: ''; position: absolute; inset: 25% 30%; background: #fff; transform: rotate(45deg); box-shadow: 0 0 0 3px var(--cc-d); }
+/* ✅ نقل المحتوى من ::before إلى ::after حتى يبقى ::before للجلد */
+.p10-card.face-center-diamond::after { content: ''; position: absolute; inset: 25% 30%; background: #fff; transform: rotate(45deg); box-shadow: 0 0 0 3px var(--cc-d); z-index: 8; }
 /* أسهم متتالية رأسية (V مكدّسة) — مختلفة تماماً عن الشرائط القطرية */
 .p10-card.face-chevron {
   background:
@@ -1095,14 +1166,138 @@ input, textarea { font-family: inherit; }
   background-size: 22px 22px, 22px 22px, 22px 22px, 22px 22px, 100% 100%;
   border: 2px solid var(--cc-d);
 }
-.p10-card.face-ripple { background: radial-gradient(circle at 50% 50%, var(--cc-d) 0 12%, var(--cc-l) 12% 24%, var(--cc) 24% 36%, var(--cc-l) 36% 48%, var(--cc-d) 48% 60%, var(--cc) 60% 72%, var(--cc-l) 72% 84%, var(--cc-d) 84% 100%); border: 2px solid var(--cc-d); }
-.p10-card.face-honeycomb { background: radial-gradient(circle at 0 0, var(--cc-l) 0 30%, transparent 32%) 0 0 / 12px 12px, radial-gradient(circle at 50% 50%, var(--cc) 0 40%, transparent 42%) 0 0 / 12px 12px, var(--cc-d); border: 2px solid var(--cc-d); }
-.p10-card.face-triangle { background: linear-gradient(135deg, var(--cc-l) 0 50%, var(--cc) 50%), var(--cc-d); position: relative; border: 2px solid var(--cc-d); }
-.p10-card.face-triangle::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 0 55%, var(--cc-d) 55% 58%, transparent 58%); }
-.p10-card.face-triangle::after { content: ''; position: absolute; inset: 0; background: linear-gradient(45deg, transparent 0 55%, rgba(0,0,0,0.3) 55% 58%, transparent 58%); }
-.p10-card.face-cross-plus { background: linear-gradient(0deg, var(--cc) 0 35%, var(--cc-l) 35% 65%, var(--cc) 65% 100%), linear-gradient(90deg, var(--cc-d) 0 35%, transparent 35% 65%, var(--cc-d) 65% 100%), var(--cc); border: 2px solid var(--cc-d); }
+.p10-card.face-ripple {
+  background: repeating-radial-gradient(circle at 50% 50%,
+    var(--cc-l) 0 7px, var(--cc) 7px 12px, var(--cc-d) 12px 14px);
+  border: 2px solid var(--cc-d);
+}
+.p10-card.face-honeycomb {
+  background:
+    linear-gradient(60deg,  transparent 24%, var(--cc-d) 25% 26%, transparent 27%) 0 0 / 18px 32px,
+    linear-gradient(120deg, transparent 24%, var(--cc-d) 25% 26%, transparent 27%) 0 0 / 18px 32px,
+    linear-gradient(180deg, transparent 42%, var(--cc-d) 43% 46%, transparent 47%) 0 0 / 18px 32px,
+    linear-gradient(180deg, var(--cc-l) 0 50%, var(--cc) 50% 100%);
+  border: 2px solid var(--cc-d);
+}
+/* صفوف مثلثات متتالية (هرم) */
+.p10-card.face-triangle {
+  background:
+    linear-gradient(60deg, transparent 45%, var(--cc-d) 45% 55%, transparent 55%) 0 0 / 20px 18px,
+    linear-gradient(-60deg, transparent 45%, var(--cc-d) 45% 55%, transparent 55%) 0 0 / 20px 18px,
+    var(--cc);
+  background-repeat: repeat;
+  border: 2px solid var(--cc-d);
+  position: relative;
+}
+/* ✅ نقل المحتوى من ::before إلى ::after حتى يبقى ::before للجلد */
+.p10-card.face-triangle::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 50% 40% at 50% 85%, var(--cc-l), transparent 70%);
+  z-index: 8;
+  pointer-events: none;
+}
+/* ✨ التصميم الأصلي للعبة Phase 10: لون صلب + بيضة بيضاء + رقم في الوسط */
+.p10-card.face-phase10-classic {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.14) 0%, transparent 60%),
+    var(--cc);
+  border: 2.5px solid #ffffff;
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,0.18),
+    inset 0 2px 6px rgba(255,255,255,0.28),
+    0 3px 8px rgba(0,0,0,0.42);
+}
+.p10-card.face-phase10-classic .center-dot {
+  width: 76% !important; height: 62% !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  border: none !important;
+  box-shadow:
+    inset 0 0 0 2px var(--cc-d),
+    inset 0 4px 10px rgba(0,0,0,0.10),
+    0 2px 6px rgba(0,0,0,0.22) !important;
+}
+.p10-card.face-phase10-classic .center-num {
+  color: var(--cc-d) !important;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.6) !important;
+  font-size: 26px !important;
+  font-weight: 900 !important;
+  letter-spacing: -1.5px;
+}
+.p10-card.face-phase10-classic .tl-num,
+.p10-card.face-phase10-classic .br-num {
+  color: #ffffff !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.55), 0 0 1px rgba(0,0,0,0.8) !important;
+  font-size: 12.5px !important;
+}
+.p10-card.face-phase10-classic .tl-dot,
+.p10-card.face-phase10-classic .br-dot {
+  background: #ffffff !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.4) !important;
+  border: none !important;
+}
+
+/* ✨ Wild في phase10-classic: إطار ذهبي + خلفية سوداء نقية */
+.p10-card.face-phase10-classic.wild {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(244,185,66,0.18) 0%, transparent 62%),
+    linear-gradient(160deg, #1c1c1c, #050505);
+  border: 2.5px solid #f4b942;
+  box-shadow:
+    inset 0 0 0 1px rgba(244,185,66,0.35),
+    inset 0 2px 6px rgba(244,185,66,0.18),
+    0 3px 8px rgba(0,0,0,0.55),
+    0 0 14px rgba(244,185,66,0.35);
+}
+.p10-card.face-phase10-classic.wild::before {
+  border-color: rgba(244,185,66,0.55) !important;
+  box-shadow: inset 0 0 8px rgba(244,185,66,0.25), 0 0 0 1px rgba(244,185,66,0.2) !important;
+}
+.p10-card.face-phase10-classic.wild .tl-num,
+.p10-card.face-phase10-classic.wild .br-num {
+  color: #f4b942 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.9), 0 0 4px rgba(244,185,66,0.6) !important;
+}
+.p10-card.face-phase10-classic.wild .tl-dot,
+.p10-card.face-phase10-classic.wild .br-dot {
+  background: #f4b942 !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6), 0 0 4px rgba(244,185,66,0.5) !important;
+}
+
+/* ✨ Skip في phase10-classic: إطار أزرق داكن */
+.p10-card.face-phase10-classic.skip {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(74,105,189,0.30) 0%, transparent 62%),
+    linear-gradient(160deg, #0f1d4a, #050a1a);
+  border: 2.5px solid #4a69bd;
+  box-shadow:
+    inset 0 0 0 1px rgba(74,105,189,0.45),
+    inset 0 2px 6px rgba(74,105,189,0.2),
+    0 3px 8px rgba(0,0,0,0.55),
+    0 0 14px rgba(74,105,189,0.4);
+}
+.p10-card.face-phase10-classic.skip::before {
+  border-color: rgba(74,105,189,0.55) !important;
+  box-shadow: inset 0 0 8px rgba(74,105,189,0.3), 0 0 0 1px rgba(74,105,189,0.25) !important;
+}
+.p10-card.face-phase10-classic.skip .tl-num,
+.p10-card.face-phase10-classic.skip .br-num {
+  color: #ff5b5b !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.9), 0 0 4px rgba(255,68,68,0.6) !important;
+}
+.p10-card.face-phase10-classic.skip .tl-dot,
+.p10-card.face-phase10-classic.skip .br-dot {
+  background: #ff4444 !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6), 0 0 4px rgba(255,68,68,0.5) !important;
+}
 .p10-card.face-dot-grid { background: radial-gradient(circle, var(--cc-d) 0 18%, transparent 20%) 0 0 / 20% 20%, radial-gradient(circle, var(--cc-l) 0 18%, transparent 20%) 50% 50% / 20% 20%, var(--cc); border: 2px solid var(--cc-d); }
-.p10-card.face-grid-thick { background: linear-gradient(0deg, transparent 0 45%, var(--cc-d) 45% 55%, transparent 55% 100%), linear-gradient(90deg, transparent 0 45%, var(--cc-d) 45% 55%, transparent 55% 100%), var(--cc-l); background-size: 30% 30%, 30% 30%, 100% 100%; border: 3px solid var(--cc-d); }
+/* شطرنج 4×4 بألوان متعاقبة */
+.p10-card.face-grid-thick {
+  background:
+    repeating-conic-gradient(from 0deg at 50% 50%, var(--cc) 0deg 90deg, var(--cc-l) 90deg 180deg) 0 0 / 25% 25%,
+    var(--cc-d);
+  border: 3px solid var(--cc-d);
+}
 /* أشعة شمسية سميكة من المركز */
 .p10-card.face-radial-line {
   background:
@@ -1116,8 +1311,23 @@ input, textarea { font-family: inherit; }
   border: 3px solid var(--cc-d) !important;
   box-shadow: 0 0 14px rgba(0,0,0,0.6), inset 0 0 6px rgba(0,0,0,0.25) !important;
 }
-.p10-card.face-wavy-bands { background: radial-gradient(ellipse 50% 20% at 50% 15%, var(--cc) 0 100%, transparent 100%), radial-gradient(ellipse 50% 20% at 50% 40%, var(--cc-l) 0 100%, transparent 100%), radial-gradient(ellipse 50% 20% at 50% 65%, var(--cc-d) 0 100%, transparent 100%), radial-gradient(ellipse 50% 20% at 50% 90%, var(--cc) 0 100%, transparent 100%), #f8f8f8; border: 2px solid var(--cc-d); }
-.p10-card.face-diag-stripe { background: repeating-linear-gradient(45deg, var(--cc) 0 12.5%, var(--cc-l) 12.5% 25%, var(--cc-d) 25% 37.5%, var(--cc) 37.5% 50%); border: 2px solid var(--cc-d); }
+/* موجات ناعمة متتالية */
+.p10-card.face-wavy-bands {
+  background:
+    radial-gradient(ellipse 100% 22% at 50% 0%,   var(--cc-d) 0 60%, transparent 62%),
+    radial-gradient(ellipse 100% 22% at 50% 20%,  var(--cc)   0 60%, transparent 62%),
+    radial-gradient(ellipse 100% 22% at 50% 40%,  var(--cc-l) 0 60%, transparent 62%),
+    radial-gradient(ellipse 100% 22% at 50% 60%,  var(--cc)   0 60%, transparent 62%),
+    radial-gradient(ellipse 100% 22% at 50% 80%,  var(--cc-d) 0 60%, transparent 62%),
+    radial-gradient(ellipse 100% 22% at 50% 100%, var(--cc-l) 0 60%, transparent 62%),
+    var(--cc);
+  border: 2px solid var(--cc-d);
+}
+.p10-card.face-diag-stripe {
+  background: repeating-linear-gradient(45deg,
+    var(--cc-l) 0 6%, var(--cc) 6% 12%, var(--cc-l) 12% 18%, var(--cc-d) 18% 22%);
+  border: 2px solid var(--cc-d);
+}
 
 .p10-card[class*="face-"] .tl-num, .p10-card[class*="face-"] .br-num { color: #fff; text-shadow: 0 0 3px var(--cc-d), 0 1px 2px rgba(0,0,0,0.9); font-weight: 900; }
 .p10-card[class*="face-"] .tl-dot, .p10-card[class*="face-"] .br-dot { background: #fff; box-shadow: 0 0 4px var(--cc-d), inset 0 0 2px rgba(0,0,0,0.5); border: 1px solid var(--cc-d); }
@@ -1138,22 +1348,57 @@ input, textarea { font-family: inherit; }
 /* 17 BACK DESIGNS */
 .back-parchment { background: repeating-linear-gradient(45deg, transparent 0 8px, rgba(201,162,39,0.35) 8px 9px), repeating-linear-gradient(-45deg, transparent 0 8px, rgba(201,162,39,0.25) 8px 9px), linear-gradient(160deg, #2a1e0a, #0f0a04); border: 2px solid #c9a227; }
 .back-classic-grid { background: repeating-linear-gradient(0deg, transparent 0 6px, rgba(201,162,39,0.55) 6px 7px), repeating-linear-gradient(90deg, transparent 0 6px, rgba(201,162,39,0.55) 6px 7px), linear-gradient(160deg, #1a2a4a, #0a1424); border: 2px solid #c9a227; }
-.back-diamond-net { background: repeating-linear-gradient(45deg, transparent 0 6px, rgba(244,185,66,0.5) 6px 7px), repeating-linear-gradient(-45deg, transparent 0 6px, rgba(244,185,66,0.5) 6px 7px), linear-gradient(160deg, #3a0a1a, #1a0208); border: 2px solid #c9a227; }
+.back-diamond-net { background: repeating-conic-gradient(from 45deg at 50% 50%, rgba(244,185,66,0.85) 0deg 90deg, transparent 90deg 180deg) 0 0 / 22px 22px, repeating-conic-gradient(from 45deg at 50% 50%, rgba(244,185,66,0.5) 0deg 90deg, transparent 90deg 180deg) 11px 11px / 22px 22px, radial-gradient(ellipse at 50% 0%, #5a0e2a, #1a0208); border: 2px solid #ffd75e; }
 .back-herringbone { background: repeating-linear-gradient(45deg, rgba(201,162,39,0.6) 0 8px, transparent 8px 16px), repeating-linear-gradient(-45deg, rgba(201,162,39,0.4) 0 8px, transparent 8px 16px), linear-gradient(160deg, #2a0a10, #0a0205); border: 2px solid #c9a227; }
 .back-polka { background: radial-gradient(circle, rgba(201,162,39,0.7) 0 8%, transparent 10%) 0 0 / 25% 25%, radial-gradient(circle, rgba(201,162,39,0.5) 0 8%, transparent 10%) 12.5% 12.5% / 25% 25%, linear-gradient(160deg, #4a0a1a, #1a0208); border: 2px solid #c9a227; }
-.back-pinstripe { background: repeating-linear-gradient(90deg, transparent 0 4px, rgba(255,215,94,0.55) 4px 5px), linear-gradient(160deg, #1a0a2a, #05010a); border: 2px solid #c9a227; }
+.back-pinstripe { background: radial-gradient(ellipse 40% 12% at 20% 15%, rgba(255,215,94,0.55), transparent 65%), radial-gradient(ellipse 40% 12% at 80% 35%, rgba(168,85,247,0.5), transparent 65%), radial-gradient(ellipse 40% 12% at 15% 60%, rgba(255,215,94,0.5), transparent 65%), radial-gradient(ellipse 40% 12% at 85% 85%, rgba(168,85,247,0.5), transparent 65%), radial-gradient(ellipse at 50% 50%, #2a1050, #0a0218); border: 2px solid #c9a227; }
 .back-houndstooth { background: repeating-linear-gradient(90deg, #0a0a15 0 4px, #c9a227 4px 8px, #0a0a15 8px 12px, transparent 12px 16px), repeating-linear-gradient(0deg, transparent 0 8px, rgba(201,162,39,0.25) 8px 9px), #4a0a1a; border: 2px solid #c9a227; }
 .back-argyle { background: repeating-linear-gradient(45deg, transparent 0 10px, #c9a227 10px 11px), repeating-linear-gradient(-45deg, transparent 0 10px, #c9a227 10px 11px), radial-gradient(circle at 50% 50%, #8b0a1a 0 12%, transparent 14%), linear-gradient(160deg, #2a0a10, #0a0205); border: 2px solid #c9a227; }
 .back-zigzag { background: repeating-linear-gradient(135deg, #0a0a15 0 5px, transparent 5px 10px, #c9a227 10px 11px, transparent 11px 16px), linear-gradient(160deg, #4a0a1a, #1a0208); border: 2px solid #ffd75e; }
 .back-star-dust { background: radial-gradient(circle at 12% 18%, #fff 0 1.5px, transparent 2px), radial-gradient(circle at 72% 25%, #ffd75e 0 1px, transparent 1.5px), radial-gradient(circle at 38% 58%, #fff 0 1px, transparent 1.5px), radial-gradient(circle at 88% 78%, #ffd75e 0 1.5px, transparent 2px), radial-gradient(circle at 22% 82%, #fff 0 1px, transparent 1.5px), radial-gradient(circle at 55% 42%, #ffd75e 0 1px, transparent 1.5px), radial-gradient(ellipse at 50% 50%, #2a0a4a 0%, #05010a 100%); border: 2px solid #c9a227; }
-.back-deco-fan { background: repeating-conic-gradient(from 180deg at 50% 100%, rgba(201,162,39,0.7) 0deg 5deg, transparent 5deg 15deg), linear-gradient(160deg, #1a0a2a, #05010a); border: 2px solid #c9a227; }
-.back-mosaic { background: repeating-linear-gradient(0deg, transparent 0 7px, rgba(0,0,0,0.5) 7px 8px), repeating-linear-gradient(90deg, transparent 0 7px, rgba(0,0,0,0.5) 7px 8px), repeating-conic-gradient(from 0deg at 50% 50%, #8b0a1a 0 30deg, #c9a227 30deg 60deg, #1d3557 60deg 90deg, #c9a227 90deg 120deg, #053a34 120deg 150deg, #c9a227 150deg 180deg, #8f5e00 180deg 210deg, #c9a227 210deg 240deg, #8b0a1a 240deg 270deg, #c9a227 270deg 300deg, #1d3557 300deg 330deg, #c9a227 330deg 360deg); border: 2px solid #ffd75e; }
-.back-h-bars { background: repeating-linear-gradient(180deg, #c9a227 0 3px, #4a0a1a 3px 15px, #ffd75e 15px 18px, #1a0a2a 18px 30px); border: 2px solid #c9a227; }
+.back-deco-fan { background: radial-gradient(ellipse 20% 30% at 50% 0%, rgba(74,222,128,0.6), transparent 70%), radial-gradient(ellipse 20% 30% at 50% 100%, rgba(74,222,128,0.6), transparent 70%), radial-gradient(ellipse 20% 30% at 0% 50%, rgba(74,222,128,0.5), transparent 70%), radial-gradient(ellipse 20% 30% at 100% 50%, rgba(74,222,128,0.5), transparent 70%), radial-gradient(circle at 50% 50%, rgba(255,215,94,0.9) 0 6%, transparent 8%), repeating-conic-gradient(from 0deg at 50% 50%, rgba(201,162,39,0.35) 0deg 3deg, transparent 3deg 45deg), linear-gradient(160deg, #0a1a2a, #05010a); border: 2px solid #4ade80; }
+.back-mosaic { background: radial-gradient(circle at 20% 20%, #ff3b4e 0 12%, transparent 14%), radial-gradient(circle at 80% 20%, #2e8bff 0 12%, transparent 14%), radial-gradient(circle at 20% 80%, #12d17a 0 12%, transparent 14%), radial-gradient(circle at 80% 80%, #ffcb1f 0 12%, transparent 14%), radial-gradient(circle at 50% 50%, #a855f7 0 14%, transparent 16%), linear-gradient(160deg, #1a0a2a, #05010a); border: 2px solid #ffd75e; }
+.back-h-bars { background: radial-gradient(circle at 25% 25%, rgba(255,215,94,0.95) 0 6%, transparent 8%), radial-gradient(circle at 75% 25%, rgba(255,215,94,0.85) 0 6%, transparent 8%), radial-gradient(circle at 25% 75%, rgba(255,215,94,0.85) 0 6%, transparent 8%), radial-gradient(circle at 75% 75%, rgba(255,215,94,0.95) 0 6%, transparent 8%), radial-gradient(circle at 50% 50%, rgba(201,162,39,0.7) 0 10%, transparent 12%), radial-gradient(circle at 50% 0%, rgba(201,162,39,0.6) 0 5%, transparent 7%), radial-gradient(circle at 50% 100%, rgba(201,162,39,0.6) 0 5%, transparent 7%), linear-gradient(160deg, #2a0a3a, #0a0218); border: 2px solid #ffd75e; }
 .back-hex-tile { background: repeating-conic-gradient(from 0deg at 50% 0%, transparent 0 60deg, rgba(201,162,39,0.55) 60deg 61deg), repeating-conic-gradient(from 0deg at 50% 50%, transparent 0 60deg, rgba(201,162,39,0.35) 60deg 61deg), linear-gradient(160deg, #0a2a3a, #05101a); background-size: 20px 34px, 20px 34px, 100% 100%; border: 2px solid #c9a227; }
 .back-weave { background: repeating-linear-gradient(45deg, transparent 0 10px, rgba(0,0,0,0.4) 10px 11px), repeating-linear-gradient(-45deg, transparent 0 10px, rgba(255,215,94,0.3) 10px 11px), linear-gradient(160deg, #4a0a1a, #1a0208); border: 2px solid #c9a227; }
 .back-circles { background: radial-gradient(circle at 25% 25%, transparent 0 22%, rgba(201,162,39,0.6) 22% 23%, transparent 23%), radial-gradient(circle at 75% 25%, transparent 0 22%, rgba(201,162,39,0.6) 22% 23%, transparent 23%), radial-gradient(circle at 25% 75%, transparent 0 22%, rgba(201,162,39,0.6) 22% 23%, transparent 23%), radial-gradient(circle at 75% 75%, transparent 0 22%, rgba(201,162,39,0.6) 22% 23%, transparent 23%), radial-gradient(circle at 50% 50%, transparent 0 20%, rgba(255,215,94,0.6) 20% 21%, transparent 21%), linear-gradient(160deg, #1a0a2a, #05010a); border: 2px solid #c9a227; }
-.back-nouveau { background: radial-gradient(ellipse 55% 18% at 50% 18%, rgba(201,162,39,0.65) 0 100%, transparent 100%), radial-gradient(ellipse 55% 18% at 50% 50%, rgba(255,215,94,0.45) 0 100%, transparent 100%), radial-gradient(ellipse 55% 18% at 50% 82%, rgba(201,162,39,0.65) 0 100%, transparent 100%), linear-gradient(160deg, #4a1a2a, #1a0208); border: 2px solid #ffd75e; }
+.back-nouveau { background: radial-gradient(circle at 50% 15%, rgba(255,215,94,0.9) 0 8%, rgba(201,162,39,0.4) 8% 14%, transparent 15%), radial-gradient(circle at 50% 50%, rgba(255,215,94,0.9) 0 8%, rgba(201,162,39,0.4) 8% 14%, transparent 15%), radial-gradient(circle at 50% 85%, rgba(255,215,94,0.9) 0 8%, rgba(201,162,39,0.4) 8% 14%, transparent 15%), linear-gradient(90deg, transparent 45%, rgba(168,85,247,0.3) 49% 51%, transparent 55%), linear-gradient(180deg, #3a0a2a, #1a0208); border: 2px solid #ffd75e; }
 .back-grad-mesh { background: radial-gradient(ellipse at 20% 20%, rgba(201,162,39,0.65), transparent 55%), radial-gradient(ellipse at 80% 30%, rgba(139,10,26,0.65), transparent 55%), radial-gradient(ellipse at 30% 80%, rgba(29,53,87,0.65), transparent 55%), radial-gradient(ellipse at 70% 70%, rgba(255,215,94,0.45), transparent 55%), linear-gradient(160deg, #1a0a1a, #05010a); border: 2px solid #c9a227; }
+
+/* ✨ الظهور الأصلي للعبة Phase 10: كحلي داكن + شعار ذهبي مركزي + إطار مزدوج */
+.back-phase10-original {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(244,185,66,0.10) 0 35%, transparent 60%),
+    linear-gradient(160deg, #0a1b4d 0%, #061032 60%, #020718 100%);
+  border: 2.5px solid #ffffff;
+  box-shadow:
+    inset 0 0 0 2px #061032,
+    inset 0 0 0 3px rgba(244,185,66,0.7),
+    inset 0 2px 12px rgba(0,0,0,0.5);
+  position: relative;
+}
+.back-phase10-original::before {
+  content: '10';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; font-weight: 900; font-style: italic;
+  color: #f4b942;
+  text-shadow:
+    0 0 12px rgba(244,185,66,0.7),
+    2px 2px 0 rgba(0,0,0,0.55),
+    -1px -1px 0 rgba(255,255,255,0.15);
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  letter-spacing: -3px;
+  transform: rotate(-8deg);
+}
+.back-phase10-original::after {
+  content: '';
+  position: absolute; inset: 8px;
+  border-radius: 4px;
+  border: 1px dashed rgba(244,185,66,0.55);
+  box-shadow: inset 0 0 14px rgba(244,185,66,0.15);
+  pointer-events: none;
+}
 
 #whyModal .modal-content { max-width: 500px; }
 .why-reason { display: flex; gap: 10px; padding: 10px; background: rgba(239,68,68,0.08); border-right: 3px solid #ef4444; border-radius: 8px; margin-bottom: 8px; }
@@ -1461,6 +1706,79 @@ body.no-glow .pile .clickable::after { display: none !important; }
 @keyframes resultPop { 0% { transform: scale(0.3); opacity: 0; } 60% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
 .big-result-overlay.hide { opacity: 0; }
 
+/* UPDATE BANNER */
+#updateAvailable {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+  background: linear-gradient(135deg, #4a69bd, #2c5aa0, #1a3a6a);
+  color: #fff; padding: 12px 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.6), 0 0 0 2px rgba(244,185,66,0.6);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  animation: updateSlideIn 0.5s var(--ease-spring);
+  border-bottom: 2px solid var(--gold);
+}
+#updateAvailable.hidden { display: none !important; }
+#updateAvailable .uv-icon { font-size: 22px; flex-shrink: 0; }
+#updateAvailable .uv-text { flex: 1; text-align: right; line-height: 1.4; }
+#updateAvailable .uv-title { font-size: 13px; font-weight: 900; }
+#updateAvailable .uv-sub { font-size: 10.5px; opacity: 0.85; margin-top: 2px; }
+#updateAvailable .uv-version { color: var(--gold); font-weight: 900; }
+#updateAvailable .uv-actions { display: flex; gap: 6px; flex-shrink: 0; }
+#updateAvailable button {
+  padding: 8px 14px; border-radius: 9px; font-size: 11.5px; font-weight: 800;
+  white-space: nowrap; cursor: pointer;
+}
+#updateAvailable #updateApplyBtn { background: linear-gradient(160deg, #5be08f, #22a862); color: #04240f; }
+#updateAvailable #updateDismissBtn { background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+@keyframes updateSlideIn {
+  0% { transform: translateY(-100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+/* ABOUT PAGE */
+.about-card {
+  background: linear-gradient(160deg, rgba(244,185,66,0.10), rgba(244,185,66,0.02));
+  border: 1.5px solid var(--gold-alpha-40);
+  border-radius: 14px;
+  padding: 16px;
+  width: 100%; max-width: 440px;
+  text-align: right;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.about-logo {
+  width: 88px; height: 88px; margin: 4px auto 8px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 42px; font-weight: 900; color: #241a00;
+  box-shadow: 0 8px 24px rgba(244,185,66,0.45), inset 0 0 0 3px rgba(0,0,0,0.15);
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  letter-spacing: -2px;
+}
+.about-title { font-size: 20px; font-weight: 900; color: var(--gold); text-align: center; margin-bottom: 2px; }
+.about-subtitle { font-size: 11px; color: var(--text-secondary); text-align: center; opacity: 0.85; margin-bottom: 8px; }
+.about-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 4px; border-bottom: 1px solid var(--border-1);
+  font-size: 12px; gap: 8px;
+}
+.about-row:last-child { border-bottom: 0; }
+.about-row .albl { color: var(--text-secondary); font-weight: 700; flex-shrink: 0; }
+.about-row .aval { color: var(--gold); font-weight: 900; text-align: left; direction: ltr; word-break: break-all; }
+.about-row .aval.ar { direction: rtl; }
+.about-contact-btn {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 14px;
+  background: var(--surface-1); border: 1px solid var(--border-1);
+  border-radius: 10px; color: var(--text-primary);
+  text-decoration: none; font-size: 12px; font-weight: 700;
+  transition: transform 0.15s, background 0.15s;
+}
+.about-contact-btn:hover { background: var(--gold-alpha-20); }
+.about-contact-btn:active { transform: scale(0.97); }
+.about-contact-btn .ci { font-size: 18px; flex-shrink: 0; }
+.about-contact-btn .ct { flex: 1; text-align: right; }
+.about-contact-btn .cv { color: var(--gold); font-size: 10.5px; font-weight: 600; opacity: 0.85; }
+
 /* DAILY CHALLENGE */
 .daily-btn { position: relative; }
 .daily-badge { position: absolute; top: -6px; left: -6px; background: linear-gradient(160deg, #ef4444, #991b1b); color: #fff; font-size: 8.5px; font-weight: 900; padding: 2px 6px; border-radius: 8px; border: 1.5px solid var(--bg-primary); line-height: 1; }
@@ -1548,6 +1866,14 @@ body.no-glow .pile .clickable::after { display: none !important; }
 </style>
 <script>
 "use strict";
+
+/* ============================================================
+   ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
+   ============================================================ */
+var APP_VERSION = '20.0.0';
+var APP_BUILD_DATE = '2026-10-08';
+var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
+var UPDATE_CHECK_INTERVAL_MS = 30 * 60 * 1000; /* 30 دقيقة */
 
 /* ============================================================
    CONSTANTS
@@ -1685,7 +2011,7 @@ var FACE_STYLES = [
   { key: 'face-ripple',         name: 'حلقات متتالية' },
   { key: 'face-honeycomb',      name: 'خلية نحل' },
   { key: 'face-triangle',       name: 'مثلث مقسّم' },
-  { key: 'face-cross-plus',     name: 'علامة زائد' },
+  { key: 'face-phase10-classic', name: 'Phase 10 الأصلي' },
   { key: 'face-dot-grid',       name: 'شبكة نقاط' },
   { key: 'face-grid-thick',     name: 'شبكة سميكة' },
   { key: 'face-radial-line',    name: 'خطوط شعاعية' },
@@ -1694,6 +2020,7 @@ var FACE_STYLES = [
 ];
 
 var BACK_STYLES = [
+  { key: 'back-phase10-original', name: 'Phase 10 الأصلي' },
   { key: 'back-classic-grid', name: 'شبكة دقيقة' },
   { key: 'back-diamond-net',  name: 'شبكة معيّنات' },
   { key: 'back-herringbone',  name: 'عظام السمك' },
@@ -2123,7 +2450,7 @@ function checkNearWinAlert(state) {
    SETTINGS
    ============================================================ */
 var DEFAULT_SETTINGS = {
-  playerName: '', faceStyle: 'face-quadrants', backStyle: 'back-classic-grid',
+  playerName: '', faceStyle: 'face-phase10-classic', backStyle: 'back-phase10-original',
   wildStyle: 'default',
   cardSize: 'medium', cpuSpeed: 'normal', animations: true, glow: true,
   autoHint: true, soundEnabled: true, theme: 'dark', autoSave: true,
@@ -2140,10 +2467,10 @@ function loadSettingsFromStorage() {
     for (var k in DEFAULT_SETTINGS) result[k] = (p[k] !== undefined) ? p[k] : DEFAULT_SETTINGS[k];
     var ok = false;
     for (var i = 0; i < FACE_STYLES.length; i++) if (FACE_STYLES[i].key === result.faceStyle) { ok = true; break; }
-    if (!ok) result.faceStyle = 'face-quadrants';
+    if (!ok) result.faceStyle = 'face-phase10-classic';
     ok = false;
     for (var j = 0; j < BACK_STYLES.length; j++) if (BACK_STYLES[j].key === result.backStyle) { ok = true; break; }
-    if (!ok) result.backStyle = 'back-classic-grid';
+    if (!ok) result.backStyle = 'back-phase10-original';
     ok = false;
     for (var w = 0; w < WILD_STYLES.length; w++) if (WILD_STYLES[w].key === result.wildStyle) { ok = true; break; }
     if (!ok) result.wildStyle = 'default';
@@ -3711,7 +4038,6 @@ function renderPhaseBox(player, hasLaid) {
     return;
   }
   var ph = list ? list[player.phase] : null;
-  var desc = ph ? escapeHTML(ph.desc || '') : '';
   var desc = ph ? escapeHTML(ph.desc || '') : '';
 
 // ✅ احتياطي: لو الوصف فارغ أو مجرد "مرحلة N"، ابنِه من المجموعات
@@ -6096,7 +6422,7 @@ function hostStartNetworkGame() {
   if (localRTC.dc && localRTC.role === 'host' && localRTC.dc.readyState === 'open') {
     try { localRTC.dc.send(JSON.stringify({ type: 'start', state: buildStateForPeer(app.state, 1) })); } catch (err) {}
   }
-  showScreen('game'); updateFloatingFullscreenVisibility(); setStatus('بدأت اللعبة!');
+  showScreen('game'); updateFullscreenButtonText(); setStatus('بدأت اللعبة!');
   setTimeout(function() { resetRenderCache(); scheduleRender(); startTurnIfNeeded(); }, 300);
 }
 
@@ -8161,6 +8487,163 @@ window.addEventListener('error', function(ev) { console.error('Global error:', e
 window.addEventListener('unhandledrejection', function(ev) { console.error('Unhandled rejection:', ev.reason); });
 
 /* ============================================================
+   🆕 DATA — بيانات التطبيق والمطوّر (عدّلها كما تشاء)
+   ============================================================ */
+var APP_DEV_INFO = {
+  developer: 'TYEYYIY',
+  email: 'tyeyyiyleseeh@petalmail.com',
+  whatsapp: '+20 1281071349',
+  whatsappLink: 'https://wa.me/01281071349',
+  github: 'https://github.com/tyeyyiy',
+  website: ''
+};
+
+/* ============================================================
+   🆕 AUTO-UPDATE — يتحقق من GitHub Pages كل 30 دقيقة
+   ============================================================ */
+var updateState = { lastCheck: 0, checking: false, found: false, latestVersion: '' };
+
+function _extractVersionFromHTML(html) {
+  if (!html) return null;
+  var m = html.match(/var\s+APP_VERSION\s*=\s*['"]([^'"]+)['"]/);
+  return m ? m[1] : null;
+}
+
+function checkForUpdates(silent) {
+  if (updateState.checking) return;
+  if (!navigator.onLine) {
+    if (!silent) _showUpdateToast('⚠ لا يوجد اتصال بالإنترنت', true);
+    return;
+  }
+  // لا نتحقق أثناء لعبة LAN جارية
+  if (app.mode === 'lan' && app.state && !app.state.gameOver) return;
+
+  updateState.checking = true;
+  updateState.lastCheck = Date.now();
+
+  var url = location.pathname + '?_v=' + Date.now() + '&_r=' + Math.random();
+  var ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+  var timeoutId = setTimeout(function() { if (ctrl) ctrl.abort(); }, 12000);
+
+  fetch(url, {
+    cache: 'no-store',
+    method: 'GET',
+    credentials: 'omit',
+    headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate', 'Pragma': 'no-cache' },
+    signal: ctrl ? ctrl.signal : undefined
+  })
+    .then(function(r) { clearTimeout(timeoutId); return r.text(); })
+    .then(function(html) {
+      updateState.checking = false;
+      var latest = _extractVersionFromHTML(html);
+      if (!latest) { if (!silent) _showUpdateToast('⚠ فشل قراءة إصدار الخادم', true); return; }
+      if (latest !== APP_VERSION) {
+        updateState.found = true;
+        updateState.latestVersion = latest;
+        _showUpdateBanner(latest);
+        if (!silent) _showUpdateToast('🎉 يوجد تحديث متوفر: ' + latest);
+      } else {
+        if (!silent) _showUpdateToast('✓ أنت على آخر إصدار (' + APP_VERSION + ')');
+      }
+    })
+    .catch(function(err) {
+      clearTimeout(timeoutId);
+      updateState.checking = false;
+      if (!silent) _showUpdateToast('⚠ فشل التحقق — تحقق من الإنترنت', true);
+    });
+}
+
+function _showUpdateBanner(newVersion) {
+  var el = $('updateAvailable');
+  if (!el) return;
+  var v = el.querySelector('.uv-version');
+  if (v) v.textContent = newVersion;
+  el.classList.remove('hidden');
+}
+
+function _showUpdateToast(msg, isErr) {
+  if (typeof setStatus === 'function') {
+    setStatus(msg, isErr ? 'var(--red)' : 'var(--green)');
+  } else {
+    console.log('[TYEYYIY Update]', msg);
+  }
+}
+
+function applyUpdateNow() {
+  // إزالة الـ Service Worker + الـ Caches ثم إعادة تحميل قسري
+  var done = false;
+  function finish() {
+    if (done) return;
+    done = true;
+    try {
+      // Bypass cache بالكامل عبر إعادة تحميل مع parameter عشوائي
+      var u = new URL(location.href);
+      u.searchParams.set('_u', Date.now());
+      location.replace(u.toString());
+    } catch (e) {
+      location.reload(true);
+    }
+  }
+
+  var promises = [];
+  try {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.getRegistrations) {
+      promises.push(navigator.serviceWorker.getRegistrations().then(function(regs) {
+        return Promise.all(regs.map(function(r) { return r.unregister().catch(function(){}); }));
+      }).catch(function(){}));
+    }
+  } catch (e) {}
+  try {
+    if (window.caches && caches.keys) {
+      promises.push(caches.keys().then(function(names) {
+        return Promise.all(names.map(function(n) { return caches.delete(n).catch(function(){}); }));
+      }).catch(function(){}));
+    }
+  } catch (e) {}
+
+  if (promises.length === 0) { finish(); return; }
+  Promise.all(promises).then(finish).catch(finish);
+  setTimeout(finish, 3000); // أمان
+}
+
+function buildAboutScreen() {
+  var vEl = $('aboutVersion'); if (vEl) vEl.textContent = APP_VERSION;
+  var bEl = $('aboutBuildDate'); if (bEl) bEl.textContent = APP_BUILD_DATE;
+  var dEl = $('aboutDev'); if (dEl) dEl.textContent = APP_DEV_INFO.developer;
+
+  var em = $('aboutContactEmail'); var emv = $('aboutEmailVal');
+  if (em && APP_DEV_INFO.email) { em.href = 'mailto:' + APP_DEV_INFO.email; if (emv) emv.textContent = APP_DEV_INFO.email; }
+
+  var wa = $('aboutContactWhatsapp'); var wav = $('aboutWhatsappVal');
+  if (wa && APP_DEV_INFO.whatsappLink) { wa.href = APP_DEV_INFO.whatsappLink; if (wav) wav.textContent = APP_DEV_INFO.whatsapp; }
+
+  var gh = $('aboutContactGithub'); var ghv = $('aboutGithubVal');
+  if (gh && APP_DEV_INFO.github) { gh.href = APP_DEV_INFO.github; if (ghv) ghv.textContent = APP_DEV_INFO.github.replace('https://', ''); }
+
+  var ws = $('aboutContactWebsite'); var wsv = $('aboutWebsiteVal');
+  if (ws && APP_DEV_INFO.website) { ws.href = APP_DEV_INFO.website; if (wsv) wsv.textContent = APP_DEV_INFO.website.replace('https://', ''); }
+}
+
+function attachAboutHandlers() {
+  var ab = $('aboutBtn');
+  if (ab) ab.onclick = function() { buildAboutScreen(); showScreen('aboutScreen'); };
+  var bb = $('aboutBackBtn');
+  if (bb) bb.onclick = function() { showScreen('menu'); };
+  var cb = $('aboutCheckUpdateBtn');
+  if (cb) cb.onclick = function() {
+    cb.disabled = true; cb.textContent = '⏳ جاري التحقق...';
+    checkForUpdates(false);
+    setTimeout(function() {
+      cb.disabled = false; cb.textContent = '🔄 التحقق من التحديثات';
+    }, 4000);
+  };
+  var ua = $('updateApplyBtn');
+  if (ua) ua.onclick = applyUpdateNow;
+  var ud = $('updateDismissBtn');
+  if (ud) ud.onclick = function() { $('updateAvailable').classList.add('hidden'); };
+}
+
+/* ============================================================
    INITIALIZE
    ============================================================ */
 function initializeApp() {
@@ -8175,8 +8658,16 @@ function initializeApp() {
     attachLobbyHandlers();
     attachGameHandlers();
     attachSettingsHandlers();
-    attachModalClosers();
-    if (app.settings.playerName) {
+attachModalClosers();
+attachAboutHandlers();
+/* 🆕 فحص التحديثات تلقائياً */
+setTimeout(function() { checkForUpdates(true); }, UPDATE_CHECK_FIRST_DELAY_MS);
+setInterval(function() { checkForUpdates(true); }, UPDATE_CHECK_INTERVAL_MS);
+/* 🆕 عند عودة الاتصال بالإنترنت */
+window.addEventListener('online', function() {
+  setTimeout(function() { checkForUpdates(true); }, 2000);
+});
+if (app.settings.playerName) {
       $('myNameInput').value = app.settings.playerName;
       $('lanNameInput').value = app.settings.playerName;
       $('settingsNameInput').value = app.settings.playerName;
@@ -8208,6 +8699,9 @@ window.p10Debug = {
   getApp: function() { return app; },
   getNet: function() { return net; },
   getCpuSkill: function() { return getCpuSkill(); },
+  getVersion: function() { return { version: APP_VERSION, build: APP_BUILD_DATE }; },
+  checkUpdates: function() { checkForUpdates(false); },
+  applyUpdate: applyUpdateNow,
   resetAll: function() {
     try {
       ['p10v20_settings','p10v20_achievements','p10v20_stats','p10v20_handOrder',
