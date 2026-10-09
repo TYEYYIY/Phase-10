@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="format-detection" content="telephone=no">
-<title>TYEYYIY — Phase 10 v20</title>
+<title>TYEYYIY — Phase 10 v21</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23f4b942'/%3E%3Cstop offset='1' stop-color='%23c98a05'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='%230a1410'/%3E%3Crect x='28' y='20' width='44' height='64' rx='6' fill='url(%23g)' stroke='%230a1410' stroke-width='2'/%3E%3Ctext x='50' y='63' font-size='42' text-anchor='middle' fill='%230a1410' font-family='Arial,sans-serif' font-weight='900'%3E10%3C/text%3E%3Ccircle cx='22' cy='78' r='10' fill='%23e63946'/%3E%3C/svg%3E">
 <script src="peerjs.min.js"></script>
 <link rel="manifest" href="manifest.json">
@@ -1839,7 +1839,90 @@ body.no-glow .pile .clickable::after { display: none !important; }
   .plist-kick { width: 22px; height: 22px; font-size: 10px; }
 }
 .game-inner > .middle-section { flex: 1 1 auto; min-height: 60px; max-height: none; }
- /* INLINE FULLSCREEN BUTTON — داخل شريط الترتيب على اليسار */
+ /* ============================================================
+   FORCED WILD & SKIP STYLING — تمييز إجباري في كل الأوجه
+   ============================================================ */
+.p10-card.wild,
+.p10-card.wild[class*="face-"] {
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,0.14), transparent 55%),
+    radial-gradient(circle at 50% 55%, rgba(244,185,66,0.25) 0%, transparent 65%),
+    linear-gradient(160deg, #1c1c1c, #050505) !important;
+  border: 2.5px solid #f4b942 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(244,185,66,0.45),
+    inset 0 2px 10px rgba(244,185,66,0.18),
+    0 3px 10px rgba(0,0,0,0.55),
+    0 0 14px rgba(244,185,66,0.40) !important;
+}
+.p10-card.wild .tl-num,
+.p10-card.wild .br-num {
+  color: #f4b942 !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 0 6px rgba(244,185,66,0.6) !important;
+}
+.p10-card.wild .tl-dot,
+.p10-card.wild .br-dot {
+  background: #f4b942 !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6), 0 0 4px rgba(244,185,66,0.5) !important;
+}
+.p10-card.wild .center-dot {
+  background: radial-gradient(circle, #fff 0 40%, #f4b942 100%) !important;
+  border: 2.5px solid #7a4d00 !important;
+  box-shadow: 0 0 14px rgba(244,185,66,0.6), inset 0 0 4px rgba(122,77,0,0.3) !important;
+}
+.p10-card.wild .center-num {
+  color: #7a4d00 !important;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.6) !important;
+}
+
+.p10-card.skip,
+.p10-card.skip[class*="face-"] {
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,0.14), transparent 55%),
+    radial-gradient(circle at 50% 55%, rgba(74,105,189,0.35) 0%, transparent 65%),
+    linear-gradient(160deg, #0f1d4a, #050a1a) !important;
+  border: 2.5px solid #4a69bd !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(74,105,189,0.5),
+    inset 0 2px 10px rgba(74,105,189,0.25),
+    0 3px 10px rgba(0,0,0,0.55),
+    0 0 14px rgba(74,105,189,0.45) !important;
+}
+.p10-card.skip .tl-num,
+.p10-card.skip .br-num {
+  color: #ff5b5b !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 0 6px rgba(255,68,68,0.6) !important;
+}
+.p10-card.skip .tl-dot,
+.p10-card.skip .br-dot {
+  background: #ff4444 !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.6), 0 0 4px rgba(255,68,68,0.5) !important;
+}
+.p10-card.skip .center-dot {
+  background: radial-gradient(circle, #fff 0 40%, #4a69bd 100%) !important;
+  border: 2.5px solid #0f1d4a !important;
+  box-shadow: 0 0 14px rgba(74,105,189,0.6), inset 0 0 4px rgba(15,29,74,0.4) !important;
+}
+.p10-card.skip .center-num { color: #0f1d4a !important; }
+
+/* تأكيد الأنماط الخاصة للـ Wild */
+.p10-card.wild.wild-style-star .center-dot {
+  background: radial-gradient(circle, #fff 0 40%, #f4b942 100%) !important;
+  border-color: #7a4d00 !important;
+}
+.p10-card.wild.wild-style-star .center-num { color: #c98a05 !important; }
+.p10-card.wild.wild-style-crown .center-dot {
+  background: linear-gradient(135deg, #a855f7, #7c3aed) !important;
+  border-color: #4c1d95 !important;
+}
+.p10-card.wild.wild-style-crown .center-num { color: #ffd75e !important; }
+.p10-card.wild.wild-style-diamond .center-dot {
+  background: linear-gradient(135deg, #06b6d4, #0e7490) !important;
+  border-color: #083344 !important;
+}
+.p10-card.wild.wild-style-diamond .center-num { color: #fff !important; }
+
+/* INLINE FULLSCREEN BUTTON — داخل شريط الترتيب على اليسار */
 .inline-fullscreen-btn {
   position: absolute;
   left: 4px;
@@ -1870,8 +1953,8 @@ body.no-glow .pile .clickable::after { display: none !important; }
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '20.0.0';
-var APP_BUILD_DATE = '2026-10-08';
+var APP_VERSION = '21.2.1';
+var APP_BUILD_DATE = '1-9-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
 var UPDATE_CHECK_INTERVAL_MS = 30 * 60 * 1000; /* 30 دقيقة */
 
@@ -1879,7 +1962,7 @@ var UPDATE_CHECK_INTERVAL_MS = 30 * 60 * 1000; /* 30 دقيقة */
    CONSTANTS
    ============================================================ */
 var SAVE_VERSION = 1;
-var SAVE_KEY = 'p10v20_savedGame';
+var SAVE_KEY = 'p10v21_savedGame';
 var SAVE_MAX_AGE_MS = 7 * 24 * 3600 * 1000;
 
 var COLORS = [
@@ -2460,7 +2543,7 @@ var DEFAULT_SETTINGS = {
 function cloneDefaults() { var r = {}; for (var k in DEFAULT_SETTINGS) r[k] = DEFAULT_SETTINGS[k]; return r; }
 function loadSettingsFromStorage() {
   try {
-    var s = localStorage.getItem('p10v20_settings') || localStorage.getItem('p10v19_settings');
+    var s = localStorage.getItem('p10v21_settings') || localStorage.getItem('p10v19_settings');
     if (!s) return cloneDefaults();
     var p = JSON.parse(s);
     var result = {};
@@ -2478,7 +2561,7 @@ function loadSettingsFromStorage() {
   } catch (err) { return cloneDefaults(); }
 }
 function saveSettingsToStorage() {
-  try { localStorage.setItem('p10v20_settings', JSON.stringify(app.settings)); } catch (err) {}
+  try { localStorage.setItem('p10v21_settings', JSON.stringify(app.settings)); } catch (err) {}
 }
 function applySettingsToDOM() {
   _cardHTMLCache = {};
@@ -2507,13 +2590,13 @@ function applySettingsToDOM() {
    ============================================================ */
 function loadAchievementsFromStorage() {
   try {
-    var s = localStorage.getItem('p10v20_achievements') || localStorage.getItem('p10v19_achievements');
+    var s = localStorage.getItem('p10v21_achievements') || localStorage.getItem('p10v19_achievements');
     if (s) return JSON.parse(s);
   } catch (err) {}
   return {};
 }
 function saveAchievementsToStorage() {
-  try { localStorage.setItem('p10v20_achievements', JSON.stringify(app.achievements)); } catch (err) {}
+  try { localStorage.setItem('p10v21_achievements', JSON.stringify(app.achievements)); } catch (err) {}
 }
 function getAchievementByKey(key) {
   for (var i = 0; i < ACHIEVEMENTS_LIST.length; i++) if (ACHIEVEMENTS_LIST[i].key === key) return ACHIEVEMENTS_LIST[i];
@@ -2527,14 +2610,14 @@ function getTotalCoins() {
       if (a) total += a.coins || 0;
     }
   }
-  try { total += parseInt(localStorage.getItem('p10v20_matchCoins') || localStorage.getItem('p10v19_matchCoins') || '0', 10); } catch (e) {}
+  try { total += parseInt(localStorage.getItem('p10v21_matchCoins') || localStorage.getItem('p10v19_matchCoins') || '0', 10); } catch (e) {}
   return total;
 }
 function awardMatchCoins(amount) {
   if (!amount || amount <= 0) return;
   try {
-    var cur = parseInt(localStorage.getItem('p10v20_matchCoins') || '0', 10);
-    localStorage.setItem('p10v20_matchCoins', String(cur + amount));
+    var cur = parseInt(localStorage.getItem('p10v21_matchCoins') || '0', 10);
+    localStorage.setItem('p10v21_matchCoins', String(cur + amount));
   } catch (e) {}
   refreshAllCoinDisplays();
 }
@@ -2594,13 +2677,13 @@ function showAchievementToast(info) {
 }
 function loadLeaderboardFromStorage() {
   try {
-    var s = localStorage.getItem('p10v20_leaderboard') || localStorage.getItem('p10v19_leaderboard');
+    var s = localStorage.getItem('p10v21_leaderboard') || localStorage.getItem('p10v19_leaderboard');
     if (s) return JSON.parse(s);
   } catch (err) {}
   return [];
 }
 function saveLeaderboardToStorage(lb) {
-  try { localStorage.setItem('p10v20_leaderboard', JSON.stringify(lb)); } catch (err) {}
+  try { localStorage.setItem('p10v21_leaderboard', JSON.stringify(lb)); } catch (err) {}
 }
 function recordLeaderboard() {
   var name = app.settings.playerName || 'لاعب';
@@ -2650,7 +2733,11 @@ pendingStalemate: false,
     hintsUsed: 0, hintsUsedThisMatch: 0, skipsUsed: 0, totalPenalty: 0,
     cpuSkill: GAME_CONST.CPU_SKILL_START, dailyChallengeDone: {}
   },
-  tutorialStep: 0
+  tutorialStep: 0,
+  dailyChallengeActive: false,
+  dailyChallengePhase: null,
+  dailyChallengeDateKey: null,
+  dailyChallengeReward: 0
 };
 var previouslyRenderedMelds = {};
 var lastShownTurnSummary = -1;
@@ -2658,11 +2745,11 @@ var lastNotifiedTurnKey = -1;
 app.specialMode = app.settings.specialMode || 'classic';
 app.phasePack = app.settings.phasePack || 'classic';
 try {
-  var ss = localStorage.getItem('p10v20_stats') || localStorage.getItem('p10v19_stats');
+  var ss = localStorage.getItem('p10v21_stats') || localStorage.getItem('p10v19_stats');
   if (ss) { var ps = JSON.parse(ss); for (var sk in ps) app.stats[sk] = ps[sk]; }
 } catch (err) {}
 try {
-  var advStr = localStorage.getItem('p10v20_advancedPhases') || localStorage.getItem('p10v19_advancedPhases');
+  var advStr = localStorage.getItem('p10v21_advancedPhases') || localStorage.getItem('p10v19_advancedPhases');
   if (advStr) app.customAdvancedPhases = JSON.parse(advStr);
 } catch (err) {}
 if (typeof app.stats.cpuSkill !== 'number') app.stats.cpuSkill = GAME_CONST.CPU_SKILL_START;
@@ -2670,15 +2757,15 @@ if (app.stats.cpuSkill < GAME_CONST.CPU_SKILL_MIN) app.stats.cpuSkill = GAME_CON
 if (app.stats.cpuSkill > GAME_CONST.CPU_SKILL_MAX) app.stats.cpuSkill = GAME_CONST.CPU_SKILL_MAX;
 if (typeof app.stats.hintsUsedThisMatch !== 'number') app.stats.hintsUsedThisMatch = 0;
 if (!app.stats.dailyChallengeDone) app.stats.dailyChallengeDone = {};
-function saveStatsToStorage() { try { localStorage.setItem('p10v20_stats', JSON.stringify(app.stats)); } catch (err) {} }
+function saveStatsToStorage() { try { localStorage.setItem('p10v21_stats', JSON.stringify(app.stats)); } catch (err) {} }
 function loadHandOrderFromStorage() {
   try {
-    var s = localStorage.getItem('p10v20_handOrder') || localStorage.getItem('p10v19_handOrder');
+    var s = localStorage.getItem('p10v21_handOrder') || localStorage.getItem('p10v19_handOrder');
     if (s) app.handOrder = JSON.parse(s) || [];
   } catch (err) { app.handOrder = []; }
 }
 function saveHandOrderToStorage() {
-  try { localStorage.setItem('p10v20_handOrder', JSON.stringify(app.handOrder.slice(0, 60))); } catch (err) {}
+  try { localStorage.setItem('p10v21_handOrder', JSON.stringify(app.handOrder.slice(0, 60))); } catch (err) {}
 }
 loadHandOrderFromStorage();
 var cpuContext = { active: false, timeout: null };
@@ -2849,7 +2936,16 @@ function getCurrentSpecialConfig() {
   return SPECIAL_MODES[0];
 }
 function getCurrentPhasePack() {
-  if (app.phasePack === 'custom-advanced' && app.customAdvancedPhases) {
+  // ✅ التحدي اليومي: مرحلة واحدة فقط
+  if (app.phasePack === 'daily' && app.dailyChallengePhase) {
+    return {
+      key: 'daily',
+      name: 'التحدي اليومي',
+      desc: app.dailyChallengePhase.desc,
+      phases: [app.dailyChallengePhase]
+    };
+  }
+  if (app.phasePack === 'custom-advanced' && app.customAdvancedPhases && app.customAdvancedPhases.length > 0) {
     return { key: 'custom-advanced', name: 'مراحل مخصصة', desc: 'مراحل مخصصة',
              phases: app.customAdvancedPhases.map(advancedToPhaseFormat) };
   }
@@ -4221,7 +4317,7 @@ function attemptFullReconnect() {
       if (isGuest() && app.state) { try { sendToHost({ type: 'ping', t: Date.now() }); } catch (e) {} }
     } else {
       if (isGuest() && net.peer && net.peer.open && net.roomCode) {
-        var hp = 'p10v20' + net.roomCode.toLowerCase();
+        var hp = 'p10v21' + net.roomCode.toLowerCase();
         try {
           net.hostConn = net.peer.connect(hp, { reliable: true, metadata: { name: net.myName } });
           setupGuestHostConnHandlers(null);
@@ -4506,7 +4602,7 @@ function createRoom(attempt) {
   if (net.peer) { try { net.peer.destroy(); } catch (err) {} net.peer = null; }
   net.guestConns = {};
   var code = generateRoomCode();
-  var peerId = 'p10v20' + code.toLowerCase() + (attempt > 1 ? Math.floor(Math.random() * 1000) : '');
+  var peerId = 'p10v21' + code.toLowerCase() + (attempt > 1 ? Math.floor(Math.random() * 1000) : '');
   net.roomCode = code; net.myPeerId = peerId; net.role = 'host'; net.connectionMode = 'internet';
   try { net.peer = new Peer(peerId, PEER_CONFIG); }
   catch (err) { setRoomStatus('خطأ في Peer: ' + err.message, 'err'); return; }
@@ -4770,7 +4866,7 @@ function setupGuestHostConnHandlers(connTimeout) {
         retryCount++;
         if (retryCount > 8) { setRoomStatus('فشل الاتصال بالغرفة', 'err'); return; }
         try {
-          var hp = 'p10v20' + (net.roomCode || '').toLowerCase();
+          var hp = 'p10v21' + (net.roomCode || '').toLowerCase();
           net.hostConn = net.peer.connect(hp, { reliable: true, metadata: { name: net.myName } });
           setupGuestHostConnHandlers(null);
         } catch (e) { setTimeout(retryConnect, Math.min(1000 * Math.pow(1.5, retryCount), 8000)); }
@@ -4797,7 +4893,7 @@ function joinRoom(attempt) {
     stableUid = sessionStorage.getItem('p10_guest_uid');
     if (!stableUid) { stableUid = Math.random().toString(36).substring(2, 8) + Date.now().toString(36).slice(-4); sessionStorage.setItem('p10_guest_uid', stableUid); }
   } catch (e) { stableUid = Math.random().toString(36).substring(2, 10); }
-  var mpId = 'p10v20g' + code.toLowerCase() + '_' + stableUid;
+  var mpId = 'p10v21g' + code.toLowerCase() + '_' + stableUid;
   net.myPeerId = mpId;
   try { net.peer = new Peer(mpId, PEER_CONFIG); }
   catch (err) { setRoomStatus('خطأ في Peer: ' + err.message, 'err'); return; }
@@ -4810,7 +4906,7 @@ function joinRoom(attempt) {
   }, 15000);
   net.peer.on('open', function() {
     requestWakeLock();
-    var hp = 'p10v20' + code.toLowerCase();
+    var hp = 'p10v21' + code.toLowerCase();
     try { net.hostConn = net.peer.connect(hp, { reliable: true, metadata: { name: myName } }); }
     catch (err) { clearTimeout(connTimeout); setRoomStatus('خطأ الاتصال: ' + err.message, 'err'); return; }
     setupGuestHostConnHandlers(connTimeout);
@@ -5290,19 +5386,71 @@ function renderMatchAnalytics() {
 /* ============================================================
    DAILY CHALLENGE
    ============================================================ */
+/* ============================================================
+   DAILY CHALLENGE — مرحلة عشوائية مصمّمة (قابلة للتنفيذ دائماً)
+   المكافأة تتناسب مع صعوبة المرحلة
+   ============================================================ */
+var DAILY_PHASE_TEMPLATES = [
+  /* 🟢 سهل — 50 عملة */
+  { diff: 1, reward: 50,  desc: 'مجموعة من 3',                  groups: [{kind:'set', size:3}] },
+  { diff: 1, reward: 50,  desc: 'متتالية من 4',                 groups: [{kind:'run', size:4}] },
+  { diff: 1, reward: 50,  desc: 'مجموعة من 4',                  groups: [{kind:'set', size:4}] },
+  { diff: 1, reward: 50,  desc: 'لون من 5',                     groups: [{kind:'color', size:5}] },
+
+  /* 🟡 متوسط — 100 عملة */
+  { diff: 2, reward: 100, desc: 'مجموعة 3 + متتالية 4',         groups: [{kind:'set', size:3}, {kind:'run', size:4}] },
+  { diff: 2, reward: 100, desc: 'مجموعتان × 3',                 groups: [{kind:'set', size:3}, {kind:'set', size:3}] },
+  { diff: 2, reward: 100, desc: 'متتالية من 5',                 groups: [{kind:'run', size:5}] },
+  { diff: 2, reward: 100, desc: 'لون من 6',                     groups: [{kind:'color', size:6}] },
+
+  /* 🟠 صعب — 150 عملة */
+  { diff: 3, reward: 150, desc: 'مجموعة 4 + متتالية 4',         groups: [{kind:'set', size:4}, {kind:'run', size:4}] },
+  { diff: 3, reward: 150, desc: 'متتالية من 6',                 groups: [{kind:'run', size:6}] },
+  { diff: 3, reward: 150, desc: 'مجموعتان × 4',                 groups: [{kind:'set', size:4}, {kind:'set', size:4}] },
+  { diff: 3, reward: 150, desc: 'لون من 7',                     groups: [{kind:'color', size:7}] },
+
+  /* 🔴 خبير — 250 عملة */
+  { diff: 4, reward: 250, desc: 'متتالية من 7',                 groups: [{kind:'run', size:7}] },
+  { diff: 4, reward: 250, desc: 'مجموعة 5 + متتالية 4',         groups: [{kind:'set', size:5}, {kind:'run', size:4}] },
+  { diff: 4, reward: 250, desc: 'مجموعة 5 + مجموعة 3',          groups: [{kind:'set', size:5}, {kind:'set', size:3}] },
+  { diff: 4, reward: 250, desc: '3 مجموعات × 3',                groups: [{kind:'set', size:3}, {kind:'set', size:3}, {kind:'set', size:3}] }
+];
+
 function getDailyChallenge() {
   var today = new Date();
   var seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
   var s = seed;
   var rng = function() { s = (s * 9301 + 49297) % 233280; return s / 233280; };
-  var packs = PHASE_PACKS.map(function(p) { return p.key; });
-  var modes = SPECIAL_MODES.map(function(m) { return m.key; });
+  var tpl = DAILY_PHASE_TEMPLATES[Math.floor(rng() * DAILY_PHASE_TEMPLATES.length)];
   return {
-    pack: packs[Math.floor(rng() * packs.length)],
-    mode: modes[Math.floor(rng() * modes.length)],
+    groups: tpl.groups.slice(),
+    reward: tpl.reward,
+    diff: tpl.diff,
+    desc: tpl.desc,
     dateKey: today.toISOString().slice(0, 10),
     seed: seed
   };
+}
+function dailyChallengeToPhase(d) {
+  var sets = [], runs = [], color = 0;
+  for (var i = 0; i < d.groups.length; i++) {
+    var g = d.groups[i];
+    if (g.kind === 'set') sets.push(g.size);
+    else if (g.kind === 'run') runs.push(g.size);
+    else if (g.kind === 'color') color = g.size;
+  }
+  var diffLabel = d.diff === 1 ? 'سهل' : (d.diff === 2 ? 'متوسط' : (d.diff === 3 ? 'صعب' : 'خبير'));
+  return {
+    sets: sets, runs: runs, color: color,
+    desc: d.desc + ' [' + diffLabel + ']',
+    constraints: { setConstraints: [], runConstraints: [], minTotalPoints: 0, maxTotalPoints: 0 }
+  };
+}
+function getDailyReward() {
+  try {
+    var d = getDailyChallenge();
+    return d.reward || 50;
+  } catch (e) { return 50; }
 }
 function isDailyChallengeDone() {
   try {
@@ -5319,28 +5467,54 @@ function markDailyChallengeDone() {
   } catch (e) {}
   renderDailyBadge();
 }
+function markDailyChallengeDone() {
+  try {
+    var d = getDailyChallenge();
+    if (!app.stats.dailyChallengeDone) app.stats.dailyChallengeDone = {};
+    app.stats.dailyChallengeDone[d.dateKey] = true;
+    saveStatsToStorage();
+  } catch (e) {}
+  renderDailyBadge();
+}
 function renderDailyBadge() {
   var b = $('dailyBadge'); if (!b) return;
   var done = isDailyChallengeDone();
   b.classList.remove('hidden');
   b.classList.toggle('done', done);
   b.textContent = done ? '✓' : 'NEW';
+  /* تحديث نص الزر ليُظهر المرحلة والمكافأة */
+  var btn = $('dailyChallengeBtn');
+  if (btn && !done) {
+    try {
+      var d = getDailyChallenge();
+      var baseText = '🎯 التحدي اليومي';
+      var span = btn.querySelector('.daily-subtitle');
+      if (!span) {
+        span = document.createElement('div');
+        span.className = 'daily-subtitle';
+        span.style.cssText = 'font-size:9.5px;opacity:.75;margin-top:2px;font-weight:600';
+        btn.appendChild(span);
+      }
+      span.textContent = d.desc + ' — +' + d.reward + ' عملة';
+    } catch (e) {}
+  }
 }
 function startDailyChallenge() {
   var d = getDailyChallenge();
-  var pack = null;
-  for (var i = 0; i < PHASE_PACKS.length; i++) if (PHASE_PACKS[i].key === d.pack) { pack = PHASE_PACKS[i]; break; }
-  var mode = null;
-  for (var j = 0; j < SPECIAL_MODES.length; j++) if (SPECIAL_MODES[j].key === d.mode) { mode = SPECIAL_MODES[j]; break; }
-  if (!pack || !mode) return;
-  app.phasePack = d.pack; app.specialMode = d.mode;
-  app.settings.phasePack = d.pack; app.settings.specialMode = d.mode;
-  saveSettingsToStorage();
+  var dailyPhase = dailyChallengeToPhase(d);
+
+  // ✅ تفعيل وضع التحدي اليومي (مرحلة واحدة فقط)
+  app.dailyChallengeActive = true;
+  app.dailyChallengeDateKey = d.dateKey;
+  app.dailyChallengePhase = dailyPhase;
+  app.dailyChallengeReward = d.reward;
+  app.phasePack = 'daily';
+  app.specialMode = 'classic';
   app.localCpuCount = 3;
+
   startCpuGame();
-  setStatus('🎯 التحدي اليومي: ' + pack.name + ' + ' + mode.name, 'var(--purple)');
-  markDailyChallengeDone();
-  unlockAchievement('dailyChallenge');
+  setStatus('🎯 التحدي اليومي: ' + dailyPhase.desc + ' — المكافأة ' + d.reward + ' عملة', 'var(--purple)');
+  // ⚠️ لا نمنح الإنجاز هنا — فقط عند الفوز الفعلي
 }
 
 /* ============================================================
@@ -5944,6 +6118,24 @@ function handleWinAchievements() {
   if ((app.stats.hintsUsedThisMatch || 0) === 0) unlockAndTrack('noHintsUsed');
   if (state.round <= 3) unlockAndTrack('quickWin');
   if (app.stats.totalPenalty >= 200) unlockAndTrack('score200');
+
+  // ✅ إكمال التحدي اليومي فقط عند الفوز
+  if (app.dailyChallengeActive && app.dailyChallengeDateKey) {
+    if (!app.stats.dailyChallengeDone) app.stats.dailyChallengeDone = {};
+    app.stats.dailyChallengeDone[app.dailyChallengeDateKey] = true;
+    saveStatsToStorage();
+    // ✅ مكافأة إضافية بحسب صعوبة المرحلة
+    var bonus = app.dailyChallengeReward || 50;
+    awardMatchCoins(bonus);
+    app.matchRewards.coinsEarned += bonus;
+    app.matchRewards.achievementsUnlocked.push('🎯 التحدي اليومي (+' + bonus + ')');
+    unlockAndTrack('dailyChallenge');
+    app.dailyChallengeActive = false;
+    app.dailyChallengePhase = null;
+    app.dailyChallengeReward = 0;
+    renderDailyBadge();
+    SoundFX.play('reward');
+  }
   recordLeaderboard();
 }
 function handleLossAchievements() {
@@ -5965,6 +6157,14 @@ function handleLossAchievements() {
   if (app.stats.totalPenalty >= 200) unlockAndTrack('score200');
   unlockAndTrack('completeGame');
   if (app.mode === 'cpu') updateCpuSkillAfterGame(false);
+
+  // ✅ فشل التحدي اليومي = لا إنجاز ولا مكافأة
+  if (app.dailyChallengeActive) {
+    app.dailyChallengeActive = false;
+    app.dailyChallengePhase = null;
+    app.dailyChallengeReward = 0;
+    setStatus('❌ لم تكمل التحدي اليومي — حاول مجدداً غداً', 'var(--red)');
+  }
 }
 
 /* ============================================================
@@ -7069,7 +7269,12 @@ function buildPacksGrid(cid) {
     var a = app.phasePack === p.key;
     html += '<button class="pack-btn' + (a ? ' active' : '') + '" data-pack="' + p.key + '" type="button"><span class="pk-name">' + escapeHTML(p.name) + '</span><span class="pk-desc">' + escapeHTML(p.desc) + '</span></button>';
   }
-  var a2 = app.phasePack === 'custom-advanced';
+  // ✅ زر التحدي اليومي داخل قائمة الحزم
+var isDaily = app.phasePack === 'daily';
+if (isDaily) {
+  html += '<button class="pack-btn active" data-pack="daily" type="button"><span class="pk-name">🎯 التحدي اليومي</span><span class="pk-desc">مرحلة عشوائية</span></button>';
+}
+var a2 = app.phasePack === 'custom-advanced';
   html += '<button class="pack-btn' + (a2 ? ' active' : '') + '" data-pack="custom-advanced" type="button"><span class="pk-name">مخصصة</span><span class="pk-desc">تخصيص كامل</span></button>';
   c.innerHTML = html;
 }
@@ -7139,9 +7344,12 @@ function buildMenuPreview() {
    CUSTOM ADVANCED BUILDER
    ============================================================ */
 function ensureCustomAdvancedPhases() {
-  if (!app.customAdvancedPhases || app.customAdvancedPhases.length !== 10) {
+  // ✅ لا نفرض 10 مراحل — نبدأ بـ 5 فقط إن كانت فارغة
+  if (!app.customAdvancedPhases || !Array.isArray(app.customAdvancedPhases)) {
     app.customAdvancedPhases = [];
-    for (var i = 0; i < 10; i++) app.customAdvancedPhases.push({
+  }
+  if (app.customAdvancedPhases.length === 0) {
+    for (var i = 0; i < 5; i++) app.customAdvancedPhases.push({
       desc: 'مرحلة ' + (i + 1),
       groups: [{ kind: 'set', size: 3 }],
       minTotalPoints: 0, maxTotalPoints: 0,
@@ -7159,15 +7367,23 @@ function ensureCustomAdvancedPhases() {
 function buildAdvancedCustomList() {
   ensureCustomAdvancedPhases();
   var list = $('advancedCustomList'); if (!list) return;
+  var total = app.customAdvancedPhases.length;
   var html = '';
-  for (var i = 0; i < 10; i++) html += buildAdvancedPhaseHTML(i, app.customAdvancedPhases[i]);
+
+  // ✅ شريط التحكم بعدد المراحل
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;margin-bottom:10px;background:linear-gradient(160deg,rgba(244,185,66,0.15),rgba(244,185,66,0.05));border-radius:10px;border:1px solid rgba(244,185,66,0.35);gap:8px;flex-wrap:wrap">';
+  html += '<span style="font-size:12.5px;font-weight:900;color:#f4b942">📋 عدد المراحل: ' + total + '</span>';
+  html += '<button class="adv-add-phase-btn" type="button" style="background:linear-gradient(160deg,#5be08f,#22a862);color:#04240f;padding:8px 14px;border-radius:8px;font-size:11.5px;font-weight:900;border:0;cursor:pointer">+ إضافة مرحلة</button>';
+  html += '</div>';
+
+  for (var i = 0; i < total; i++) html += buildAdvancedPhaseHTML(i, app.customAdvancedPhases[i]);
   list.innerHTML = html;
   attachAdvancedPhaseHandlers();
 }
 function buildAdvancedPhaseHTML(idx, ph) {
   var h = '';
   h += '<div class="adv-phase" data-idx="' + idx + '">';
-  h += '<div class="adv-head"><div class="adv-num">' + (idx + 1) + '</div><input type="text" class="adv-title" style="background:transparent;border:0;color:var(--gold);font-weight:800;font-size:12.5px;flex:1;text-align:right;outline:none" value="' + escapeHTML(ph.desc || ('مرحلة ' + (idx + 1))) + '" data-field="desc" maxlength="40"><span class="adv-preview">' + buildPhaseSummary(ph) + '</span></div>';
+  h += '<div class="adv-head"><div class="adv-num">' + (idx + 1) + '</div><input type="text" class="adv-title" style="background:transparent;border:0;color:var(--gold);font-weight:800;font-size:12.5px;flex:1;text-align:right;outline:none" value="' + escapeHTML(ph.desc || ('مرحلة ' + (idx + 1))) + '" data-field="desc" maxlength="40"><button class="adv-remove-phase-btn" data-remove-phase type="button" title="حذف المرحلة" style="background:linear-gradient(160deg,#ef4444,#991b1b);color:#fff;width:26px;height:26px;border-radius:50%;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;border:0;cursor:pointer;flex-shrink:0">×</button><span class="adv-preview">' + buildPhaseSummary(ph) + '</span></div>';
   h += '<div class="adv-section"><div class="adv-section-title"><span>مجموعات / متتاليات / لون</span><button class="adv-add-btn" data-add-group type="button">+ إضافة</button></div>';
   if (ph.groups.length === 0) h += '<div style="font-size:10px;opacity:.6;text-align:center">لا توجد مجموعات</div>';
   for (var g = 0; g < ph.groups.length; g++) {
@@ -7289,9 +7505,45 @@ function attachAdvancedPhaseHandlers() {
       saveAdvancedPhases(); buildAdvancedCustomList();
     };
   })(runToggles[t]);
+
+  // ✅ زر إضافة مرحلة جديدة
+  var addPhaseBtn = list.querySelector('.adv-add-phase-btn');
+  if (addPhaseBtn) addPhaseBtn.onclick = function() {
+    app.customAdvancedPhases.push({
+      desc: 'مرحلة ' + (app.customAdvancedPhases.length + 1),
+      groups: [{ kind: 'set', size: 3 }],
+      minTotalPoints: 0, maxTotalPoints: 0,
+      setConstraints: [], runConstraints: []
+    });
+    saveAdvancedPhases();
+    buildAdvancedCustomList();
+  };
+
+  // ✅ أزرار حذف المراحل
+  var rmPhaseBtns = list.querySelectorAll('[data-remove-phase]');
+  for (var rp = 0; rp < rmPhaseBtns.length; rp++) (function(btn) {
+    btn.onclick = function() {
+      var ph = btn.closest('.adv-phase');
+      var idx = parseInt(ph.getAttribute('data-idx'), 10);
+      if (app.customAdvancedPhases.length <= 1) {
+        alert('يجب وجود مرحلة واحدة على الأقل');
+        return;
+      }
+      if (!confirm('حذف المرحلة ' + (idx + 1) + '؟')) return;
+      app.customAdvancedPhases.splice(idx, 1);
+      // إعادة ترقيم الأوصاف الافتراضية
+      for (var i = 0; i < app.customAdvancedPhases.length; i++) {
+        if (/^مرحلة\s*\d+$/.test(app.customAdvancedPhases[i].desc)) {
+          app.customAdvancedPhases[i].desc = 'مرحلة ' + (i + 1);
+        }
+      }
+      saveAdvancedPhases();
+      buildAdvancedCustomList();
+    };
+  })(rmPhaseBtns[rp]);
 }
 function saveAdvancedPhases() {
-  try { localStorage.setItem('p10v20_advancedPhases', JSON.stringify(app.customAdvancedPhases)); } catch (err) {}
+  try { localStorage.setItem('p10v21_advancedPhases', JSON.stringify(app.customAdvancedPhases)); } catch (err) {}
 }
 function openAdvancedBuilder() {
   ensureCustomAdvancedPhases();
@@ -7313,19 +7565,19 @@ var SHOP_ITEMS = [
   { key: 'complete', name: '⚡ إكمال المرحلة',  desc: 'تلميح قوي لإنهاء مرحلتك',    price: 250, cat: 'خارقة',   needsGame: false }
 ];
 function getSpentCoins() {
-  try { return parseInt(localStorage.getItem('p10v20_spent') || localStorage.getItem('p10v19_spent') || '0', 10) || 0; }
+  try { return parseInt(localStorage.getItem('p10v21_spent') || localStorage.getItem('p10v19_spent') || '0', 10) || 0; }
   catch (e) { return 0; }
 }
 function getAvailableCoins() { return Math.max(0, getTotalCoins() - getSpentCoins()); }
 function spendCoins(amount) {
-  try { localStorage.setItem('p10v20_spent', String(getSpentCoins() + amount)); } catch (e) {}
+  try { localStorage.setItem('p10v21_spent', String(getSpentCoins() + amount)); } catch (e) {}
 }
 function loadInventory() {
-  try { return JSON.parse(localStorage.getItem('p10v20_inventory') || localStorage.getItem('p10v19_inventory') || '[]'); }
+  try { return JSON.parse(localStorage.getItem('p10v21_inventory') || localStorage.getItem('p10v19_inventory') || '[]'); }
   catch (e) { return []; }
 }
 function saveInventory(inv) {
-  try { localStorage.setItem('p10v20_inventory', JSON.stringify(inv)); } catch (e) {}
+  try { localStorage.setItem('p10v21_inventory', JSON.stringify(inv)); } catch (e) {}
 }
 function addToInventory(key) {
   var inv = loadInventory();
@@ -7796,11 +8048,11 @@ function recordCpuMemoryHit(state, hitterId, targetId) {
    PROGRESS & PROFILE
    ============================================================ */
 function loadMatchHistory() {
-  try { return JSON.parse(localStorage.getItem('p10v20_matchHistory') || localStorage.getItem('p10v19_matchHistory') || '[]'); }
+  try { return JSON.parse(localStorage.getItem('p10v21_matchHistory') || localStorage.getItem('p10v19_matchHistory') || '[]'); }
   catch (e) { return []; }
 }
 function saveMatchHistory(history) {
-  try { localStorage.setItem('p10v20_matchHistory', JSON.stringify(history.slice(-GAME_CONST.MAX_HISTORY))); } catch (e) {}
+  try { localStorage.setItem('p10v21_matchHistory', JSON.stringify(history.slice(-GAME_CONST.MAX_HISTORY))); } catch (e) {}
 }
 function recordMatchResult(result, score, rounds, mode, cpuSkill, opponents) {
   var history = loadMatchHistory();
@@ -7817,7 +8069,7 @@ function getPlayerLevel() {
       if (a) totalXP += a.coins || 0;
     }
   }
-  try { totalXP += parseInt(localStorage.getItem('p10v20_matchCoins') || '0', 10); } catch (e) {}
+  try { totalXP += parseInt(localStorage.getItem('p10v21_matchCoins') || '0', 10); } catch (e) {}
   totalXP += (app.stats.totalWins || 0) * GAME_CONST.LEVEL_WIN_XP;
   var level = Math.floor(totalXP / GAME_CONST.LEVEL_XP_BASE) + 1;
   var currentXP = totalXP % GAME_CONST.LEVEL_XP_BASE;
@@ -7996,12 +8248,12 @@ if (ffb) ffb.onclick = function() {
   var rb = $('resumeBtn');
   if (rb) rb.onclick = function() { resumeSavedGame(); };
   var dcb = $('dailyChallengeBtn');
-  if (dcb) dcb.onclick = function() {
-    if (isDailyChallengeDone()) {
-      if (!confirm('أكملت تحدي اليوم بالفعل — هل تريد اللعب مجدداً؟')) return;
-    }
-    startDailyChallenge();
-  };
+if (dcb) dcb.onclick = function() {
+  if (isDailyChallengeDone()) {
+    if (!confirm('أكملت تحدي اليوم بالفعل — هل تريد اللعب مجدداً بدون مكافأة؟')) return;
+  }
+  startDailyChallenge();
+};
 }
 function isFullscreen() {
   return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
@@ -8684,7 +8936,7 @@ if (app.settings.playerName) {
     if (!app.settings.tutorialSeen && !loadMatchHistory().length) {
       setTimeout(function() { openTutorial(0); }, 500);
     }
-    console.log('%c TYEYYIY Phase 10 v20 — القواعد الرسمية ✓ ' + FACE_STYLES.length + ' أوجه + ' + BACK_STYLES.length + ' ظهور', 'color:#f4b942;font-weight:bold;font-size:14px');
+    console.log('%c TYEYYIY Phase 10 v21 — القواعد الرسمية ✓ ' + FACE_STYLES.length + ' أوجه + ' + BACK_STYLES.length + ' ظهور', 'color:#f4b942;font-weight:bold;font-size:14px');
   } catch (err) {
     console.error('Init error:', err);
     alert('خطأ في التهيئة: ' + err.message);
@@ -8704,9 +8956,9 @@ window.p10Debug = {
   applyUpdate: applyUpdateNow,
   resetAll: function() {
     try {
-      ['p10v20_settings','p10v20_achievements','p10v20_stats','p10v20_handOrder',
-       'p10v20_leaderboard','p10v20_advancedPhases','p10v20_inventory','p10v20_spent',
-       'p10v20_matchCoins','p10v20_matchHistory','p10v20_savedGame'].forEach(function(k) {
+      ['p10v21_settings','p10v21_achievements','p10v21_stats','p10v21_handOrder',
+       'p10v21_leaderboard','p10v21_advancedPhases','p10v21_inventory','p10v21_spent',
+       'p10v21_matchCoins','p10v21_matchHistory','p10v21_savedGame'].forEach(function(k) {
         localStorage.removeItem(k);
       });
       location.reload();
