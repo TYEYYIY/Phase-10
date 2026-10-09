@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#123020"/>
+      <stop offset="1" stop-color="#060f0a"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd75e"/>
+      <stop offset="0.5" stop-color="#f4b942"/>
+      <stop offset="1" stop-color="#b97e04"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.4"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#f4b942" stop-opacity="0.25"/>
+      <stop offset="1" stop-color="#f4b942" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="115" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="115" fill="url(#glow)"/>
+
+  <!-- Card -->
+  <rect x="106" y="72" width="300" height="368" rx="42" fill="url(#card)"/>
+  <rect x="106" y="72" width="300" height="184" rx="42" fill="url(#shine)"/>
+  <rect x="106" y="72" width="300" height="368" rx="42" fill="none" stroke="#7a4d00" stroke-width="8"/>
+
+  <!-- Number 10 -->
+  <text x="256" y="340"
+        font-size="220"
+        text-anchor="middle"
+        fill="#1a1200"
+        font-family="Arial, Helvetica, sans-serif"
+        font-weight="900"
+        font-style="italic"
+        letter-spacing="-12">10</text>
+
+  <!-- Corner accents -->
+  <circle cx="148" cy="114" r="18" fill="#e63946"/>
+  <circle cx="364" cy="398" r="18" fill="#2e8bff"/>
+</svg>

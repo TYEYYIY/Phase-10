@@ -8,7 +8,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="format-detection" content="telephone=no">
 <title>TYEYYIY — Phase 10 v21</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23f4b942'/%3E%3Cstop offset='1' stop-color='%23c98a05'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='%230a1410'/%3E%3Crect x='28' y='20' width='44' height='64' rx='6' fill='url(%23g)' stroke='%230a1410' stroke-width='2'/%3E%3Ctext x='50' y='63' font-size='42' text-anchor='middle' fill='%230a1410' font-family='Arial,sans-serif' font-weight='900'%3E10%3C/text%3E%3Ccircle cx='22' cy='78' r='10' fill='%23e63946'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23123020'/%3E%3Cstop offset='1' stop-color='%23060f0a'/%3E%3C/linearGradient%3E%3ClinearGradient id='card' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ffd75e'/%3E%3Cstop offset='0.5' stop-color='%23f4b942'/%3E%3Cstop offset='1' stop-color='%23b97e04'/%3E%3C/linearGradient%3E%3ClinearGradient id='shine' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23ffffff' stop-opacity='0.4'/%3E%3Cstop offset='1' stop-color='%23ffffff' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='115' fill='url(%23bg)'/%3E%3Crect x='106' y='72' width='300' height='368' rx='42' fill='url(%23card)'/%3E%3Crect x='106' y='72' width='300' height='184' rx='42' fill='url(%23shine)'/%3E%3Crect x='106' y='72' width='300' height='368' rx='42' fill='none' stroke='%237a4d00' stroke-width='8'/%3E%3Ctext x='256' y='340' font-size='220' text-anchor='middle' fill='%231a1200' font-family='Arial,Helvetica,sans-serif' font-weight='900' font-style='italic' letter-spacing='-12'%3E10%3C/text%3E%3Ccircle cx='148' cy='114' r='18' fill='%23e63946'/%3E%3Ccircle cx='364' cy='398' r='18' fill='%232e8bff'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23123020'/%3E%3Cstop offset='1' stop-color='%23060f0a'/%3E%3C/linearGradient%3E%3ClinearGradient id='card' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ffd75e'/%3E%3Cstop offset='0.5' stop-color='%23f4b942'/%3E%3Cstop offset='1' stop-color='%23b97e04'/%3E%3C/linearGradient%3E%3ClinearGradient id='shine' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23ffffff' stop-opacity='0.4'/%3E%3Cstop offset='1' stop-color='%23ffffff' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='115' fill='url(%23bg)'/%3E%3Crect x='106' y='72' width='300' height='368' rx='42' fill='url(%23card)'/%3E%3Crect x='106' y='72' width='300' height='184' rx='42' fill='url(%23shine)'/%3E%3Crect x='106' y='72' width='300' height='368' rx='42' fill='none' stroke='%237a4d00' stroke-width='8'/%3E%3Ctext x='256' y='340' font-size='220' text-anchor='middle' fill='%231a1200' font-family='Arial,Helvetica,sans-serif' font-weight='900' font-style='italic' letter-spacing='-12'%3E10%3C/text%3E%3Ccircle cx='148' cy='114' r='18' fill='%23e63946'/%3E%3Ccircle cx='364' cy='398' r='18' fill='%232e8bff'/%3E%3C/svg%3E">
+<link rel="mask-icon" href="icon.svg" color="#f4b942">
 <script src="peerjs.min.js"></script>
 <link rel="manifest" href="manifest.json">
 <script>
@@ -1946,6 +1948,302 @@ body.no-glow .pile .clickable::after { display: none !important; }
 .inline-fullscreen-btn:hover { filter: brightness(1.1); }
 .inline-fullscreen-btn:active { transform: translateY(-50%) scale(0.88); }
 .inline-fullscreen-btn svg { pointer-events: none; display: block; }
+/* ===== تصميم Wild و Skip الأصلي ===== */
+.p10-card.wild,
+.p10-card.skip {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+}
+.p10-card.wild .center-dot,
+.p10-card.skip .center-dot {
+  width: 80% !important;
+  height: 60% !important;
+  background: #fff !important;
+  border-radius: 4px !important;
+}
+.p10-card.wild .center-num,
+.p10-card.skip .center-num {
+  font-size: 1.2em !important;
+  font-weight: 900 !important;
+  letter-spacing: 1px !important;
+}
+.p10-card.wild .center-num { color: #000 !important; }
+.p10-card.skip .center-num { color: #000 !important; }
+
+/* زوايا ملونة */
+.p10-card.wild .tl-num, .p10-card.wild .br-num,
+.p10-card.skip .tl-num, .p10-card.skip .br-num {
+  color: #fff !important;
+}
+.p10-card.wild .tl-dot, .p10-card.wild .br-dot,
+.p10-card.skip .tl-dot, .p10-card.skip .br-dot {
+  background: #fff !important;
+}
+
+/* ===== ظهر البطاقة الأصلي ===== */
+.back-phase10-original {
+  background: linear-gradient(160deg, #0a1b4d, #061032) !important;
+  border: 2.5px solid #fff !important;
+  position: relative;
+  overflow: hidden;
+}
+.back-phase10-original::before {
+  content: 'Phase 10';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+  font-weight: 900;
+  font-style: italic;
+  color: #f4b942;
+  text-shadow: 0 0 10px rgba(244,185,66,0.8), 2px 2px 0 #000;
+  transform: rotate(-15deg);
+  z-index: 2;
+}
+.back-phase10-original::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border-radius: 4px;
+  border: 1px dashed rgba(244,185,66,0.6);
+  box-shadow: inset 0 0 20px rgba(244,185,66,0.2);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ============================================================
+   REAL PHASE 10 DESIGN v3 — رأس المثلث في زاوية البطاقة
+   ============================================================ */
+
+/* 1️⃣ إخفاء النقاط الدائرية نهائياً */
+.p10-card .tl-dot,
+.p10-card .br-dot {
+  display: none !important;
+}
+
+/* 2️⃣ بطاقة الرقم — خلفية بيضاء نقية */
+.p10-card.face-phase10-classic {
+  background: #fefefe !important;
+  border: 2.5px solid #ffffff !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,0.10),
+    inset 0 2px 4px rgba(0,0,0,0.05),
+    0 3px 8px rgba(0,0,0,0.42) !important;
+}
+
+/* ───── الزاوية العلوية: رأس المثلث في زاوية البطاقة ───── */
+.p10-card.face-phase10-classic .tl-corner {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 44% !important;
+  height: 44% !important;
+  background: var(--cc) !important;
+  /* رأس المثلث (النقطة) عند (0,0) — زاوية البطاقة */
+  clip-path: polygon(0 0, 100% 0, 0 100%) !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+  overflow: visible !important;
+}
+.p10-card.face-phase10-classic .tl-num {
+  position: absolute !important;
+  top: 8% !important;
+  left: 10% !important;
+  color: #ffffff !important;
+  font-size: 0.58em !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+  margin: 0 !important;
+  display: block !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* ───── الزاوية السفلية: رأس المثلث في زاوية البطاقة ───── */
+.p10-card.face-phase10-classic .br-corner {
+  position: absolute !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  width: 44% !important;
+  height: 44% !important;
+  background: var(--cc) !important;
+  /* رأس المثلث (النقطة) عند (100%, 100%) — زاوية البطاقة */
+  clip-path: polygon(100% 100%, 0 100%, 100% 0) !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  display: block !important;
+  overflow: visible !important;
+}
+.p10-card.face-phase10-classic .br-num {
+  position: absolute !important;
+  bottom: 8% !important;
+  right: 10% !important;
+  color: #ffffff !important;
+  font-size: 0.58em !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+  margin: 0 !important;
+  display: block !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* ───── الرقم المركزي: كبير، واضح، ومتوازن ───── */
+.p10-card.face-phase10-classic .center-dot {
+  width: auto !important;
+  height: auto !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.p10-card.face-phase10-classic .center-num {
+  color: var(--cc) !important;
+  font-size: 2.1em !important;
+  font-weight: 900 !important;
+  text-shadow: 0 2px 0 rgba(0,0,0,0.06) !important;
+  letter-spacing: -0.05em !important;
+  line-height: 0.9 !important;
+  text-align: center !important;
+  display: block !important;
+  font-variant-numeric: tabular-nums !important;
+  /* تحسين توازن الأرقام المزدوجة (10، 11، 12) */
+  padding: 0 0.1em !important;
+}
+
+/* 3️⃣ Wild — خلفية سوداء مع W ذهبية */
+.p10-card.face-phase10-classic.wild {
+  background: linear-gradient(160deg, #1c1c1c 0%, #050505 100%) !important;
+  border: 2.5px solid #ffffff !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(244,185,66,0.4),
+    0 3px 8px rgba(0,0,0,0.6),
+    0 0 14px rgba(244,185,66,0.35) !important;
+}
+.p10-card.face-phase10-classic.wild .tl-corner,
+.p10-card.face-phase10-classic.wild .br-corner {
+  background: #f4b942 !important;
+}
+.p10-card.face-phase10-classic.wild .tl-num,
+.p10-card.face-phase10-classic.wild .br-num {
+  color: #1c1c1c !important;
+  text-shadow: 0 1px 1px rgba(255,255,255,0.35) !important;
+}
+.p10-card.face-phase10-classic.wild .center-num {
+  color: #f4b942 !important;
+  font-size: 1.45em !important;
+  letter-spacing: 0.04em !important;
+  text-shadow: 0 0 10px rgba(244,185,66,0.85), 0 2px 4px rgba(0,0,0,0.9) !important;
+}
+
+/* 4️⃣ Skip — خلفية زرقاء داكنة مع S بيضاء */
+.p10-card.face-phase10-classic.skip {
+  background: linear-gradient(160deg, #0f1d4a 0%, #050a1a 100%) !important;
+  border: 2.5px solid #ffffff !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(74,105,189,0.5),
+    0 3px 8px rgba(0,0,0,0.6),
+    0 0 14px rgba(74,105,189,0.4) !important;
+}
+.p10-card.face-phase10-classic.skip .tl-corner,
+.p10-card.face-phase10-classic.skip .br-corner {
+  background: #4a69bd !important;
+}
+.p10-card.face-phase10-classic.skip .tl-num,
+.p10-card.face-phase10-classic.skip .br-num {
+  color: #ffffff !important;
+}
+.p10-card.face-phase10-classic.skip .center-num {
+  color: #ffffff !important;
+  font-size: 1.45em !important;
+  letter-spacing: 0.04em !important;
+  text-shadow: 0 0 10px rgba(74,105,189,0.85), 0 2px 4px rgba(0,0,0,0.9) !important;
+}
+
+/* 5️⃣ ظهر البطاقة الأصلي — شعار Phase 10 متناسق */
+.back-phase10-original {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(244,185,66,0.10) 0 42%, transparent 68%),
+    linear-gradient(160deg, #0a1b4d 0%, #061032 60%, #020718 100%) !important;
+  border: 2.5px solid #ffffff !important;
+  box-shadow:
+    inset 0 0 0 2px #061032,
+    inset 0 0 0 3px rgba(244,185,66,0.7),
+    inset 0 2px 12px rgba(0,0,0,0.5),
+    0 3px 8px rgba(0,0,0,0.5) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  /* نص الصورة: دائرة الشعار في المنتصف */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+/* إزالة أي pseudo-elements قديمة قد تسبب مشاكل */
+.back-phase10-original::before,
+.back-phase10-original::after {
+  display: none !important;
+}
+/* شعار Phase 10 داخل span مضمّن */
+.back-phase10-original > .back-logo {
+  position: relative;
+  z-index: 3;
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  font-style: italic;
+  font-weight: 900;
+  color: #f4b942;
+  font-size: 0.72em;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  text-align: center;
+  text-shadow:
+    0 0 8px rgba(244,185,66,0.9),
+    1px 1px 0 rgba(0,0,0,0.75),
+    -0.5px -0.5px 0 rgba(255,255,255,0.1);
+  transform: rotate(-8deg);
+  white-space: nowrap;
+  padding: 0 6%;
+  pointer-events: none;
+  user-select: none;
+}
+/* 4 بطاقات صغيرة ملونة في الزوايا (خلف الشعار) */
+.back-phase10-original > .back-bg {
+  position: absolute;
+  inset: 14%;
+  border-radius: 4px;
+  background:
+    linear-gradient(135deg, #ff3b4e 0 20%, transparent 20%),
+    linear-gradient(225deg, #2e8bff 0 20%, transparent 20%),
+    linear-gradient(45deg, #12d17a 0 20%, transparent 20%),
+    linear-gradient(-45deg, #ffcb1f 0 20%, transparent 20%);
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 1;
+  border: 1px dashed rgba(244,185,66,0.5);
+  box-shadow: inset 0 0 18px rgba(244,185,66,0.15);
+}
+
+/* 6️⃣ تصحيح البطاقات الصغيرة في القوائم والمعروضات */
+.setting-item .preview-card .p10-card .center-num,
+.meld .p10-card .center-num {
+  font-size: 1.15em !important;
+}
+.setting-item .preview-card .p10-card .tl-num,
+.setting-item .preview-card .p10-card .br-num,
+.meld .p10-card .tl-num,
+.meld .p10-card .br-num {
+  font-size: 0.5em !important;
+}
+
 </style>
 <script>
 "use strict";
@@ -1953,7 +2251,7 @@ body.no-glow .pile .clickable::after { display: none !important; }
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '21.2.2';
+var APP_VERSION = '21.4.2';
 var APP_BUILD_DATE = '1-9-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
 var UPDATE_CHECK_INTERVAL_MS = 30 * 60 * 1000; /* 30 دقيقة */
@@ -3882,6 +4180,13 @@ function _buildCardHTMLInternal(card, options) {
 function buildCardBackHTML(extraClass) {
   var cls = 'back ' + app.settings.backStyle;
   if (extraClass) cls += ' ' + extraClass;
+  /* ⛑️ إضافة العناصر الداخلية لظهر Phase 10 الأصلي */
+  if (app.settings.backStyle === 'back-phase10-original') {
+    return '<div class="p10-card ' + cls + '">' +
+             '<div class="back-bg"></div>' +
+             '<div class="back-logo">Phase 10</div>' +
+           '</div>';
+  }
   return '<div class="p10-card ' + cls + '"></div>';
 }
 function buildPreviewCardHTML(faceStyle, backStyle, colorKey, value) {
@@ -4201,8 +4506,16 @@ function renderCardPiles(state, vId) {
   var canDeck = isMyTurn && !state.hasDrawn && state.deck.length > 0;
   var canDisc = isMyTurn && !state.hasDrawn && top && top.type !== 'skip';
   var dEl = $('drawDeckBtn');
-  dEl.className = 'p10-card back ' + app.settings.backStyle + (canDeck ? ' clickable' : '');
-  dEl.style.position = 'relative';
+dEl.className = 'p10-card back ' + app.settings.backStyle + (canDeck ? ' clickable' : '');
+dEl.style.position = 'relative';
+/* ⛑️ إعادة بناء محتوى ظهر Phase 10 الأصلي */
+if (app.settings.backStyle === 'back-phase10-original') {
+  if (!dEl.querySelector('.back-logo')) {
+    dEl.innerHTML = '<div class="back-bg"></div><div class="back-logo">Phase 10</div>';
+  }
+} else if (dEl.querySelector('.back-logo')) {
+  dEl.innerHTML = '';
+}
   var sEl = $('discardSlot');
   if (top) sEl.innerHTML = '<div class="' + (canDisc ? 'clickable' : '') + '" style="position:relative">' + buildCardHTML(top) + '</div>';
   else sEl.innerHTML = buildCardBackHTML();
@@ -5249,7 +5562,7 @@ function _pickAutoDiscard(state, pId) {
   var candidates = [];
   for (var i = 0; i < p.hand.length; i++) {
     var c = p.hand[i];
-    if (c.type === 'wild') continue; /* لا تتخلص من Wild أبداً */
+    if (c.type === 'wild') continue; /* نفضّل عدم التخلص من Wild */
     var usefulness = 0;
     if (c.type === 'num' && phase) {
       for (var j = 0; j < p.hand.length; j++) {
@@ -5260,10 +5573,12 @@ function _pickAutoDiscard(state, pId) {
         if (o.type === 'num' && o.col === c.col && Math.abs(o.value - c.value) === 2) usefulness += 3;
       }
     }
-    /* الأولوية: قيمة عالية + فائدة منخفضة = مرشح للتخلص */
     candidates.push({ card: c, score: getCardValue(c) * 2 - usefulness });
   }
-  if (candidates.length === 0) return null;
+  /* ⛑️ شبكة أمان: لو كل اليد Wild، اختر أول بطاقة (لن يتجمد) */
+  if (candidates.length === 0) {
+    return p.hand[0] || null;
+  }
   candidates.sort(function(a, b) { return b.score - a.score; });
   return candidates[0].card;
 }
@@ -5271,16 +5586,58 @@ function autoPlayMyTurn() {
   var state = app.state; if (!state || state.gameOver) return;
   if (state.turnIndex !== app.myPlayerId && state.turnIndex !== app.viewerId) return;
   var pId = (app.mode === 'lan') ? app.myPlayerId : app.viewerId;
-  function doAutoDiscard() {
-    if (app.state !== state || !state.hasDrawn) return;
-    var pick = _pickAutoDiscard(state, pId);
-    if (pick) { state.selected = [pick.id]; actionDiscard(); }
+
+  /* ⛑️ إجبار الدور على التقدّم عند الفشل */
+  function forceAdvance() {
+    try {
+      if (app.state !== state || state.gameOver) return;
+      state.selected = []; state.hintCards = []; state.hasDrawn = false;
+      advanceTurn(state, 1);
+      resetRenderCache(); scheduleRender();
+      setTimeout(function() { if (app.state === state && !state.gameOver) startTurnIfNeeded(); }, 600);
+    } catch (e) { console.error('forceAdvance error:', e); }
   }
-  if (!state.hasDrawn) {
-    actionDraw('deck');
-    setTimeout(doAutoDiscard, 600);
-  } else {
-    doAutoDiscard();
+
+  function doAutoDiscard() {
+    try {
+      if (app.state !== state || !state.hasDrawn) { forceAdvance(); return; }
+      var pick = _pickAutoDiscard(state, pId);
+      if (!pick && state.players[pId] && state.players[pId].hand.length > 0) {
+        pick = state.players[pId].hand[0]; /* fallback قسري */
+      }
+      if (pick) {
+        state.selected = [pick.id];
+        actionDiscard();
+      } else {
+        forceAdvance();
+      }
+    } catch (err) {
+      console.error('autoPlayMyTurn discard error:', err);
+      forceAdvance();
+    }
+  }
+
+  try {
+    if (!state.hasDrawn) {
+      actionDraw('deck');
+      /* ⛑️ تأكد أن السحب نجح قبل جدولة التخلص */
+      setTimeout(function() {
+        if (app.state !== state || state.gameOver) return;
+        if (state.hasDrawn) {
+          doAutoDiscard();
+        } else if (app.dealing) {
+          /* نفاد الرزمة — اترك handleDeckExhaustion يكمل عمله */
+          return;
+        } else {
+          forceAdvance();
+        }
+      }, 600);
+    } else {
+      doAutoDiscard();
+    }
+  } catch (err) {
+    console.error('autoPlayMyTurn error:', err);
+    forceAdvance();
   }
 }
 
@@ -5457,15 +5814,6 @@ function isDailyChallengeDone() {
     var d = getDailyChallenge();
     return app.stats.dailyChallengeDone && app.stats.dailyChallengeDone[d.dateKey] === true;
   } catch (e) { return false; }
-}
-function markDailyChallengeDone() {
-  try {
-    var d = getDailyChallenge();
-    if (!app.stats.dailyChallengeDone) app.stats.dailyChallengeDone = {};
-    app.stats.dailyChallengeDone[d.dateKey] = true;
-    saveStatsToStorage();
-  } catch (e) {}
-  renderDailyBadge();
 }
 function markDailyChallengeDone() {
   try {
@@ -8757,8 +9105,9 @@ var updateState = { lastCheck: 0, checking: false, found: false, latestVersion: 
 
 /* ✅ معاينة سريعة للبيانات المحفوظة (للتحقق من الأمان) */
 function _previewLocalStorage() {
-  var keys = ['p10v20_settings','p10v20_achievements','p10v20_stats',
-              'p10v20_matchCoins','p10v20_matchHistory','p10v20_leaderboard'];
+  var keys = ['p10v21_settings','p10v21_achievements','p10v21_stats',
+              'p10v21_matchCoins','p10v21_matchHistory','p10v21_leaderboard',
+              'p10v21_advancedPhases','p10v21_inventory','p10v21_spent'];
   var out = {};
   for (var i = 0; i < keys.length; i++) {
     try { out[keys[i]] = localStorage.getItem(keys[i]) || '(فارغ)'; } catch (e) {}
@@ -8844,7 +9193,8 @@ function backupLocalStorageForUpdate() {
     var snapshot = {};
     for (var i = 0; i < localStorage.length; i++) {
       var k = localStorage.key(i);
-      if (k && k.indexOf('p10v20_') === 0) {
+      /* ⛑️ نجمع كل مفاتيح اللعبة أياً كان إصدارها (p10v19 / p10v20 / p10v21 ...) */
+      if (k && /^p10v\d+_/.test(k)) {
         snapshot[k] = localStorage.getItem(k);
       }
     }
@@ -8966,13 +9316,16 @@ function initializeApp() {
     if (wasRestored) {
       console.info('[TYEYYIY] ✓ تم استعادة بياناتك بعد التحديث');
     }
-    // ✅ إعادة تحميل الإعدادات بعد الاستعادة
-    app.settings = loadSettingsFromStorage();
-    app.achievements = loadAchievementsFromStorage();
-    try {
-      var ss = localStorage.getItem('p10v20_stats');
-      if (ss) { var ps = JSON.parse(ss); for (var sk in ps) app.stats[sk] = ps[sk]; }
-    } catch (e) {}
+// ✅ إعادة تحميل الإعدادات بعد الاستعادة
+app.settings = loadSettingsFromStorage();
+app.achievements = loadAchievementsFromStorage();
+/* ⛑️ نقرأ stats بمفتاح الإصدار الحالي مع دعم الإصدارات القديمة */
+try {
+  var ss = localStorage.getItem('p10v21_stats')
+        || localStorage.getItem('p10v20_stats')
+        || localStorage.getItem('p10v19_stats');
+  if (ss) { var ps = JSON.parse(ss); for (var sk in ps) app.stats[sk] = ps[sk]; }
+} catch (e) {}
 
     applySettingsToDOM();
     buildMenuPreview();
@@ -9018,6 +9371,45 @@ if (app.settings.playerName) {
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initializeApp);
 else initializeApp();
+
+/* ⛑️ شبكة أمان: إذا مرّ أكثر من 45 ثانية دون أي تغيير في الدور → أجبر الدور على التقدّم */
+var _lastTurnWatchdogKey = '';
+var _lastTurnWatchdogTime = 0;
+setInterval(function() {
+  if (!app.state || app.state.gameOver) return;
+  if (app.mode !== 'cpu' && app.mode !== 'pass') return;
+  if (app.busy || app.dealing) return;
+  /* ⛑️ لا تتدخّل أثناء نوافذ النتائج أو الانتظار */
+  if (app.pendingRoundScore) return;
+  var rsm = $('roundScoreModal');
+  if (rsm && !rsm.classList.contains('hidden')) return;
+  var psm = $('passOverlay');
+  if (psm && !psm.classList.contains('hidden')) return;
+  var scm = $('sideChoiceModal');
+  if (scm && !scm.classList.contains('hidden')) return;
+  var st = app.state;
+  var cp = st.players[st.turnIndex];
+  if (!cp) return;
+  /* تجاهل دور الـ CPU (لديه مؤقت داخلي) */
+  if (cp.isCPU && app.mode === 'cpu') return;
+  var key = st.turnNumber + '_' + st.turnIndex + '_' + st.round;
+  if (key !== _lastTurnWatchdogKey) {
+    _lastTurnWatchdogKey = key;
+    _lastTurnWatchdogTime = Date.now();
+    return;
+  }
+  /* مرّ 45 ثانية على نفس الدور بدون تقدّم → تدخّل */
+  if (Date.now() - _lastTurnWatchdogTime > 45000) {
+    _lastTurnWatchdogTime = Date.now();
+    console.warn('[Watchdog] الدور متجمّد — إجبار على التقدّم');
+    try {
+      st.selected = []; st.hintCards = []; st.hasDrawn = false;
+      advanceTurn(st, 1);
+      resetRenderCache(); scheduleRender();
+      setTimeout(function() { if (app.state === st && !st.gameOver) startTurnIfNeeded(); }, 500);
+    } catch (e) { console.error('Watchdog error:', e); }
+  }
+}, 5000);
 
 /* Diagnostics */
 window.p10Debug = {

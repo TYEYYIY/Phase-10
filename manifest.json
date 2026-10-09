@@ -1,32 +1,26 @@
 {
-  "name": "TYEYYIY — Phase 10",
+  "name": "TYEYYIY Phase 10",
   "short_name": "Phase 10",
-  "description": "لعبة الورق الشهيرة Phase 10 — القواعد الرسمية، 10 مراحل متتالية، أوضاع لعب متعددة، وذكاء اصطناعي متقدم.",
+  "description": "لعبة الورق الشهيرة — القواعد الرسمية",
+  "lang": "ar",
+  "dir": "rtl",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0a1410",
-  "theme_color": "#0a1410",
-  "lang": "ar",
-  "dir": "rtl",
+  "theme_color": "#f4b942",
   "categories": ["games", "entertainment"],
   "icons": [
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23f4b942'/%3E%3Cstop offset='1' stop-color='%23c98a05'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='%230a1410'/%3E%3Crect x='28' y='20' width='44' height='64' rx='6' fill='url(%23g)' stroke='%230a1410' stroke-width='2'/%3E%3Ctext x='50' y='63' font-size='42' text-anchor='middle' fill='%230a1410' font-family='Arial,sans-serif' font-weight='900'%3E10%3C/text%3E%3Ccircle cx='22' cy='78' r='10' fill='%23e63946'/%3E%3C/svg%3E",
-      "sizes": "192x192",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23123020'/%3E%3Cstop offset='1' stop-color='%23060f0a'/%3E%3C/linearGradient%3E%3ClinearGradient id='card' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ffd75e'/%3E%3Cstop offset='0.5' stop-color='%23f4b942'/%3E%3Cstop offset='1' stop-color='%23b97e04'/%3E%3C/linearGradient%3E%3ClinearGradient id='shine' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23ffffff' stop-opacity='0.4'/%3E%3Cstop offset='1' stop-color='%23ffffff' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='115' fill='url(%23bg)'/%3E%3Crect x='106' y='72' width='300' height='368' rx='42' fill='url(%23card)'/%3E%3Crect x='106' y='72' width='300' height='184' rx='42' fill='url(%23shine)'/%3E%3Crect x='106' y='72' width='300' height='368' rx='42' fill='none' stroke='%237a4d00' stroke-width='8'/%3E%3Ctext x='256' y='340' font-size='220' text-anchor='middle' fill='%231a1200' font-family='Arial,Helvetica,sans-serif' font-weight='900' font-style='italic' letter-spacing='-12'%3E10%3C/text%3E%3Ccircle cx='148' cy='114' r='18' fill='%23e63946'/%3E%3Ccircle cx='364' cy='398' r='18' fill='%232e8bff'/%3E%3C/svg%3E",
+      "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23f4b942'/%3E%3Cstop offset='1' stop-color='%23c98a05'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='%230a1410'/%3E%3Crect x='28' y='20' width='44' height='64' rx='6' fill='url(%23g)' stroke='%230a1410' stroke-width='2'/%3E%3Ctext x='50' y='63' font-size='42' text-anchor='middle' fill='%230a1410' font-family='Arial,sans-serif' font-weight='900'%3E10%3C/text%3E%3Ccircle cx='22' cy='78' r='10' fill='%23e63946'/%3E%3C/svg%3E",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230a1410'/%3E%3Crect x='28' y='20' width='44' height='64' rx='6' fill='%23f4b942'/%3E%3Ctext x='50' y='63' font-size='42' text-anchor='middle' fill='%230a1410' font-family='Arial,sans-serif' font-weight='900'%3E10%3C/text%3E%3C/svg%3E",
-      "sizes": "512x512",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23123020'/%3E%3Cstop offset='1' stop-color='%23060f0a'/%3E%3C/linearGradient%3E%3ClinearGradient id='card' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ffd75e'/%3E%3Cstop offset='0.5' stop-color='%23f4b942'/%3E%3Cstop offset='1' stop-color='%23b97e04'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' fill='%230a1410'/%3E%3Crect x='156' y='122' width='200' height='268' rx='28' fill='url(%23card)'/%3E%3Crect x='156' y='122' width='200' height='268' rx='28' fill='none' stroke='%237a4d00' stroke-width='6'/%3E%3Ctext x='256' y='318' font-size='150' text-anchor='middle' fill='%231a1200' font-family='Arial,Helvetica,sans-serif' font-weight='900' font-style='italic' letter-spacing='-8'%3E10%3C/text%3E%3Ccircle cx='186' cy='152' r='12' fill='%23e63946'/%3E%3Ccircle cx='326' cy='360' r='12' fill='%232e8bff'/%3E%3C/svg%3E",
+      "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "maskable"
     }
