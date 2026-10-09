@@ -476,7 +476,7 @@
     <div class="settings-tabs">
       <button class="settings-tab active" data-tab="general" type="button">عام</button>
       <button class="settings-tab" data-tab="face" type="button">الأوجه (17)</button>
-      <button class="settings-tab" data-tab="back" type="button">الظهور (17)</button>
+      <button class="settings-tab" data-tab="back" type="button">الظهور (18)</button>
     </div>
     <div id="tab-general" class="settings-tab-content">
       <h3>الاسم</h3>
@@ -527,7 +527,7 @@
       <div class="settings-grid" id="faceGrid"></div>
     </div>
     <div id="tab-back" class="settings-tab-content hidden">
-      <p style="text-align:center;font-size:10px;color:#8fa5a0;margin-bottom:7px">17 تصميم ظهور فريد</p>
+      <p style="text-align:center;font-size:10px;color:#8fa5a0;margin-bottom:7px">18 تصميم ظهور فريد</p>
       <div class="settings-grid" id="backGrid"></div>
     </div>
     <button class="primary" id="closeSettings" type="button">حفظ وإغلاق</button>
@@ -579,7 +579,7 @@
     <p style="text-align:center;font-size:11px;color:#8fa5a0;margin-bottom:12px">اختر تصميمك المفضل</p>
     <div class="settings-tabs">
       <button class="settings-tab active" data-gtab="faces" type="button">الأوجه (17)</button>
-      <button class="settings-tab" data-gtab="backs" type="button">الظهور (17)</button>
+      <button class="settings-tab" data-gtab="backs" type="button">الظهور (18)</button>
     </div>
     <div class="settings-grid" id="galleryGrid" style="grid-template-columns:repeat(auto-fill,minmax(80px,1fr))"></div>
     <button class="primary" id="closeGallery" type="button">إغلاق</button>
@@ -8755,6 +8755,18 @@ var APP_DEV_INFO = {
    ============================================================ */
 var updateState = { lastCheck: 0, checking: false, found: false, latestVersion: '' };
 
+/* ✅ معاينة سريعة للبيانات المحفوظة (للتحقق من الأمان) */
+function _previewLocalStorage() {
+  var keys = ['p10v20_settings','p10v20_achievements','p10v20_stats',
+              'p10v20_matchCoins','p10v20_matchHistory','p10v20_leaderboard'];
+  var out = {};
+  for (var i = 0; i < keys.length; i++) {
+    try { out[keys[i]] = localStorage.getItem(keys[i]) || '(فارغ)'; } catch (e) {}
+  }
+  return out;
+}
+window.p10DebugPreviewBackup = _previewLocalStorage;
+
 function _extractVersionFromHTML(html) {
   if (!html) return null;
   var m = html.match(/var\s+APP_VERSION\s*=\s*['"]([^'"]+)['"]/);
@@ -8821,14 +8833,63 @@ function _showUpdateToast(msg, isErr) {
   }
 }
 
+/* ============================================================
+   BACKUP SYSTEM — نسخ احتياطي قبل أي تحديث
+   ============================================================ */
+var BACKUP_KEY = 'p10v20_updateBackup';
+var BACKUP_MAX_AGE_MS = 5 * 60 * 1000; // 5 دقائق
+
+function backupLocalStorageForUpdate() {
+  try {
+    var snapshot = {};
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k && k.indexOf('p10v20_') === 0) {
+        snapshot[k] = localStorage.getItem(k);
+      }
+    }
+    var payload = {
+      ts: Date.now(),
+      data: snapshot,
+      version: (typeof APP_VERSION !== 'undefined') ? APP_VERSION : 'unknown'
+    };
+    localStorage.setItem(BACKUP_KEY, JSON.stringify(payload));
+    return true;
+  } catch (e) { return false; }
+}
+
+function restoreFromUpdateBackup() {
+  try {
+    var raw = localStorage.getItem(BACKUP_KEY);
+    if (!raw) return false;
+    var payload = JSON.parse(raw);
+    if (!payload || !payload.data) { localStorage.removeItem(BACKUP_KEY); return false; }
+    // تجاهل النسخ القديمة
+    if (Date.now() - (payload.ts || 0) > BACKUP_MAX_AGE_MS) {
+      localStorage.removeItem(BACKUP_KEY);
+      return false;
+    }
+    var restored = 0;
+    for (var k in payload.data) {
+      if (payload.data.hasOwnProperty(k)) {
+        localStorage.setItem(k, payload.data[k]);
+        restored++;
+      }
+    }
+    localStorage.removeItem(BACKUP_KEY);
+    return restored > 0;
+  } catch (e) { return false; }
+}
+
 function applyUpdateNow() {
-  // إزالة الـ Service Worker + الـ Caches ثم إعادة تحميل قسري
+  // ✅ 1) نسخة احتياطية كاملة قبل أي شيء
+  backupLocalStorageForUpdate();
+
   var done = false;
   function finish() {
     if (done) return;
     done = true;
     try {
-      // Bypass cache بالكامل عبر إعادة تحميل مع parameter عشوائي
       var u = new URL(location.href);
       u.searchParams.set('_u', Date.now());
       location.replace(u.toString());
@@ -8855,7 +8916,7 @@ function applyUpdateNow() {
 
   if (promises.length === 0) { finish(); return; }
   Promise.all(promises).then(finish).catch(finish);
-  setTimeout(finish, 3000); // أمان
+  setTimeout(finish, 3000);
 }
 
 function buildAboutScreen() {
@@ -8900,6 +8961,19 @@ function attachAboutHandlers() {
    ============================================================ */
 function initializeApp() {
   try {
+    // ✅ استعادة البيانات إن كان هناك تحديث جارٍ
+    var wasRestored = restoreFromUpdateBackup();
+    if (wasRestored) {
+      console.info('[TYEYYIY] ✓ تم استعادة بياناتك بعد التحديث');
+    }
+    // ✅ إعادة تحميل الإعدادات بعد الاستعادة
+    app.settings = loadSettingsFromStorage();
+    app.achievements = loadAchievementsFromStorage();
+    try {
+      var ss = localStorage.getItem('p10v20_stats');
+      if (ss) { var ps = JSON.parse(ss); for (var sk in ps) app.stats[sk] = ps[sk]; }
+    } catch (e) {}
+
     applySettingsToDOM();
     buildMenuPreview();
     attachMenuHandlers();
