@@ -2251,7 +2251,7 @@ body.no-glow .pile .clickable::after { display: none !important; }
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '21.4.2';
+var APP_VERSION = '21.4.3';
 var APP_BUILD_DATE = '1-9-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
 var UPDATE_CHECK_INTERVAL_MS = 30 * 60 * 1000; /* 30 دقيقة */
@@ -3277,10 +3277,10 @@ function advancedToPhaseFormat(adv) {
 
   // ✅ إذا الوصف المخصص هو مجرد "مرحلة N" أو فارغ → استخدم التلقائي
   var userDesc = (adv && adv.desc) ? String(adv.desc).trim() : '';
-  var isPlaceholder = !userDesc
-    || /^مرحلة\s*\d*\s*$/.test(userDesc)
-    || userDesc === 'مرحلة مخصصة';
-
+var isPlaceholder = !userDesc
+  || /^مرحلة\s*\d*\s*$/.test(userDesc)
+  || userDesc === 'مرحلة مخصصة'
+  || /فردي|زوجي/.test(userDesc);   /* ← أضف هذا السطر */
   var finalDesc;
   if (isPlaceholder) {
     finalDesc = autoDesc || 'مرحلة مخصصة';
@@ -3540,10 +3540,8 @@ function tryExtractSet(available, size, constraint) {
 }
 function _checkRunParity(lo, hi, parity) {
   if (!parity || parity === CONSTRAINTS.PARITY_ANY) return true;
-  for (var v = lo; v <= hi; v++) {
-    if (parity === CONSTRAINTS.PARITY_ODD && v % 2 === 0) return false;
-    if (parity === CONSTRAINTS.PARITY_EVEN && v % 2 !== 0) return false;
-  }
+  if (parity === CONSTRAINTS.PARITY_ODD && lo % 2 === 0) return false;
+  if (parity === CONSTRAINTS.PARITY_EVEN && lo % 2 !== 0) return false;
   return true;
 }
 function tryExtractRun(available, size, constraint) {
@@ -3554,39 +3552,49 @@ function tryExtractRun(available, size, constraint) {
     if (c.type === 'wild') wilds.push(c);
     else if (c.type === 'num') byCol[c.col].push(c);
   }
+  var parity = (constraint && constraint.parity && constraint.parity !== CONSTRAINTS.PARITY_ANY)
+               ? constraint.parity : 'any';
+  var step = (parity === 'odd' || parity === 'even') ? 2 : 1;
+
   for (var col = 0; col < 4; col++) {
     var nums = byCol[col];
-    for (var low = 1; low <= 12 - size + 1; low++) {
-      var high = low + size - 1;
-      if (constraint && !_checkRunParity(low, high, constraint.parity)) continue;
-      var used = {};
-      var picked = [];
-      var missing = [];
-      for (var v = low; v <= high; v++) {
+    for (var low = 1; low <= 12; low++) {
+      if (parity === 'odd'  && low % 2 === 0) continue;
+      if (parity === 'even' && low % 2 !== 0) continue;
+      var high = low + (size - 1) * step;
+      if (high > 12) break;
+
+      var used = {}, picked = [], missing = [];
+      for (var v = low; v <= high; v += step) {
         var found = null;
-        for (var n = 0; n < nums.length; n++) if (nums[n].value === v && !used[nums[n].id]) { found = nums[n]; break; }
+        for (var n = 0; n < nums.length; n++) {
+          if (nums[n].value === v && !used[nums[n].id]) { found = nums[n]; break; }
+        }
         if (found) { picked.push(found); used[found.id] = true; }
         else missing.push(v);
       }
+      if (picked.length === 0) continue;
       if (missing.length > wilds.length) continue;
+
       var prefixEnd = low;
-      while (missing.indexOf(prefixEnd) >= 0) prefixEnd++;
+      while (missing.indexOf(prefixEnd) >= 0) prefixEnd += step;
       var suffixStart = high;
-      while (missing.indexOf(suffixStart) >= 0) suffixStart--;
+      while (missing.indexOf(suffixStart) >= 0) suffixStart -= step;
       var valid = true;
       for (var m = 0; m < missing.length; m++) {
         if (missing[m] >= prefixEnd && missing[m] <= suffixStart) { valid = false; break; }
       }
       if (!valid) continue;
+
       var result = [];
       var wIdx = 0;
-      for (var v2 = low; v2 <= high; v2++) {
+      for (var v2 = low; v2 <= high; v2 += step) {
         var f2 = null;
-        for (var n2 = 0; n2 < picked.length; n2++) if (picked[n2].value === v2) { f2 = picked[n2]; break; }
-        if (f2) result.push(f2);
-        else result.push(wilds[wIdx++]);
+        for (var n2 = 0; n2 < picked.length; n2++)
+          if (picked[n2].value === v2) { f2 = picked[n2]; break; }
+        if (f2) result.push(f2); else result.push(wilds[wIdx++]);
       }
-      return { type: 'run', lo: low, hi: high, col: col, cards: result };
+      return { type: 'run', lo: low, hi: high, col: col, step: step, cards: result };
     }
   }
   return null;
@@ -3644,58 +3652,60 @@ function extractLongestRun(available, minSize, constraint) {
     if (c.type === 'num') byCol[c.col].push(c);
     else if (c.type === 'wild') wilds.push(c);
   }
+  var parity = (constraint && constraint.parity && constraint.parity !== CONSTRAINTS.PARITY_ANY)
+               ? constraint.parity : 'any';
+  var step = (parity === 'odd' || parity === 'even') ? 2 : 1;
   var best = null;
+
   for (var col = 0; col < 4; col++) {
     var nums = byCol[col].slice().sort(function(a, b) { return a.value - b.value; });
-    for (var s = 1; s <= 12 - minSize + 1; s++) {
-      var sOriginal = s;
-      var e = s + minSize - 1;
-      for (var ext = e + 1; ext <= 12; ext++) {
+    for (var low = 1; low <= 12; low++) {
+      if (parity === 'odd'  && low % 2 === 0) continue;
+      if (parity === 'even' && low % 2 !== 0) continue;
+      var minHigh = low + (minSize - 1) * step;
+      if (minHigh > 12) break;
+
+      /* مد المتتالية لأقصى مدى ممكن */
+      var high = minHigh;
+      var ext = high + step;
+      while (ext <= 12) {
         var has = false;
         for (var n = 0; n < nums.length; n++) if (nums[n].value === ext) { has = true; break; }
-        if (has) e = ext; else break;
+        if (has || wilds.length > 0) { high = ext; ext += step; }
+        else break;
       }
-      if (wilds.length > 0) {
-        var used0 = {}; var picked0 = []; var missing0 = [];
-        for (var v0 = s; v0 <= e; v0++) {
-          var f0 = null;
-          for (var nn = 0; nn < nums.length; nn++) if (nums[nn].value === v0 && !used0[nums[nn].id]) { f0 = nums[nn]; break; }
-          if (f0) { picked0.push(f0); used0[f0.id] = true; } else missing0.push(v0);
-        }
-        var wildsUsedInside = missing0.length;
-        var wildsLeft = wilds.length - wildsUsedInside;
-        var sLocal = s; var eLocal = e;
-        while (wildsLeft > 0 && sLocal > 1) { sLocal--; wildsLeft--; }
-        while (wildsLeft > 0 && eLocal < 12) { eLocal++; wildsLeft--; }
-        s = sLocal; e = eLocal;
-      }
-      if (constraint && !_checkRunParity(s, e, constraint.parity)) {
-        s = sOriginal; e = sOriginal + minSize - 1; continue;
-      }
-      var used = {}; var picked = []; var missing = [];
-      for (var v = s; v <= e; v++) {
+
+      var used = {}, picked = [], missing = [];
+      for (var v = low; v <= high; v += step) {
         var f = null;
-        for (var n2 = 0; n2 < nums.length; n2++) if (nums[n2].value === v && !used[nums[n2].id]) { f = nums[n2]; break; }
+        for (var n2 = 0; n2 < nums.length; n2++)
+          if (nums[n2].value === v && !used[nums[n2].id]) { f = nums[n2]; break; }
         if (f) { picked.push(f); used[f.id] = true; } else missing.push(v);
       }
-      if (missing.length > wilds.length) { s = sOriginal; e = sOriginal + minSize - 1; continue; }
-      var prefixEnd = s; while (missing.indexOf(prefixEnd) >= 0) prefixEnd++;
-      var suffixStart = e; while (missing.indexOf(suffixStart) >= 0) suffixStart--;
-      var valid = true;
+      if (picked.length === 0) continue;
+      if (missing.length > wilds.length) continue;
+
+      var prefixEnd = low;
+      while (missing.indexOf(prefixEnd) >= 0) prefixEnd += step;
+      var suffixStart = high;
+      while (missing.indexOf(suffixStart) >= 0) suffixStart -= step;
+      var ok = true;
       for (var m = 0; m < missing.length; m++) {
-        if (missing[m] >= prefixEnd && missing[m] <= suffixStart) { valid = false; break; }
+        if (missing[m] >= prefixEnd && missing[m] <= suffixStart) { ok = false; break; }
       }
-      if (!valid) { s = sOriginal; e = sOriginal + minSize - 1; continue; }
+      if (!ok) continue;
+
       var result = [];
       var wIdx = 0;
-      for (var v2 = s; v2 <= e; v2++) {
+      for (var v2 = low; v2 <= high; v2 += step) {
         var f2 = null;
-        for (var n3 = 0; n3 < picked.length; n3++) if (picked[n3].value === v2) { f2 = picked[n3]; break; }
-        if (f2) result.push(f2);
-        else result.push(wilds[wIdx++]);
+        for (var n3 = 0; n3 < picked.length; n3++)
+          if (picked[n3].value === v2) { f2 = picked[n3]; break; }
+        if (f2) result.push(f2); else result.push(wilds[wIdx++]);
       }
-      if (!best || result.length > best.cards.length) best = { type: 'run', lo: s, hi: e, col: col, cards: result };
-      s = sOriginal; e = sOriginal + minSize - 1;
+      if (!best || result.length > best.cards.length) {
+        best = { type: 'run', lo: low, hi: high, col: col, step: step, cards: result };
+      }
     }
   }
   return best;
@@ -3778,13 +3788,14 @@ function _tryExactOrder(cards, phase, rS, rR, rC, order) {
           if (meld.cards[cc].type === 'wild') totalPoints += meld.num;
           else totalPoints += meld.cards[cc].value;
         }
-      } else if (meld.type === 'run') {
-        for (var vv = meld.lo; vv <= meld.hi; vv++) {
-          var found = null;
-          for (var rr = 0; rr < meld.cards.length; rr++) if (meld.cards[rr].type === 'num' && meld.cards[rr].value === vv) { found = meld.cards[rr]; break; }
-          if (found) totalPoints += found.value; else totalPoints += vv;
-        }
-      } else if (meld.type === 'color') {
+     } else if (meld.type === 'run') {
+  var runStep = meld.step || 1;
+  for (var vv = meld.lo; vv <= meld.hi; vv += runStep) {
+    var found = null;
+    for (var rr = 0; rr < meld.cards.length; rr++) if (meld.cards[rr].type === 'num' && meld.cards[rr].value === vv) { found = meld.cards[rr]; break; }
+    if (found) totalPoints += found.value; else totalPoints += vv;
+  }
+} else if (meld.type === 'color') {
         for (var c4 = 0; c4 < meld.cards.length; c4++) {
           if (meld.cards[c4].type === 'wild') totalPoints += 5;
           else totalPoints += meld.cards[c4].value;
@@ -3807,11 +3818,12 @@ function analyzeFlexible(cards, phase) {
   requiredTotal += rqCChk;
   if (cards.length !== requiredTotal) return null;
   var avail = cards.slice(); var all = [];
-  var rS = 20;
-  while (avail.length >= 4 && rS > 0) {
-    rS--;
-    var rm = extractLongestRun(avail, 4, null);
-    if (!rm) break;
+var rS = 20;
+var runConstraint = (phase.constraints && phase.constraints.runConstraints && phase.constraints.runConstraints[0]) || null;
+while (avail.length >= 4 && rS > 0) {
+  rS--;
+  var rm = extractLongestRun(avail, 4, runConstraint);
+  if (!rm) break;
     all.push(rm);
     for (var r = 0; r < rm.cards.length; r++) { var ix2 = avail.indexOf(rm.cards[r]); if (ix2 >= 0) avail.splice(ix2, 1); }
   }
@@ -3856,10 +3868,9 @@ function analyzeFlexible(cards, phase) {
         if (_setPar === 'even' && _meld.num % 2 !== 0) return null;
       }
       if (_meld.type === 'run' && _runPar !== 'any') {
-        for (var _v = _meld.lo; _v <= _meld.hi; _v++) {
-          if (_runPar === 'odd' && _v % 2 === 0) return null;
-          if (_runPar === 'even' && _v % 2 !== 0) return null;
-        }
+  if ((_meld.step || 1) !== 2) return null;
+  if (_runPar === 'odd'  && _meld.lo % 2 === 0) return null;
+  if (_runPar === 'even' && _meld.lo % 2 !== 0) return null;
       }
     }
   }
@@ -3912,6 +3923,29 @@ function findBestMeldsForPhase(hand, phaseObj) {
     for (var b = 0; b < rm.cards.length; b++) { var ix2 = avail.indexOf(rm.cards[b]); if (ix2 >= 0) avail.splice(ix2, 1); }
   }
   if (rC) { var cm = tryExtractColor(avail, rC); if (!cm) return null; melds.push(cm); }
+  if (constraints && (constraints.minTotalPoints || constraints.maxTotalPoints)) {
+    var tp = 0;
+    for (var mi = 0; mi < melds.length; mi++) {
+      var md = melds[mi];
+      if (md.type === 'set') {
+        for (var cc = 0; cc < md.cards.length; cc++)
+          tp += md.cards[cc].type === 'wild' ? md.num : md.cards[cc].value;
+      } else if (md.type === 'run') {
+        var rSt = md.step || 1;
+        for (var vv = md.lo; vv <= md.hi; vv += rSt) {
+          var f = null;
+          for (var rr = 0; rr < md.cards.length; rr++)
+            if (md.cards[rr].type === 'num' && md.cards[rr].value === vv) { f = md.cards[rr]; break; }
+          tp += f ? f.value : vv;
+        }
+      } else if (md.type === 'color') {
+        for (var c4 = 0; c4 < md.cards.length; c4++)
+          tp += md.cards[c4].type === 'wild' ? 5 : md.cards[c4].value;
+      }
+    }
+    if (constraints.minTotalPoints && tp < constraints.minTotalPoints) return null;
+    if (constraints.maxTotalPoints && tp > constraints.maxTotalPoints) return null;
+  }
   return melds.length > 0 ? melds : null;
 }
 function findBestHintForPhase(hand, phaseObj) {
@@ -3959,21 +3993,25 @@ function canHitMeld(card, meld) {
     return null;
   }
   if (meld.type === 'run') {
-    if (card.type === 'num' && card.col !== meld.col) return null;
-    var canLeft = meld.lo > 1;
-    var canRight = meld.hi < 12;
-    if (card.type === 'wild') {
-      if (canLeft && canRight) return { meld: meld, side: 'both' };
-      if (canRight) return { meld: meld, side: 'right' };
-      if (canLeft) return { meld: meld, side: 'left' };
-      return null;
-    }
-    if (card.type === 'num') {
-      if (card.value === meld.hi + 1 && canRight) return { meld: meld, side: 'right' };
-      if (card.value === meld.lo - 1 && canLeft) return { meld: meld, side: 'left' };
-    }
+  var runStep = meld.step || 1;
+  var runParity = runStep === 2 ? (meld.lo % 2 === 1 ? 'odd' : 'even') : null;
+  if (card.type === 'num' && card.col !== meld.col) return null;
+  if (card.type === 'num' && runParity === 'odd'  && card.value % 2 === 0) return null;
+  if (card.type === 'num' && runParity === 'even' && card.value % 2 !== 0) return null;
+  var canLeft  = (meld.lo - runStep) >= 1;
+  var canRight = (meld.hi + runStep) <= 12;
+  if (card.type === 'wild') {
+    if (canLeft && canRight) return { meld: meld, side: 'both' };
+    if (canRight) return { meld: meld, side: 'right' };
+    if (canLeft)  return { meld: meld, side: 'left' };
+    return null;
   }
-  return null;
+  if (card.type === 'num') {
+    if (card.value === meld.hi + runStep && canRight) return { meld: meld, side: 'right' };
+    if (card.value === meld.lo - runStep && canLeft)  return { meld: meld, side: 'left' };
+  }
+}
+return null;
 }
 function findAllMeldsForCard(state, pId, card) {
   if (!state || !state.players || !card) return [];
@@ -4019,14 +4057,15 @@ function countHittableCards(state, pId, cards) {
       if (all.length === 0) continue;
       var m2 = all[0].meld;
       var side = all[0].side === 'both' ? 'right' : all[0].side;
-      if (m2.type === 'run') {
-        if (side === 'left' && m2.lo <= 1) continue;
-        if (side === 'right' && m2.hi >= 12) continue;
-      }
-      if (m2.type === 'run') {
-        if (side === 'left') { m2.cards.unshift(card); m2.lo = card.type === 'num' ? card.value : m2.lo - 1; }
-        else { m2.cards.push(card); m2.hi = card.type === 'num' ? card.value : m2.hi + 1; }
-      } else m2.cards.push(card);
+      var m2Step = m2.type === 'run' ? (m2.step || 1) : 1;
+if (m2.type === 'run') {
+  if (side === 'left'  && (m2.lo - m2Step) < 1)  continue;
+  if (side === 'right' && (m2.hi + m2Step) > 12) continue;
+}
+if (m2.type === 'run') {
+  if (side === 'left') { m2.cards.unshift(card); m2.lo = card.type === 'num' ? card.value : m2.lo - m2Step; }
+  else { m2.cards.push(card); m2.hi = card.type === 'num' ? card.value : m2.hi + m2Step; }
+} else m2.cards.push(card);
       remaining.splice(r, 1);
       count++;
       progress = true;
@@ -4044,15 +4083,21 @@ function performHit(state, pId, card, hit, preferredSide) {
   if (hi < 0) return false;
   var m = hit.meld;
   var side = hit.side;
+  var runStep = m.type === 'run' ? (m.step || 1) : 1;
   if (side === 'both') side = preferredSide || 'right';
   if (m.type === 'run') {
-    if (side === 'left' && m.lo <= 1) return false;
-    if (side === 'right' && m.hi >= 12) return false;
+    if (side === 'left'  && (m.lo - runStep) < 1)  return false;
+    if (side === 'right' && (m.hi + runStep) > 12) return false;
   }
   p.hand.splice(hi, 1);
   if (m.type === 'run') {
-    if (side === 'left') { m.cards.unshift(card); if (card.type === 'num') m.lo = card.value; else m.lo -= 1; }
-    else { m.cards.push(card); if (card.type === 'num') m.hi = card.value; else m.hi += 1; }
+    if (side === 'left') {
+      m.cards.unshift(card);
+      if (card.type === 'num') m.lo = card.value; else m.lo -= runStep;
+    } else {
+      m.cards.push(card);
+      if (card.type === 'num') m.hi = card.value; else m.hi += runStep;
+    }
   } else m.cards.push(card);
   return true;
 }
@@ -4483,7 +4528,11 @@ function renderAllMelds(state, vId) {
       newRendered[key] = true;
       var tl;
       if (meld.type === 'set') tl = 'مجموعة ' + meld.num;
-      else if (meld.type === 'run') tl = 'متتالية ' + meld.lo + '-' + meld.hi + ' (' + COLORS[meld.col || 0].name + ')';
+      else if (meld.type === 'run') {
+  var rs = meld.step || 1;
+  var label = rs === 2 ? (meld.lo % 2 ? 'متتالية فردية' : 'متتالية زوجية') : 'متتالية';
+  tl = label + ' ' + meld.lo + '⬅️' + meld.hi + ' (' + COLORS[meld.col || 0].name + ')';
+}
       else tl = 'لون ' + COLORS[meld.col].name;
       var canHit = !!hittableMap[pi2 + '_' + mi2];
       var extra = canHit ? ' can-hit' : '';
@@ -4555,13 +4604,21 @@ $('inventoryBtn').onclick = function() { openInventory(); };
 $('btnHit').onclick = function() { actionHit(); };
 $('btnDiscard').onclick = function() { actionDiscard(); };
   }
-  $('btnDraw').disabled = !canDraw;
-  $('btnLay').disabled = false;
-  $('btnLay').style.opacity = canLay ? '1' : '0.35';
-  $('btnLay').style.cursor = canLay ? 'pointer' : 'not-allowed';
-  $('btnClear').disabled = !canClear;
-  $('btnHit').disabled = !canHit;
-  $('btnDiscard').disabled = !canDiscard;
+  var bDraw = $('btnDraw');
+if (bDraw) {
+  bDraw.disabled = !canDraw;
+  /* ⛑️ إعادة ربط الـ handler في حال فُقد */
+  if (!bDraw.__bound) {
+    bDraw.__bound = true;
+    bDraw.onclick = function() { if (!app.busy || app.mode !== 'lan') actionDraw('deck'); };
+  }
+}
+$('btnLay').disabled = false;
+$('btnLay').style.opacity = canLay ? '1' : '0.35';
+$('btnLay').style.cursor = canLay ? 'pointer' : 'not-allowed';
+$('btnClear').disabled = !canClear;
+$('btnHit').disabled = !canHit;
+$('btnDiscard').disabled = !canDiscard;
   var db = $('btnDiscard');
   var dLabel = 'تخلص';
   if (maxD > 1) { dLabel = sel.length >= 1 ? ('تخلص ' + sel.length + '/' + maxD) : ('تخلص 1-' + maxD); }
@@ -4796,7 +4853,8 @@ function buildStateForPeer(state, vId) {
     var mc = [];
     for (var mm = 0; mm < p.melds.length; mm++) {
       var m = p.melds[mm];
-      mc.push({ type: m.type, num: m.num, col: m.col, lo: m.lo, hi: m.hi, phase: m.phase, cards: m.cards.slice() });
+      mc.push({ type: m.type, num: m.num, col: m.col, lo: m.lo, hi: m.hi,
+          step: m.step || 1, phase: m.phase, cards: m.cards.slice() });
     }
     players.push({
       id: p.id, name: p.name, isCPU: p.isCPU, hand: hc, handCount: p.hand.length,
@@ -5874,7 +5932,9 @@ function actionDraw(fromWhere) {
   var pId = app.viewerId;
   if (state.turnIndex !== pId) return;
   if (state.hasDrawn) return;
-  if (app.busy) return;
+  /* ⛑️ اسمح بالسحب في الوضع المحلي حتى لو كان busy عالقاً */
+  if (app.busy && app.mode === 'lan') return;
+  if (app.busy) app.busy = false;
   SoundFX.ensureContext();
   if (isGuest()) { setBusy(true); setStatus('جاري السحب...'); sendToHost({ type: 'action', action: 'draw', payload: { from: fromWhere } }); return; }
   if (isDeckExhausted(state)) { handleDeckExhaustion(state); return; }
@@ -5949,7 +6009,8 @@ function adjustWildPositions(melds, player) {
   for (var m = 0; m < melds.length; m++) {
     var meld = melds[m];
     if (meld.type !== 'run') continue;
-    var wilds = [];
+if ((meld.step || 1) !== 1) continue;
+var wilds = [];
     var numerics = [];
     for (var c = 0; c < meld.cards.length; c++) {
       var card = meld.cards[c];
@@ -6356,22 +6417,32 @@ function actionDiscard() {
     });
   }
   if (skipCount > 0) {
-    if (pId === app.myPlayerId) {
-      app.stats.skipsUsed += skipCount;
-      saveStatsToStorage();
-      if (app.stats.skipsUsed >= 5) unlockAchievement('useSkip5');
-    }
-    var adv = 1 + skipCount;
-    pushActionLog(state, pId, 'skip', '⏭️ تخطّى ' + skipCount + ' لاعب');
-    advanceTurn(state, adv);
-    if (state.playerCount === 2) setStatus('Skip! دورك مجدداً');
-    else setStatus('Skip ×' + skipCount + '! تخطي ' + skipCount + ' لاعبين');
-    if (player.hand.length === 0) { checkWinOrNewRound(state, pId); return; }
-    resetRenderCache(); scheduleRender(); syncStateToPeers();
-    setTimeout(function() { if (app.state === state && !state.gameOver) startTurnIfNeeded(); }, 700);
-    autoSaveGame();
-    return;
+  if (pId === app.myPlayerId) {
+    app.stats.skipsUsed += skipCount;
+    saveStatsToStorage();
+    if (app.stats.skipsUsed >= 5) unlockAchievement('useSkip5');
   }
+  var adv = 1 + skipCount;
+  pushActionLog(state, pId, 'skip', '⏭️ تخطّى ' + skipCount + ' لاعب');
+  advanceTurn(state, adv);
+  if (state.playerCount === 2) setStatus('Skip! دورك مجدداً');
+  else setStatus('Skip ×' + skipCount + '! تخطي ' + skipCount + ' لاعبين');
+  if (player.hand.length === 0) { checkWinOrNewRound(state, pId); return; }
+  /* ⛑️ إصلاح التجمّد: صفّر الأعلام العالقة وأعد بناء الحالة */
+  app.busy = false;
+  app.dealing = false;
+  if (renderRafId) { try { cancelAnimationFrame(renderRafId); } catch (e) {} renderRafId = 0; }
+  state.selected = []; state.hintCards = []; state.hasDrawn = false;
+  resetRenderCache();
+  /* ⛑️ استدعِ تحديث الزراء مباشرة — لا تعتمد على rAF */
+  try { performFullRender(); } catch (e) { console.error('Skip render error:', e); }
+  updateActionsButtons();
+  updateHandDisabledState();
+  syncStateToPeers();
+  setTimeout(function() { if (app.state === state && !state.gameOver) startTurnIfNeeded(); }, 700);
+  autoSaveGame();
+  return;
+}
   advanceTurn(state, 1);
   setStatus(player.name + ' تخلص' + (discarded.length > 1 ? ' من ' + discarded.length + ' بطاقات' : ''));
   resetRenderCache(); scheduleRender(); syncStateToPeers();
@@ -6521,6 +6592,12 @@ function handleLossAchievements() {
 function startTurnIfNeeded() {
   var state = app.state; if (!state || state.gameOver) return;
   var cp = state.players[state.turnIndex]; if (!cp) return;
+
+  /* ⛑️ شبكة أمان: صفّر أي علم عالق في الوضع المحلي */
+  if (app.mode === 'cpu' || app.mode === 'pass') {
+    app.busy = false;
+    app.dealing = false;
+  }
 
   /* ⛑️ شبكة أمان: لو اللاعب الحالي يده فارغة والجولة لم تُنهَ → أعد الفحص */
   if (cp.hand.length === 0) {
@@ -6993,7 +7070,8 @@ function serializeMeld(m) {
   if (!m) return null;
   var cards = [];
   for (var i = 0; i < (m.cards || []).length; i++) cards.push(serializeCard(m.cards[i]));
-  return { type: m.type, num: m.num, col: m.col, lo: m.lo, hi: m.hi, phase: m.phase, cards: cards };
+  return { type: m.type, num: m.num, col: m.col, lo: m.lo, hi: m.hi,
+           step: m.step || 1, phase: m.phase, cards: cards };
 }
 function deserializeMeld(o) {
   if (!o || !o.type) return null;
@@ -7002,6 +7080,7 @@ function deserializeMeld(o) {
   if (o.col !== undefined) m.col = o.col;
   if (o.lo !== undefined) m.lo = o.lo;
   if (o.hi !== undefined) m.hi = o.hi;
+  if (o.step !== undefined) m.step = o.step;
   for (var i = 0; i < (o.cards || []).length; i++) {
     var c = deserializeCard(o.cards[i]);
     if (c) m.cards.push(c);
@@ -8843,8 +8922,8 @@ function attachLobbyHandlers() {
 function attachGameHandlers() {
   var ddb = $('drawDeckBtn');
   if (ddb) {
-    ddb.onclick = function() { if (!app.busy) actionDraw('deck'); };
-    ddb.onkeydown = function(e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (!app.busy) actionDraw('deck'); } };
+    ddb.onclick = function() { if (!app.busy || app.mode !== 'lan') actionDraw('deck'); };
+    ddb.onkeydown = function(e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (!app.busy || app.mode !== 'lan') actionDraw('deck'); } };
   }
   var ds = $('discardSlot');
   if (ds) {
@@ -9378,7 +9457,19 @@ var _lastTurnWatchdogTime = 0;
 setInterval(function() {
   if (!app.state || app.state.gameOver) return;
   if (app.mode !== 'cpu' && app.mode !== 'pass') return;
-  if (app.busy || app.dealing) return;
+  /* ⛑️ في الوضع المحلي: لو busy عالق لوقت طويل، صفّره */
+  if (app.busy) {
+    app._busyStuckSince = app._busyStuckSince || Date.now();
+    if (Date.now() - app._busyStuckSince > 8000) {
+      console.warn('[Watchdog] app.busy عالق — تصفير');
+      app.busy = false;
+      app._busyStuckSince = 0;
+    }
+    return;
+  } else {
+    app._busyStuckSince = 0;
+  }
+  if (app.dealing) return;
   /* ⛑️ لا تتدخّل أثناء نوافذ النتائج أو الانتظار */
   if (app.pendingRoundScore) return;
   var rsm = $('roundScoreModal');
