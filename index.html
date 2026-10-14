@@ -2251,7 +2251,7 @@ body.no-glow .pile .clickable::after { display: none !important; }
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '21.4.3';
+var APP_VERSION = '21.5.0';
 var APP_BUILD_DATE = '1-9-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
 var UPDATE_CHECK_INTERVAL_MS = 30 * 60 * 1000; /* 30 دقيقة */
@@ -3146,6 +3146,9 @@ function scheduleRender() {
     try { performFullRender(); } catch (err) { console.error('Render error:', err); }
   });
 }
+
+function resetResetMeldsCache() { previouslyRenderedMelds = {}; }
+
 function resetRenderCache() { for (var k in renderCache) renderCache[k] = ''; }
 window.addEventListener('resize', function() {
   resetRenderCache();
@@ -3253,42 +3256,54 @@ function getCurrentPhasePack() {
 }
 function advancedToPhaseFormat(adv) {
   var sets = [], runs = [], color = 0;
-  if (adv && adv.groups) for (var i = 0; i < adv.groups.length; i++) {
-    var g = adv.groups[i];
-    if (g.kind === 'set') sets.push(g.size);
-    else if (g.kind === 'run') runs.push(g.size);
-    else if (g.kind === 'color') color = g.size;
-  }
-  var setParity = (adv && adv.setConstraints && adv.setConstraints[0] && adv.setConstraints[0].parity) || 'any';
-  var runParity = (adv && adv.runConstraints && adv.runConstraints[0] && adv.runConstraints[0].parity) || 'any';
-  var setC = []; for (var si = 0; si < sets.length; si++) setC.push({ parity: setParity });
-  var runC = []; for (var ri = 0; ri < runs.length; ri++) runC.push({ parity: runParity });
+  var setC = [], runC = [];
+  /* دعم القراءة من الهيكل الجديد والقديم */
+  var legacySetParity = (adv && adv.setConstraints && adv.setConstraints[0] && adv.setConstraints[0].parity) || 'any';
+  var legacyRunParity = (adv && adv.runConstraints && adv.runConstraints[0] && adv.runConstraints[0].parity) || 'any';
 
-  // ✅ توليد وصف تلقائي من محتوى المرحلة
+  if (adv && adv.groups) {
+    for (var i = 0; i < adv.groups.length; i++) {
+      var g = adv.groups[i];
+      var parity = (typeof g.parity === 'string') ? g.parity
+                 : (g.kind === 'set' ? legacySetParity
+                 : (g.kind === 'run' ? legacyRunParity : 'any'));
+      if (g.kind === 'set') {
+        sets.push(g.size);
+        setC.push({ parity: parity });
+      } else if (g.kind === 'run') {
+        runs.push(g.size);
+        runC.push({ parity: parity });
+      } else if (g.kind === 'color') {
+        color = g.size;
+      }
+    }
+  }
+
+  /* ✅ وصف تلقائي مفصّل بقيد كل مجموعة */
   var autoParts = [];
   if (adv && adv.groups) for (var ai = 0; ai < adv.groups.length; ai++) {
     var ag = adv.groups[ai];
     var aname = ag.kind === 'set' ? 'مجموعة' : (ag.kind === 'run' ? 'متتالية' : 'لون');
-    autoParts.push(aname + ' ' + ag.size);
+    var agParity = (typeof ag.parity === 'string') ? ag.parity
+                 : (ag.kind === 'set' ? legacySetParity
+                 : (ag.kind === 'run' ? legacyRunParity : 'any'));
+    var suf = '';
+    if ((ag.kind === 'set' || ag.kind === 'run') && agParity && agParity !== 'any') {
+      suf = ' ' + (agParity === 'odd' ? 'فردية' : 'زوجية');
+    }
+    autoParts.push(aname + ' ' + ag.size + suf);
   }
   var autoDesc = autoParts.join(' + ');
-  if (setParity === 'odd' || runParity === 'odd') autoDesc += ' • فردي';
-  else if (setParity === 'even' || runParity === 'even') autoDesc += ' • زوجي';
 
-  // ✅ إذا الوصف المخصص هو مجرد "مرحلة N" أو فارغ → استخدم التلقائي
   var userDesc = (adv && adv.desc) ? String(adv.desc).trim() : '';
-var isPlaceholder = !userDesc
-  || /^مرحلة\s*\d*\s*$/.test(userDesc)
-  || userDesc === 'مرحلة مخصصة'
-  || /فردي|زوجي/.test(userDesc);   /* ← أضف هذا السطر */
+  var isPlaceholder = !userDesc
+    || /^مرحلة\s*\d*\s*$/.test(userDesc)
+    || userDesc === 'مرحلة مخصصة'
+    || /فردي|زوجي/.test(userDesc);
   var finalDesc;
-  if (isPlaceholder) {
-    finalDesc = autoDesc || 'مرحلة مخصصة';
-  } else if (autoDesc && userDesc !== autoDesc) {
-    finalDesc = userDesc + ' — ' + autoDesc;
-  } else {
-    finalDesc = userDesc || autoDesc || 'مرحلة مخصصة';
-  }
+  if (isPlaceholder) finalDesc = autoDesc || 'مرحلة مخصصة';
+  else if (autoDesc && userDesc !== autoDesc) finalDesc = userDesc + ' — ' + autoDesc;
+  else finalDesc = userDesc || autoDesc || 'مرحلة مخصصة';
 
   return {
     sets: sets, runs: runs, color: color,
@@ -3334,14 +3349,17 @@ function newGame(configs, spCfg, packKey) {
   var firstDiscard = pickInitialDiscard(deck);
   var discard = firstDiscard ? [firstDiscard] : [];
   return {
-    players: players, deck: deck, discard: discard,
-    turnIndex: Math.floor(Math.random() * players.length),
-    hasDrawn: false, selected: [], round: 1, roundLog: [], hintCards: [],
-    playerCount: players.length, specialCfg: spCfg,
-    phasesLimit: spCfg.phasesLimit || phases.length,
-    phasesList: phases, phasePackKey: pack.key,
-    turnNumber: 1, aiFirstLayTurn: {}, actionLog: []
-  };
+  players: players, deck: deck, discard: discard,
+  turnIndex: Math.floor(Math.random() * players.length),
+  hasDrawn: false, selected: [], round: 1, roundLog: [], hintCards: [],
+  playerCount: players.length, specialCfg: spCfg,
+  phasesLimit: spCfg.phasesLimit || phases.length,
+  phasesList: phases, phasePackKey: pack.key,
+  turnNumber: 1, aiFirstLayTurn: {}, actionLog: [],
+  /* ✅ مزامنة إعدادات المضيف للجميع */
+  turnTimerEnabled: app.settings.turnTimerEnabled === true,
+  turnTimerSeconds: app.settings.turnTimerSeconds || 30
+};
 }
 function startNewRound(state, winnerId) {
   var summary = { winnerName: '', players: [] };
@@ -3729,8 +3747,9 @@ function extractLargestColorGroup(available, minSize, constraint) {
   return null;
 }
 function analyzeExact(cards, phase) {
-  var rS = (phase.sets || []).slice().sort(function(a, b) { return b - a; });
-  var rR = (phase.runs || []).slice().sort(function(a, b) { return b - a; });
+  /* ⚠️ لا نرتّب — للحفاظ على تطابق القيود مع كل مجموعة */
+var rS = (phase.sets || []).slice();
+var rR = (phase.runs || []).slice();
   var rC = phase.color || 0;
   var total = 0;
   for (var i = 0; i < rS.length; i++) total += rS[i];
@@ -3901,8 +3920,8 @@ function analyzeSelection(cards, phaseObj) {
 }
 function findBestMeldsForPhase(hand, phaseObj) {
   if (!phaseObj) return null;
-  var rS = (phaseObj.sets || []).slice().sort(function(a, b) { return b - a; });
-  var rR = (phaseObj.runs || []).slice().sort(function(a, b) { return b - a; });
+  var rS = (phaseObj.sets || []).slice();
+var rR = (phaseObj.runs || []).slice();
   var rC = phaseObj.color || 0;
   var avail = hand.slice(); var melds = [];
   var constraints = phaseObj.constraints || null;
@@ -3950,8 +3969,8 @@ function findBestMeldsForPhase(hand, phaseObj) {
 }
 function findBestHintForPhase(hand, phaseObj) {
   if (!phaseObj) return [];
-  var rS = (phaseObj.sets || []).slice().sort(function(a, b) { return b - a; });
-  var rR = (phaseObj.runs || []).slice().sort(function(a, b) { return b - a; });
+  var rS = (phaseObj.sets || []).slice();
+var rR = (phaseObj.runs || []).slice();
   var rC = phaseObj.color || 0;
   var avail = hand.slice(); var melds = [];
   var constraints = phaseObj.constraints || null;
@@ -4496,11 +4515,36 @@ if (ph && (!desc || /^مرحلة\s*\d*\s*$/.test(desc))) {
   if (!desc) desc = 'مرحلة مخصصة';
 }
   if (ph && ph.constraints) {
-    var extras = [];
-    if (ph.constraints.minTotalPoints) extras.push('≥ ' + ph.constraints.minTotalPoints);
-    if (ph.constraints.maxTotalPoints) extras.push('≤ ' + ph.constraints.maxTotalPoints);
-    if (extras.length > 0) desc += ' • ' + extras.join(' • ');
+  var extras = [];
+  if (ph.constraints.minTotalPoints) extras.push('≥ ' + ph.constraints.minTotalPoints);
+  if (ph.constraints.maxTotalPoints) extras.push('≤ ' + ph.constraints.maxTotalPoints);
+  if (extras.length > 0) desc += ' • ' + extras.join(' • ');
+
+/* ✅ عرض قيد كل مجموعة/متتالية منفردة — مع منع التكرار */
+if (!/(فردي|زوجي)/.test(desc)) {
+  var parityItems = [];
+  var setCS = (ph.constraints.setConstraints || []);
+  var runCS = (ph.constraints.runConstraints || []);
+  var multiSets = setCS.length > 1;
+  var multiRuns = runCS.length > 1;
+  for (var sci = 0; sci < setCS.length; sci++) {
+    var sc = setCS[sci];
+    if (sc && sc.parity && sc.parity !== 'any') {
+      var lbl = multiSets ? ('مجموعة ' + (sci + 1)) : 'مجموعة';
+      parityItems.push(lbl + ' ' + (sc.parity === 'odd' ? 'فردية' : 'زوجية'));
+    }
   }
+  for (var rci = 0; rci < runCS.length; rci++) {
+    var rc = runCS[rci];
+    if (rc && rc.parity && rc.parity !== 'any') {
+      var lbl2 = multiRuns ? ('متتالية ' + (rci + 1)) : 'متتالية';
+      parityItems.push(lbl2 + ' ' + (rc.parity === 'odd' ? 'فردية' : 'زوجية'));
+    }
+  }
+  if (parityItems.length > 0) desc += ' • ' + parityItems.join(' • ');
+}
+}
+}
   var pct = (player.phase / lim) * 100;
   $('phaseBox').innerHTML = '<span class="phase-num">المرحلة ' + (player.phase + 1) + '/' + lim + '</span><span class="desc">' + desc + '</span><div class="phase-progress"><div class="fill" style="width:' + pct + '%"></div></div>';
 }
@@ -4528,9 +4572,12 @@ function renderAllMelds(state, vId) {
       newRendered[key] = true;
       var tl;
       if (meld.type === 'set') tl = 'مجموعة ' + meld.num;
-      else if (meld.type === 'run') {
+else if (meld.type === 'run') {
   var rs = meld.step || 1;
-  var label = rs === 2 ? (meld.lo % 2 ? 'متتالية فردية' : 'متتالية زوجية') : 'متتالية';
+  /* ✅ lo هو دائماً أصغر رقم في المتتالية، لذا lo % 2 يحدد النوع بدقة */
+  var label = (rs === 2)
+    ? ((meld.lo % 2 === 1) ? 'متتالية فردية' : 'متتالية زوجية')
+    : 'متتالية';
   tl = label + ' ' + meld.lo + '⬅️' + meld.hi + ' (' + COLORS[meld.col || 0].name + ')';
 }
       else tl = 'لون ' + COLORS[meld.col].name;
@@ -4871,10 +4918,13 @@ function buildStateForPeer(state, vId) {
     hasDrawn: state.hasDrawn, round: state.round, roundLog: state.roundLog,
     playerCount: state.playerCount, phasesLimit: state.phasesLimit,
     phasesList: state.phasesList, phasePackKey: state.phasePackKey,
-    specialCfg: state.specialCfg, turnNumber: state.turnNumber || 1,
-    aiFirstLayTurn: state.aiFirstLayTurn || {},
-    actionLog: (state.actionLog || []).slice(-40)
-  };
+      specialCfg: state.specialCfg, turnNumber: state.turnNumber || 1,
+  aiFirstLayTurn: state.aiFirstLayTurn || {},
+  actionLog: (state.actionLog || []).slice(-40),
+  /* ✅ إعدادات المضيف تُرسل للضيوف */
+  turnTimerEnabled: state.turnTimerEnabled === true,
+  turnTimerSeconds: state.turnTimerSeconds || 30
+};
 }
 function ingestStateFromPeer(s) {
   if (!s) return null;
@@ -5330,19 +5380,21 @@ function showGuestRoundScore(summary) {
   modal.classList.remove('hidden');
   SoundFX.play('reward');
   $('roundScoreContinueBtn').onclick = function() {
-    modal.classList.add('hidden');
-    app.pendingRoundScore = false;
-    /* تشغيل أنيميشن توزيع الجولة الجديدة بعد إغلاق نافذة النتيجة */
-    if (app.pendingNewRound) {
-      var r = app.pendingNewRound;
-      app.pendingNewRound = null;
-      setTimeout(function() {
-        showRoundOverlay(r, function() {
-          resetRenderCache(); scheduleRender();
-        });
-      }, 250);
-    }
-  };
+  modal.classList.add('hidden');
+  app.pendingRoundScore = false;
+  /* تشغيل أنيميشن توزيع الجولة الجديدة بعد إغلاق نافذة النتيجة */
+  if (app.pendingNewRound) {
+    var r = app.pendingNewRound;
+    app.pendingNewRound = null;
+    setTimeout(function() {
+      showRoundOverlay(r, function() {
+        resetResetMeldsCache();
+        resetRenderCache(); scheduleRender();
+        if (navigator.vibrate) try { navigator.vibrate([50, 30, 50]); } catch (e) {}
+      });
+    }, 250);
+  }
+};
 }
 function handleHostMessage(msg) {
   if (!msg || !msg.type) return;
@@ -5394,6 +5446,129 @@ function _processIncomingLiveStream(log) {
     }
   }
 }
+
+/* ============================================================
+   ✅ ANIMATIONS FOR REMOTE STATE CHANGES (لجميع اللاعبين في LAN)
+   يحاكي كل الأنيميشن الذي يراه المضيف، لكن بناءً على الفرق في الحالة
+   ============================================================ */
+function animateRemoteChangesForAll(oldState, newState) {
+  if (!oldState || !newState) return;
+  if (!shouldRunAnimations()) return;
+  var vId = app.viewerId;
+
+  /* 1️⃣ أنيميشن دمج جديد (Lay Melds) لأي لاعب */
+  for (var i = 0; i < newState.players.length; i++) {
+    var newP = newState.players[i];
+    var oldP = oldState.players[i];
+    if (!oldP || !newP) continue;
+
+    var oldMelds = oldP.melds.length;
+    var newMelds = newP.melds.length;
+
+    if (newMelds > oldMelds) {
+      /* لاعب جديد وضع مرحلة — أنيميشن توهج */
+      (function(pi, startIdx, endIdx) {
+        setTimeout(function() {
+          for (var m = startIdx; m < endIdx; m++) {
+            var mEl = document.querySelector('.meld[data-pid="' + pi + '"][data-midx="' + m + '"]');
+            if (mEl) {
+              mEl.classList.add('new-meld-glow');
+              setTimeout(function() {
+                if (mEl) mEl.classList.remove('new-meld-glow');
+              }, 1400);
+            }
+          }
+        }, 150);
+      })(i, oldMelds, newMelds);
+    }
+
+    /* 2️⃣ أنيميشن ضرب (Hits) — أي مجموعة زاد عدد بطاقاتها */
+    var minMelds = Math.min(oldMelds, newMelds);
+    for (var m = 0; m < minMelds; m++) {
+      var oldMeld = oldP.melds[m];
+      var newMeld = newP.melds[m];
+      if (newMeld.cards.length > oldMeld.cards.length) {
+        (function(pi, mi) {
+          setTimeout(function() {
+            var mEl = document.querySelector('.meld[data-pid="' + pi + '"][data-midx="' + mi + '"]');
+            if (mEl) {
+              mEl.classList.add('just-hit');
+              setTimeout(function() {
+                if (mEl) mEl.classList.remove('just-hit');
+              }, 850);
+              var r = mEl.getBoundingClientRect();
+              floatScore(r.left + r.width / 2, r.top, '+1', '#4ade80');
+            }
+          }, 100);
+        })(i, m);
+      }
+    }
+  }
+
+  /* 3️⃣ أنيميشن سحب بطاقة للاعب آخر — من الرزمة إلى الشريحة */
+  if (newState.discard.length === oldState.discard.length) {
+    /* لم يتغير المهملات — إذن قد يكون سحباً */
+    for (var j = 0; j < newState.players.length; j++) {
+      var np = newState.players[j];
+      var op = oldState.players[j];
+      if (!op || !np) continue;
+      if (np.id === vId) continue; /* لا تكرر مع أنيميشن يدك */
+      if (np.hand.length > op.hand.length) {
+        (function(pi, count) {
+          var chipEl = document.querySelector('.player-chip[data-pid="' + pi + '"]');
+          var srcEl = $('drawDeckBtn');
+          var srcRect = getRect(srcEl);
+          var dstRect = chipEl ? getRect(chipEl) : null;
+          if (srcRect && dstRect) {
+            setTimeout(function() {
+              flyCardGhost(srcRect, dstRect, {
+                html: '<div class="p10-card back ' + app.settings.backStyle + '" style="width:100%;height:100%"></div>',
+                duration: 620, flip: true, arcHeight: 48
+              });
+            }, 150);
+          }
+        })(j, np.hand.length - op.hand.length);
+      }
+    }
+  }
+
+  /* 4️⃣ أنيميشن التخلص — من شريحة اللاعب إلى المهملات */
+  if (newState.discard.length > oldState.discard.length) {
+    var addedCount = newState.discard.length - oldState.discard.length;
+    var dstSlot = document.querySelector('#discardSlot .p10-card');
+    var dstRect = getRect(dstSlot);
+    if (dstRect) {
+      /* ابحث عن اللاعب الذي تغيرت يده أو مراحل */
+      var discarder = -1;
+      for (var k = 0; k < newState.players.length; k++) {
+        if (!oldState.players[k]) continue;
+        if (newState.players[k].hand.length < oldState.players[k].hand.length) {
+          discarder = k;
+          break;
+        }
+      }
+      var srcChip = discarder >= 0
+        ? document.querySelector('.player-chip[data-pid="' + discarder + '"]')
+        : null;
+      var srcRect2 = srcChip ? getRect(srcChip) : {
+        centerX: dstRect.centerX + 40, centerY: dstRect.top - 60,
+        left: dstRect.centerX + 20, top: dstRect.top - 80,
+        width: 40, height: 55, right: dstRect.centerX + 60, bottom: dstRect.top - 25
+      };
+      for (var d = 0; d < addedCount; d++) {
+        (function(idx) {
+          setTimeout(function() {
+            flyCardGhost(srcRect2, dstRect, {
+              html: buildCardHTML(newState.discard[newState.discard.length - addedCount + idx]),
+              duration: 440, flip: false, arcHeight: 38, rotateEnd: 0
+            });
+          }, idx * 90);
+        })(d);
+      }
+    }
+  }
+}
+
 function ingestRemoteState(s) {
   if (!s) return;
   var wasGameOver = !!(app.state && app.state.gameOver);
@@ -5404,6 +5579,7 @@ function ingestRemoteState(s) {
 app.state = proc;
 _processIncomingLiveStream(proc.actionLog);
 try { detectAndAnimateStateChanges(oldState, proc); } catch (e) {}
+try { animateRemoteChangesForAll(oldState, proc); } catch (e) {}
   if (!app.pendingRoundScore) {
     var scModal = $('roundScoreModal');
     if (scModal && !scModal.classList.contains('hidden')) scModal.classList.add('hidden');
@@ -5585,11 +5761,15 @@ function maybeNotifyMyTurn() {
 var turnTimerInterval = null;
 function startTurnTimer() {
   stopTurnTimer();
-  if (!app.settings.turnTimerEnabled) return;
   var state = app.state; if (!state || state.gameOver) return;
+  /* ✅ اقرأ من الحالة أولاً (يعمل للمضيف والضيف) */
+  var timerOn = (typeof state.turnTimerEnabled === 'boolean')
+                ? state.turnTimerEnabled
+                : app.settings.turnTimerEnabled;
+  if (!timerOn) return;
   if (state.turnIndex !== app.myPlayerId && state.turnIndex !== app.viewerId) return;
   if (app.mode !== 'lan' && app.mode !== 'cpu' && app.mode !== 'pass') return;
-  var remaining = app.settings.turnTimerSeconds || 30;
+  var remaining = state.turnTimerSeconds || app.settings.turnTimerSeconds || 30;
   var tb = document.querySelector('.topbar');
   if (!tb) return;
   var badge = $('turnTimerBadge');
@@ -7020,8 +7200,10 @@ function startPassAndPlayGame() {
 function handleGameStart(msg) {
   var s = msg.state; if (!s) return;
   var proc = ingestStateFromPeer(s); if (!proc) return;
+  var oldState = app.state;
 app.state = proc; app.mode = 'lan';
 _lastSeenLogTs = 0;
+try { animateRemoteChangesForAll(oldState, proc); } catch (e) {}
 resetLiveStream();
 resetRenderCache(); previouslyRenderedMelds = {}; app.undoStack = [];
   app.stats.hintsUsedThisMatch = 0;
@@ -7164,10 +7346,12 @@ function serializeGameState(s) {
     playerCount: s.playerCount, phasesLimit: s.phasesLimit,
     phasesList: s.phasesList, phasePackKey: s.phasePackKey,
     specialCfg: s.specialCfg, turnNumber: s.turnNumber || 1,
-    aiFirstLayTurn: s.aiFirstLayTurn || {},
-    actionLog: (s.actionLog || []).slice(-40),
-    gameOver: !!s.gameOver, tie: !!s.tie
-  };
+      aiFirstLayTurn: s.aiFirstLayTurn || {},
+  actionLog: (s.actionLog || []).slice(-40),
+  gameOver: !!s.gameOver, tie: !!s.tie,
+  turnTimerEnabled: s.turnTimerEnabled === true,
+  turnTimerSeconds: s.turnTimerSeconds || 30
+};
 }
 function deserializeGameState(o) {
   if (!o || !Array.isArray(o.players)) return null;
@@ -7195,11 +7379,13 @@ function deserializeGameState(o) {
     playerCount: players.length, phasesLimit: o.phasesLimit || 10,
     phasesList: o.phasesList || null, phasePackKey: o.phasePackKey || 'classic',
     specialCfg: o.specialCfg || { key: 'classic', name: 'الكلاسيكي', startHand: 10, drawCount: 1 },
-    turnNumber: o.turnNumber || 1,
-    aiFirstLayTurn: o.aiFirstLayTurn || {},
-    actionLog: o.actionLog || [],
-    gameOver: !!o.gameOver, tie: !!o.tie
-  };
+      turnNumber: o.turnNumber || 1,
+  aiFirstLayTurn: o.aiFirstLayTurn || {},
+  actionLog: o.actionLog || [],
+  gameOver: !!o.gameOver, tie: !!o.tie,
+  turnTimerEnabled: o.turnTimerEnabled === true,
+  turnTimerSeconds: o.turnTimerSeconds || 30
+};
 }
 function computeChecksum(payload) {
   try {
@@ -7771,25 +7957,37 @@ function buildMenuPreview() {
    CUSTOM ADVANCED BUILDER
    ============================================================ */
 function ensureCustomAdvancedPhases() {
-  // ✅ لا نفرض 10 مراحل — نبدأ بـ 5 فقط إن كانت فارغة
   if (!app.customAdvancedPhases || !Array.isArray(app.customAdvancedPhases)) {
     app.customAdvancedPhases = [];
   }
   if (app.customAdvancedPhases.length === 0) {
     for (var i = 0; i < 5; i++) app.customAdvancedPhases.push({
       desc: 'مرحلة ' + (i + 1),
-      groups: [{ kind: 'set', size: 3 }],
-      minTotalPoints: 0, maxTotalPoints: 0,
-      setConstraints: [], runConstraints: []
+      groups: [{ kind: 'set', size: 3, parity: 'any' }],
+      minTotalPoints: 0, maxTotalPoints: 0
     });
   }
   for (var j = 0; j < app.customAdvancedPhases.length; j++) {
     var ph = app.customAdvancedPhases[j];
-    if (!ph.setConstraints) ph.setConstraints = [];
-    if (!ph.runConstraints) ph.runConstraints = [];
     if (typeof ph.minTotalPoints !== 'number') ph.minTotalPoints = 0;
     if (typeof ph.maxTotalPoints !== 'number') ph.maxTotalPoints = 0;
+    /* ✅ ترحيل البيانات القديمة: قيد واحد لكل النوع → قيد لكل مجموعة */
+    var oldSetParity = (ph.setConstraints && ph.setConstraints[0] && ph.setConstraints[0].parity) || 'any';
+    var oldRunParity = (ph.runConstraints && ph.runConstraints[0] && ph.runConstraints[0].parity) || 'any';
+    if (ph.groups && Array.isArray(ph.groups)) {
+      for (var k = 0; k < ph.groups.length; k++) {
+        var g = ph.groups[k];
+        if (typeof g.parity !== 'string') {
+          if (g.kind === 'set') g.parity = oldSetParity;
+          else if (g.kind === 'run') g.parity = oldRunParity;
+          else g.parity = 'any';
+        }
+      }
+    }
+    delete ph.setConstraints;
+    delete ph.runConstraints;
   }
+  saveAdvancedPhases();
 }
 function buildAdvancedCustomList() {
   ensureCustomAdvancedPhases();
@@ -7814,14 +8012,35 @@ function buildAdvancedPhaseHTML(idx, ph) {
   h += '<div class="adv-section"><div class="adv-section-title"><span>مجموعات / متتاليات / لون</span><button class="adv-add-btn" data-add-group type="button">+ إضافة</button></div>';
   if (ph.groups.length === 0) h += '<div style="font-size:10px;opacity:.6;text-align:center">لا توجد مجموعات</div>';
   for (var g = 0; g < ph.groups.length; g++) {
-    var grp = ph.groups[g];
-    h += '<div class="adv-row" data-group-idx="' + g + '"><span class="adv-row-label">النوع</span><select class="adv-select" data-field="kind"><option value="set"' + (grp.kind === 'set' ? ' selected' : '') + '>مجموعة</option><option value="run"' + (grp.kind === 'run' ? ' selected' : '') + '>متتالية</option><option value="color"' + (grp.kind === 'color' ? ' selected' : '') + '>لون</option></select><span class="adv-row-label" style="min-width:auto">حجم</span><input type="number" class="adv-num-input" data-field="size" min="2" max="12" value="' + (grp.size || 3) + '"><button class="adv-remove-btn" data-remove-group type="button">×</button></div>';
+  var grp = ph.groups[g];
+  var grpParity = grp.parity || 'any';
+  h += '<div class="adv-row" data-group-idx="' + g + '">';
+  h += '<span class="adv-row-label">النوع</span>';
+  h += '<select class="adv-select" data-field="kind">';
+  h += '<option value="set"' + (grp.kind === 'set' ? ' selected' : '') + '>مجموعة</option>';
+  h += '<option value="run"' + (grp.kind === 'run' ? ' selected' : '') + '>متتالية</option>';
+  h += '<option value="color"' + (grp.kind === 'color' ? ' selected' : '') + '>لون</option>';
+  h += '</select>';
+  h += '<span class="adv-row-label" style="min-width:auto">حجم</span>';
+  h += '<input type="number" class="adv-num-input" data-field="size" min="2" max="12" value="' + (grp.size || 3) + '">';
+  h += '<button class="adv-remove-btn" data-remove-group type="button">×</button>';
+  h += '</div>';
+  /* ✅ صف القيد الخاص بهذه المجموعة (فقط لمجموعة/متتالية) */
+  if (grp.kind === 'set' || grp.kind === 'run') {
+    h += '<div class="adv-row" data-group-idx="' + g + '" style="padding-right:14px;opacity:.92">';
+    h += '<span class="adv-row-label" style="font-size:9.5px;min-width:auto">قيد ' + (grp.kind === 'set' ? 'المجموعة' : 'المتتالية') + '</span>';
+    h += '<div class="adv-toggle-row">';
+    h += '<button class="adv-toggle' + (grpParity === 'any' ? ' active' : '') + '" data-group-parity="any" type="button">بلا قيد</button>';
+    h += '<button class="adv-toggle' + (grpParity === 'odd' ? ' active' : '') + '" data-group-parity="odd" type="button">فردي</button>';
+    h += '<button class="adv-toggle' + (grpParity === 'even' ? ' active' : '') + '" data-group-parity="even" type="button">زوجي</button>';
+    h += '</div></div>';
   }
+}
   h += '</div>';
   var hasSet = ph.groups.some(function(g) { return g.kind === 'set'; });
   if (hasSet) {
     h += '<div class="adv-section"><div class="adv-section-title">قيد المجموعة (فردي/زوجي)</div><div class="adv-toggle-row">';
-    var setParity = (ph.setConstraints[0] && ph.setConstraints[0].parity) || 'any';
+    var setParity = (ph.setConstraints && ph.setConstraints[0] && ph.setConstraints[0].parity) || 'any';
     h += '<button class="adv-toggle' + (setParity === 'any' ? ' active' : '') + '" data-set-parity="any" type="button">بلا قيد</button>';
     h += '<button class="adv-toggle' + (setParity === 'odd' ? ' active' : '') + '" data-set-parity="odd" type="button">أرقام فردية</button>';
     h += '<button class="adv-toggle' + (setParity === 'even' ? ' active' : '') + '" data-set-parity="even" type="button">أرقام زوجية</button>';
@@ -7830,7 +8049,7 @@ function buildAdvancedPhaseHTML(idx, ph) {
   var hasRun = ph.groups.some(function(g) { return g.kind === 'run'; });
   if (hasRun) {
     h += '<div class="adv-section"><div class="adv-section-title">قيد المتتالية (فردي/زوجي)</div><div class="adv-toggle-row">';
-    var runParity = (ph.runConstraints[0] && ph.runConstraints[0].parity) || 'any';
+    var runParity = (ph.runConstraints && ph.runConstraints[0] && ph.runConstraints[0].parity) || 'any';
     h += '<button class="adv-toggle' + (runParity === 'any' ? ' active' : '') + '" data-run-parity="any" type="button">بلا قيد</button>';
     h += '<button class="adv-toggle' + (runParity === 'odd' ? ' active' : '') + '" data-run-parity="odd" type="button">أرقام فردية</button>';
     h += '<button class="adv-toggle' + (runParity === 'even' ? ' active' : '') + '" data-run-parity="even" type="button">أرقام زوجية</button>';
@@ -7865,14 +8084,15 @@ function buildPhaseSummary(ph) {
 function attachAdvancedPhaseHandlers() {
   var list = $('advancedCustomList'); if (!list) return;
   var addBtns = list.querySelectorAll('[data-add-group]');
-  for (var i = 0; i < addBtns.length; i++) (function(btn) {
-    btn.onclick = function() {
-      var ph = btn.closest('.adv-phase');
-      var idx = parseInt(ph.getAttribute('data-idx'), 10);
-      app.customAdvancedPhases[idx].groups.push({ kind: 'set', size: 3 });
-      saveAdvancedPhases(); buildAdvancedCustomList();
-    };
-  })(addBtns[i]);
+for (var i = 0; i < addBtns.length; i++) (function(btn) {
+  btn.onclick = function() {
+    var ph = btn.closest('.adv-phase');
+    var idx = parseInt(ph.getAttribute('data-idx'), 10);
+    /* ✅ كل مجموعة جديدة تبدأ بقيد مستقل افتراضي 'any' */
+    app.customAdvancedPhases[idx].groups.push({ kind: 'set', size: 3, parity: 'any' });
+    saveAdvancedPhases(); buildAdvancedCustomList();
+  };
+})(addBtns[i]);
   var rmBtns = list.querySelectorAll('[data-remove-group]');
   for (var j = 0; j < rmBtns.length; j++) (function(btn) {
     btn.onclick = function() {
@@ -7885,66 +8105,75 @@ function attachAdvancedPhaseHandlers() {
     };
   })(rmBtns[j]);
   var inputs = list.querySelectorAll('input[data-field], select[data-field]');
-  for (var k = 0; k < inputs.length; k++) (function(inp) {
-    inp.onchange = function() {
-      var ph = inp.closest('.adv-phase'); if (!ph) return;
-      var idx = parseInt(ph.getAttribute('data-idx'), 10);
-      var field = inp.getAttribute('data-field');
-      var target = app.customAdvancedPhases[idx];
-      if (inp.tagName === 'SELECT') {
-        var row = inp.closest('.adv-row');
-        var gi = parseInt(row.getAttribute('data-group-idx'), 10);
-        target.groups[gi].kind = inp.value;
-      } else if (field === 'size') {
-        var row2 = inp.closest('.adv-row');
-        var gi2 = parseInt(row2.getAttribute('data-group-idx'), 10);
-        var sz = parseInt(inp.value, 10);
-        if (isNaN(sz) || sz < 2) sz = 2;
-        if (sz > 12) sz = 12;
-        target.groups[gi2].size = sz;
-      } else if (field === 'desc') target.desc = inp.value.trim() || ('مرحلة ' + (idx + 1));
-      else if (field === 'minTotalPoints') target.minTotalPoints = Math.max(0, parseInt(inp.value, 10) || 0);
-      else if (field === 'maxTotalPoints') target.maxTotalPoints = Math.max(0, parseInt(inp.value, 10) || 0);
-      saveAdvancedPhases();
-      var prev = ph.querySelector('.adv-preview'); if (prev) prev.textContent = buildPhaseSummary(target);
-      var sum = ph.querySelector('.adv-summary'); if (sum) sum.textContent = '› ' + buildPhaseSummary(target);
-    };
-  })(inputs[k]);
-  var setToggles = list.querySelectorAll('[data-set-parity]');
-  for (var s = 0; s < setToggles.length; s++) (function(btn) {
-    btn.onclick = function() {
-      var ph = btn.closest('.adv-phase');
-      var idx = parseInt(ph.getAttribute('data-idx'), 10);
-      var v = btn.getAttribute('data-set-parity');
-      if (v === 'any') app.customAdvancedPhases[idx].setConstraints = [];
-      else app.customAdvancedPhases[idx].setConstraints = [{ parity: v }];
-      saveAdvancedPhases(); buildAdvancedCustomList();
-    };
-  })(setToggles[s]);
-  var runToggles = list.querySelectorAll('[data-run-parity]');
-  for (var t = 0; t < runToggles.length; t++) (function(btn) {
-    btn.onclick = function() {
-      var ph = btn.closest('.adv-phase');
-      var idx = parseInt(ph.getAttribute('data-idx'), 10);
-      var v = btn.getAttribute('data-run-parity');
-      if (v === 'any') app.customAdvancedPhases[idx].runConstraints = [];
-      else app.customAdvancedPhases[idx].runConstraints = [{ parity: v }];
-      saveAdvancedPhases(); buildAdvancedCustomList();
-    };
-  })(runToggles[t]);
+for (var k = 0; k < inputs.length; k++) (function(inp) {
+  inp.onchange = function() {
+    var ph = inp.closest('.adv-phase'); if (!ph) return;
+    var idx = parseInt(ph.getAttribute('data-idx'), 10);
+    var field = inp.getAttribute('data-field');
+    var target = app.customAdvancedPhases[idx];
 
-  // ✅ زر إضافة مرحلة جديدة
-  var addPhaseBtn = list.querySelector('.adv-add-phase-btn');
-  if (addPhaseBtn) addPhaseBtn.onclick = function() {
-    app.customAdvancedPhases.push({
-      desc: 'مرحلة ' + (app.customAdvancedPhases.length + 1),
-      groups: [{ kind: 'set', size: 3 }],
-      minTotalPoints: 0, maxTotalPoints: 0,
-      setConstraints: [], runConstraints: []
-    });
+    /* ✅ تغيير النوع (مجموعة/متتالية/لون) — نعيد البناء لإظهار/إخفاء صف القيد */
+    if (inp.tagName === 'SELECT') {
+      var row = inp.closest('.adv-row');
+      var gi = parseInt(row.getAttribute('data-group-idx'), 10);
+      var newKind = inp.value;
+      target.groups[gi].kind = newKind;
+      /* إذا تحوّل إلى لون → أزل القيد */
+      if (newKind === 'color') target.groups[gi].parity = 'any';
+      /* إذا لم يكن هناك قيد → ضع افتراضياً */
+      if (!target.groups[gi].parity) target.groups[gi].parity = 'any';
+      saveAdvancedPhases();
+      buildAdvancedCustomList();
+      return;
+    }
+
+    /* ✅ تغيير الحجم */
+    if (field === 'size') {
+      var row2 = inp.closest('.adv-row');
+      var gi2 = parseInt(row2.getAttribute('data-group-idx'), 10);
+      var sz = parseInt(inp.value, 10);
+      if (isNaN(sz) || sz < 2) sz = 2;
+      if (sz > 12) sz = 12;
+      target.groups[gi2].size = sz;
+    }
+    else if (field === 'desc') target.desc = inp.value.trim() || ('مرحلة ' + (idx + 1));
+    else if (field === 'minTotalPoints') target.minTotalPoints = Math.max(0, parseInt(inp.value, 10) || 0);
+    else if (field === 'maxTotalPoints') target.maxTotalPoints = Math.max(0, parseInt(inp.value, 10) || 0);
+
+    saveAdvancedPhases();
+    var prev = ph.querySelector('.adv-preview'); if (prev) prev.textContent = buildPhaseSummary(target);
+    var sum = ph.querySelector('.adv-summary'); if (sum) sum.textContent = '› ' + buildPhaseSummary(target);
+  };
+})(inputs[k]);
+
+/* ✅ قيد خاص بكل مجموعة — منفصل تماماً */
+var groupParityBtns = list.querySelectorAll('[data-group-parity]');
+for (var gp = 0; gp < groupParityBtns.length; gp++) (function(btn) {
+  btn.onclick = function(ev) {
+    ev.preventDefault();
+    var row = btn.closest('.adv-row');
+    var gi = parseInt(row.getAttribute('data-group-idx'), 10);
+    var ph = btn.closest('.adv-phase');
+    var idx = parseInt(ph.getAttribute('data-idx'), 10);
+    var val = btn.getAttribute('data-group-parity');
+    if (!app.customAdvancedPhases[idx].groups[gi]) return;
+    app.customAdvancedPhases[idx].groups[gi].parity = val;
     saveAdvancedPhases();
     buildAdvancedCustomList();
   };
+})(groupParityBtns[gp]);
+
+
+var addPhaseBtn = list.querySelector('.adv-add-phase-btn');
+if (addPhaseBtn) addPhaseBtn.onclick = function() {
+  app.customAdvancedPhases.push({
+    desc: 'مرحلة ' + (app.customAdvancedPhases.length + 1),
+    groups: [{ kind: 'set', size: 3, parity: 'any' }],
+    minTotalPoints: 0, maxTotalPoints: 0
+  });
+  saveAdvancedPhases();
+  buildAdvancedCustomList();
+};
 
   // ✅ أزرار حذف المراحل
   var rmPhaseBtns = list.querySelectorAll('[data-remove-phase]');
@@ -8357,27 +8586,40 @@ function explainWhyCannotLay(selected, phase, player) {
     }
   }
   var reqRuns = (phase.runs || []).slice().sort(function(a, b) { return b - a; });
-  if (reqRuns.length > 0) {
-    var byCol = [[], [], [], []];
-    for (var c = 0; c < selected.length; c++) if (selected[c].type === 'num') byCol[selected[c].col].push(selected[c].value);
-    var maxRun = 0, maxRunCol = -1;
-    for (var col = 0; col < 4; col++) {
-      var nums = byCol[col].slice().sort(function(a, b) { return a - b; });
-      var run = 1, bestRun = nums.length > 0 ? 1 : 0;
-      for (var n = 1; n < nums.length; n++) {
-        if (nums[n] === nums[n - 1] + 1) run++;
-        else run = 1;
-        if (run > bestRun) bestRun = run;
-      }
-      if (bestRun > maxRun) { maxRun = bestRun; maxRunCol = col; }
-    }
-    if (maxRun + wildCount < reqRuns[0]) {
-      var colName = maxRunCol >= 0 ? COLORS[maxRunCol].name : '';
-      reasons.push('تحتاج متتالية من <strong>' + reqRuns[0] + ' بطاقات متتالية بنفس اللون</strong>. أطول متتالية لديك ' + maxRun + ' بطاقة' + (colName ? ' بلون ' + colName : ''));
-      suggestions.push('بطاقات المتتالية يجب أن تكون <strong>بنفس اللون</strong>: مثل 5♠ 6♠ 7♠ 8♠');
-      suggestions.push('Wild يُسمح به في <strong>البداية أو النهاية فقط</strong> — ليس في المنتصف');
-    }
+var runC0 = (phase.constraints && phase.constraints.runConstraints && phase.constraints.runConstraints[0]) || null;
+var runParity = (runC0 && runC0.parity) || 'any';
+var runStep = (runParity === 'odd' || runParity === 'even') ? 2 : 1;
+if (reqRuns.length > 0) {
+  var byCol = [[], [], [], []];
+  for (var c = 0; c < selected.length; c++) if (selected[c].type === 'num') {
+    /* ✅ لاحظ القيد الفردي/الزوجي عند بناء المتتالية */
+    if (runParity === 'odd' && selected[c].value % 2 === 0) continue;
+    if (runParity === 'even' && selected[c].value % 2 !== 0) continue;
+    byCol[selected[c].col].push(selected[c].value);
   }
+  var maxRun = 0, maxRunCol = -1;
+  for (var col = 0; col < 4; col++) {
+    var nums = byCol[col].slice().sort(function(a, b) { return a - b; });
+    var run = 1, bestRun = nums.length > 0 ? 1 : 0;
+    for (var n = 1; n < nums.length; n++) {
+      if (nums[n] === nums[n - 1] + runStep) run++;
+      else run = 1;
+      if (run > bestRun) bestRun = run;
+    }
+    if (bestRun > maxRun) { maxRun = bestRun; maxRunCol = col; }
+  }
+  if (maxRun + wildCount < reqRuns[0]) {
+    var colName = maxRunCol >= 0 ? COLORS[maxRunCol].name : '';
+    var parityNote = '';
+    if (runParity === 'odd') parityNote = ' <strong>فردية (1، 3، 5، 7...)</strong>';
+    else if (runParity === 'even') parityNote = ' <strong>زوجية (2، 4، 6، 8...)</strong>';
+    reasons.push('تحتاج متتالية من <strong>' + reqRuns[0] + ' بطاقات' + parityNote + ' بنفس اللون</strong>. أطول متتالية لديك ' + maxRun + ' بطاقة' + (colName ? ' بلون ' + colName : ''));
+    if (runParity === 'odd') suggestions.push('مثال لمتتالية فردية صحيحة: 1♠ 3♠ 5♠ 7♠');
+    else if (runParity === 'even') suggestions.push('مثال لمتتالية زوجية صحيحة: 2♠ 4♠ 6♠ 8♠');
+    else suggestions.push('بطاقات المتتالية يجب أن تكون <strong>بنفس اللون</strong>: مثل 5♠ 6♠ 7♠ 8♠');
+    suggestions.push('Wild يُسمح به في <strong>البداية أو النهاية فقط</strong> — ليس في المنتصف');
+  }
+}
   if (phase.color && phase.color > 0) {
     var colCounts = [0, 0, 0, 0];
     for (var p = 0; p < selected.length; p++) if (selected[p].type === 'num') colCounts[selected[p].col]++;
