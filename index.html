@@ -2254,7 +2254,7 @@ body.no-glow .pile .clickable::after { display: none !important; }
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '21.5.1';
+var APP_VERSION = '21.5.2';
 var APP_BUILD_DATE = '1-9-2026';
 var APP_LAST_UPDATE = '17-10-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
@@ -3073,7 +3073,23 @@ loadHandOrderFromStorage();
 var cpuContext = { active: false, timeout: null };
 var uniqueIdCounter = 0;
 function nextUniqueId() { return 'c' + (uniqueIdCounter++); }
-function setBusy(v) { app.busy = !!v; updateHandDisabledState(); updateActionsButtons(); }
+var busyTimer = null;
+function setBusy(v) {
+  app.busy = !!v;
+  if (v) {
+    if (busyTimer) clearTimeout(busyTimer);
+    busyTimer = setTimeout(function() {
+      if (app.busy && app.mode === 'lan') {
+        console.warn('[Watchdog] app.busy عالق في وضع الشبكة — تم تصفيره');
+        app.busy = false;
+        updateHandDisabledState(); updateActionsButtons();
+      }
+    }, 4000);
+  } else {
+    if (busyTimer) { clearTimeout(busyTimer); busyTimer = null; }
+  }
+  updateHandDisabledState(); updateActionsButtons();
+}
 
 /* ============================================================
    CPU SKILL
@@ -4654,13 +4670,13 @@ $('inventoryBtn').onclick = function() { openInventory(); };
 $('btnHit').onclick = function() { actionHit(); };
 $('btnDiscard').onclick = function() { actionDiscard(); };
   }
-  var bDraw = $('btnDraw');
+var bDraw = $('btnDraw');
 if (bDraw) {
   bDraw.disabled = !canDraw;
   /* ⛑️ إعادة ربط الـ handler في حال فُقد */
   if (!bDraw.__bound) {
     bDraw.__bound = true;
-    bDraw.onclick = function() { if (!app.busy || app.mode !== 'lan') actionDraw('deck'); };
+    bDraw.onclick = function() { actionDraw('deck'); };
   }
 }
 $('btnLay').disabled = false;
@@ -6115,9 +6131,9 @@ function actionDraw(fromWhere) {
   var pId = app.viewerId;
   if (state.turnIndex !== pId) return;
   if (state.hasDrawn) return;
-  /* ⛑️ اسمح بالسحب في الوضع المحلي حتى لو كان busy عالقاً */
-  if (app.busy && app.mode === 'lan') return;
-  if (app.busy) app.busy = false;
+  
+  if (isGuest() && app.busy) return; /* منع الضيف من إرسال طلبات متكررة أثناء الانتظار */
+  if (app.busy && app.mode !== 'lan') app.busy = false; 
   SoundFX.ensureContext();
   if (isGuest()) { setBusy(true); setStatus('جاري السحب...'); sendToHost({ type: 'action', action: 'draw', payload: { from: fromWhere } }); return; }
   if (isDeckExhausted(state)) { handleDeckExhaustion(state); return; }
