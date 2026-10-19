@@ -2254,7 +2254,7 @@ body.no-glow .pile .clickable::after { display: none !important; }
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '21.5.2';
+var APP_VERSION = '21.6.0';
 var APP_BUILD_DATE = '1-9-2026';
 var APP_LAST_UPDATE = '17-10-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
@@ -6669,11 +6669,33 @@ function checkWinOrNewRound(state, pId) {
   var player = state.players[pId]; if (!player) return;
   if (player.hand.length !== 0) return;
   var lim = state.phasesLimit;
-  var completed = [];
-  for (var i = 0; i < state.players.length; i++) {
-    if (state.players[i].phase >= lim) completed.push(state.players[i]);
+
+  /* ⛑️ إصلاح 1: احسب عقوبات الجولة الأخيرة لجميع اللاعبين (عدا من فرّغ يده) */
+  var roundPenalties = {};
+  for (var ri = 0; ri < state.players.length; ri++) {
+    var rp = state.players[ri];
+    if (rp.id === pId) { roundPenalties[rp.id] = 0; continue; }
+    var penSum = 0;
+    for (var rj = 0; rj < rp.hand.length; rj++) penSum += getCardValue(rp.hand[rj]);
+    roundPenalties[rp.id] = penSum;
   }
-  if (completed.length > 0) {
+
+  /* ⛑️ إصلاح 2: لا تنتهِ اللعبة إلا إذا كان من فرّغ يده قد أكمل كل المراحل */
+  if (player.phase >= lim) {
+    /* طبّق العقوبات على كل اللاعبين قبل تحديد الفائز */
+    for (var pi = 0; pi < state.players.length; pi++) {
+      var sp = state.players[pi];
+      var addPen = roundPenalties[sp.id] || 0;
+      sp.score += addPen;
+      app.stats.totalPenalty += addPen;
+    }
+    saveStatsToStorage();
+
+    /* الفائز = الأقل نقاطاً بين من أكملوا كل المراحل (بعد احتساب عقوبات الجولة) */
+    var completed = [];
+    for (var ci = 0; ci < state.players.length; ci++) {
+      if (state.players[ci].phase >= lim) completed.push(state.players[ci]);
+    }
     var winner = completed[0];
     for (var j = 1; j < completed.length; j++) {
       if (completed[j].score < winner.score) winner = completed[j];
@@ -6690,6 +6712,8 @@ function checkWinOrNewRound(state, pId) {
     setTimeout(function() { showGameOver(); }, 1400);
     return;
   }
+
+  /* لم يكمل المراحل → فاز بالجولة فقط، واللعبة تستمر */
   startNewRound(state, pId);
   setStatus(player.name + ' أنهى الجولة!');
   resetRenderCache();
