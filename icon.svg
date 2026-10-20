@@ -39,83 +39,87 @@
       <feGaussianBlur stdDeviation="30"/>
     </filter>
   </defs>
-
+  
   <!-- الخلفية -->
   <rect width="512" height="512" rx="115" fill="url(#bg)"/>
-  <!-- إضاءة خلفية ذهبية خفيفة -->
   <ellipse cx="256" cy="256" rx="160" ry="120" fill="#f4b942" opacity="0.15" filter="url(#glow)"/>
 
-  <!-- البطاقة 1: حمراء 3 -->
-  <g transform="translate(90, 200) rotate(-22 50 75)">
-    <rect width="100" height="150" rx="8" fill="#000" opacity="0.5" filter="url(#shadow)"/>
-    <rect width="100" height="150" rx="8" fill="url(#redGrad)" stroke="#fff" stroke-width="2.5"/>
-    <rect x="4" y="4" width="92" height="142" rx="5" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
-    <rect width="100" height="50" rx="8" fill="url(#shine)"/>
-    <ellipse cx="50" cy="75" rx="32" ry="42" fill="#fff"/>
-    <text x="50" y="88" font-family="Arial,Helvetica,sans-serif" font-size="45" font-weight="900" font-style="italic" fill="#c21430" text-anchor="middle">3</text>
-    <text x="10" y="22" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="900" fill="#fff">3</text>
-    <g transform="rotate(180 90 140)">
-      <text x="90" y="140" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="900" fill="#fff" text-anchor="end">3</text>
+  <!-- 🟢 هذا هو السطر السحري الذي يكبر البطاقات بنسبة 45% -->
+  <g transform="translate(256, 256) scale(1.45) translate(-256, -256)">
+    
+    <!-- البطاقة 1: حمراء 3 -->
+    <g transform="translate(90, 200) rotate(-22 50 75)">
+      <rect width="100" height="150" rx="8" fill="#000" opacity="0.5" filter="url(#shadow)"/>
+      <rect width="100" height="150" rx="8" fill="url(#redGrad)" stroke="#fff" stroke-width="3"/>
+      <rect x="4" y="4" width="92" height="142" rx="5" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+      <rect width="100" height="50" rx="8" fill="url(#shine)"/>
+      <ellipse cx="50" cy="75" rx="32" ry="42" fill="#fff"/>
+      <text x="50" y="92" font-family="Arial,Helvetica,sans-serif" font-size="55" font-weight="900" font-style="italic" fill="#c21430" text-anchor="middle">3</text>
+      <text x="10" y="24" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="900" fill="#fff">3</text>
+      <g transform="rotate(180 90 140)">
+        <text x="90" y="140" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="900" fill="#fff" text-anchor="end">3</text>
+      </g>
     </g>
+
+    <!-- البطاقة 2: Skip -->
+    <g transform="translate(145, 175) rotate(-11 50 75)">
+      <rect width="100" height="150" rx="8" fill="#000" opacity="0.5" filter="url(#shadow)"/>
+      <rect width="100" height="150" rx="8" fill="url(#skipGrad)" stroke="#4a69bd" stroke-width="3"/>
+      <rect x="4" y="4" width="92" height="142" rx="5" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+      <rect width="100" height="50" rx="8" fill="url(#shine)"/>
+      <circle cx="50" cy="75" r="35" fill="#ff3b4e"/>
+      <line x1="28" y1="53" x2="72" y2="97" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+      <line x1="72" y1="53" x2="28" y2="97" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+      <text x="10" y="24" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="900" fill="#ff3b4e">S</text>
+      <g transform="rotate(180 90 140)">
+        <text x="90" y="140" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="900" fill="#ff3b4e" text-anchor="end">S</text>
+      </g>
+    </g>
+
+    <!-- البطاقة 3: Wild -->
+    <g transform="translate(206, 155) rotate(0 50 75)">
+      <rect width="100" height="150" rx="8" fill="#000" opacity="0.5" filter="url(#shadow)"/>
+      <rect width="100" height="150" rx="8" fill="url(#wildGrad)" stroke="#f4b942" stroke-width="3"/>
+      <rect x="4" y="4" width="92" height="142" rx="5" fill="none" stroke="rgba(244,185,66,0.3)" stroke-width="1"/>
+      <rect width="100" height="50" rx="8" fill="url(#shine)"/>
+      <circle cx="50" cy="75" r="35" fill="url(#goldGrad)"/>
+      <text x="50" y="92" font-family="Arial,Helvetica,sans-serif" font-size="50" font-weight="900" font-style="italic" fill="#000" text-anchor="middle">W</text>
+      <text x="10" y="24" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="900" fill="#f4b942">W</text>
+      <g transform="rotate(180 90 140)">
+        <text x="90" y="140" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="900" fill="#f4b942" text-anchor="end">W</text>
+      </g>
+    </g>
+
+    <!-- البطاقة 4: زرقاء 11 -->
+    <g transform="translate(265, 175) rotate(11 50 75)">
+      <rect width="100" height="150" rx="8" fill="#000" opacity="0.5" filter="url(#shadow)"/>
+      <rect width="100" height="150" rx="8" fill="url(#blueGrad)" stroke="#fff" stroke-width="3"/>
+      <rect x="4" y="4" width="92" height="142" rx="5" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+      <rect width="100" height="50" rx="8" fill="url(#shine)"/>
+      <ellipse cx="50" cy="75" rx="32" ry="42" fill="#fff"/>
+      <text x="50" y="88" font-family="Arial,Helvetica,sans-serif" font-size="45" font-weight="900" font-style="italic" fill="#0a52cc" text-anchor="middle">11</text>
+      <text x="10" y="24" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="900" fill="#fff">11</text>
+      <g transform="rotate(180 90 140)">
+        <text x="90" y="140" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="900" fill="#fff" text-anchor="end">11</text>
+      </g>
+    </g>
+
+    <!-- البطاقة 5: خضراء 7 -->
+    <g transform="translate(320, 200) rotate(22 50 75)">
+      <rect width="100" height="150" rx="8" fill="#000" opacity="0.5" filter="url(#shadow)"/>
+      <rect width="100" height="150" rx="8" fill="url(#greenGrad)" stroke="#fff" stroke-width="3"/>
+      <rect x="4" y="4" width="92" height="142" rx="5" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+      <rect width="100" height="50" rx="8" fill="url(#shine)"/>
+      <ellipse cx="50" cy="75" rx="32" ry="42" fill="#fff"/>
+      <text x="50" y="92" font-family="Arial,Helvetica,sans-serif" font-size="55" font-weight="900" font-style="italic" fill="#069c56" text-anchor="middle">7</text>
+      <text x="10" y="24" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="900" fill="#fff">7</text>
+      <g transform="rotate(180 90 140)">
+        <text x="90" y="140" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="900" fill="#fff" text-anchor="end">7</text>
+      </g>
+    </g>
+    
   </g>
 
-  <!-- البطاقة 2: Skip -->
-  <g transform="translate(145, 175) rotate(-11 50 75)">
-    <rect width="100" height="150" rx="8" fill="#000" opacity="0.5" filter="url(#shadow)"/>
-    <rect width="100" height="150" rx="8" fill="url(#skipGrad)" stroke="#4a69bd" stroke-width="2.5"/>
-    <rect x="4" y="4" width="92" height="142" rx="5" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-    <rect width="100" height="50" rx="8" fill="url(#shine)"/>
-    <circle cx="50" cy="75" r="30" fill="#ff3b4e"/>
-    <line x1="30" y1="55" x2="70" y2="95" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
-    <line x1="70" y1="55" x2="30" y2="95" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
-    <text x="10" y="22" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="900" fill="#ff3b4e">S</text>
-    <g transform="rotate(180 90 140)">
-      <text x="90" y="140" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="900" fill="#ff3b4e" text-anchor="end">S</text>
-    </g>
-  </g>
-
-  <!-- البطاقة 3: Wild -->
-  <g transform="translate(206, 155) rotate(0 50 75)">
-    <rect width="100" height="150" rx="8" fill="#000" opacity="0.5" filter="url(#shadow)"/>
-    <rect width="100" height="150" rx="8" fill="url(#wildGrad)" stroke="#f4b942" stroke-width="2.5"/>
-    <rect x="4" y="4" width="92" height="142" rx="5" fill="none" stroke="rgba(244,185,66,0.3)" stroke-width="1"/>
-    <rect width="100" height="50" rx="8" fill="url(#shine)"/>
-    <circle cx="50" cy="75" r="32" fill="url(#goldGrad)"/>
-    <text x="50" y="88" font-family="Arial,Helvetica,sans-serif" font-size="45" font-weight="900" font-style="italic" fill="#000" text-anchor="middle">W</text>
-    <text x="10" y="22" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="900" fill="#f4b942">W</text>
-    <g transform="rotate(180 90 140)">
-      <text x="90" y="140" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="900" fill="#f4b942" text-anchor="end">W</text>
-    </g>
-  </g>
-
-  <!-- البطاقة 4: زرقاء 11 -->
-  <g transform="translate(265, 175) rotate(11 50 75)">
-    <rect width="100" height="150" rx="8" fill="#000" opacity="0.5" filter="url(#shadow)"/>
-    <rect width="100" height="150" rx="8" fill="url(#blueGrad)" stroke="#fff" stroke-width="2.5"/>
-    <rect x="4" y="4" width="92" height="142" rx="5" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
-    <rect width="100" height="50" rx="8" fill="url(#shine)"/>
-    <ellipse cx="50" cy="75" rx="32" ry="42" fill="#fff"/>
-    <text x="50" y="88" font-family="Arial,Helvetica,sans-serif" font-size="38" font-weight="900" font-style="italic" fill="#0a52cc" text-anchor="middle">11</text>
-    <text x="10" y="22" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="900" fill="#fff">11</text>
-    <g transform="rotate(180 90 140)">
-      <text x="90" y="140" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="900" fill="#fff" text-anchor="end">11</text>
-    </g>
-  </g>
-
-  <!-- البطاقة 5: خضراء 7 -->
-  <g transform="translate(320, 200) rotate(22 50 75)">
-    <rect width="100" height="150" rx="8" fill="#000" opacity="0.5" filter="url(#shadow)"/>
-    <rect width="100" height="150" rx="8" fill="url(#greenGrad)" stroke="#fff" stroke-width="2.5"/>
-    <rect x="4" y="4" width="92" height="142" rx="5" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
-    <rect width="100" height="50" rx="8" fill="url(#shine)"/>
-    <ellipse cx="50" cy="75" rx="32" ry="42" fill="#fff"/>
-    <text x="50" y="88" font-family="Arial,Helvetica,sans-serif" font-size="45" font-weight="900" font-style="italic" fill="#069c56" text-anchor="middle">7</text>
-    <text x="10" y="22" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="900" fill="#fff">7</text>
-    <g transform="rotate(180 90 140)">
-      <text x="90" y="140" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="900" fill="#fff" text-anchor="end">7</text>
-    </g>
-  </g>
-
-  <!-- حافة التطبيق الزجاجية اللامعة -->
+  <!-- إطار التطبيق الزجاجي -->
   <rect width="512" height="512" rx="115" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
 </svg>
