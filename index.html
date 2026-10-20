@@ -80,6 +80,7 @@
       <button id="tutorialBtn" type="button">🎓 تعليم سريع</button>
 <button id="aboutBtn" type="button">ℹ️ حول التطبيق</button>
 <button id="dailyChallengeBtn" class="daily-btn" type="button">🎯 التحدي اليومي<span class="daily-badge hidden" id="dailyBadge">NEW</span></button>
+<button id="pwaInstallBtn" type="button" style="display:none; background:linear-gradient(160deg, #5be08f, #22a862); color:#04240f; font-weight:bold; border: 1px solid #4ade80;">📲 تثبيت التطبيق</button>
     </div>
   </div>
 
@@ -2256,7 +2257,7 @@ body.no-glow .pile .clickable::after { display: none !important; }
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '21.6.3';
+var APP_VERSION = '21.6.4';
 var APP_BUILD_DATE = '1-9-2026';
 var APP_LAST_UPDATE = '17-10-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
@@ -9827,6 +9828,40 @@ window.p10Debug = {
     } catch (err) {}
   }
 };
+// --- كود تثبيت التطبيق (PWA) ---
+let deferredPrompt;
+const pwaInstallBtn = document.getElementById('pwaInstallBtn');
+
+// يحدث هذا الحدث عندما يقرر المتصفح أن التطبيق جاهز للتثبيت
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // إظهار زر التثبيت
+  if (pwaInstallBtn) {
+    pwaInstallBtn.style.display = 'inline-block';
+  }
+});
+
+// عند الضغط على زر التثبيت
+if (pwaInstallBtn) {
+  pwaInstallBtn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      pwaInstallBtn.style.display = 'none'; // إخفاء الزر بعد التثبيت
+    } else {
+      // إرشادات لمن يستخدم الآيفون (لأن الآيفون لا يدعم الزر التلقائي)
+      alert('للتثبيت:\n\n📱 على الآيفون (Safari):\nاضغط على زر المشاركة (Share) في الأسفل، ثم اختر "إضافة إلى الشاشة الرئيسية" (Add to Home Screen).\n\n📱 على الأندرويد (Chrome):\nاضغط على الثلاث نقاط (⋮) بالأعلى، ثم اختر "تثبيت التطبيق" (Install App) أو "إضافة إلى الشاشة الرئيسية".');
+    }
+  });
+}
+
+// إخفاء الزر إذا كان التطبيق مثبتاً بالفعل
+window.addEventListener('appinstalled', () => {
+  if (pwaInstallBtn) pwaInstallBtn.style.display = 'none';
+  deferredPrompt = null;
+});
 </script>
 </body>
 </html>
