@@ -80,6 +80,7 @@
       <button id="tutorialBtn" type="button">🎓 تعليم سريع</button>
 <button id="aboutBtn" type="button">ℹ️ حول التطبيق</button>
 <button id="dailyChallengeBtn" class="daily-btn" type="button">🎯 التحدي اليومي<span class="daily-badge hidden" id="dailyBadge">NEW</span></button>
+<button id="dailyLeaderboardBtn" type="button">🏆 متصدرو التحدي</button>
 <button id="pwaInstallBtn" type="button" style="display:none; background:linear-gradient(160deg, #5be08f, #22a862); color:#04240f; font-weight:bold; border: 1px solid #4ade80;">📲 تثبيت التطبيق</button>
     </div>
   </div>
@@ -226,7 +227,7 @@
     <div class="game-inner">
       <div class="topbar">
         <div class="turn-info">
-          <span class="turn-icon">🎯</span>
+
           <span class="turn-name" id="turnIndicator">دور اللاعب</span>
           <span class="cur-stats" id="currentPlayerStats"></span>
         </div>
@@ -496,7 +497,25 @@
           <div style="font-size:22px;font-weight:900;color:#f4b942;line-height:1.1"><span id="settingsCoinTotal">0</span></div>
         </div>
       </div>
-      <h3>حجم البطاقات</h3>
+      <h3>الموسيقى والخلفية</h3>
+<div class="setting-row">
+  <div><div class="row-label">موسيقى الخلفية</div></div>
+  <div style="display:flex;gap:4px">
+    <button class="adv-toggle" data-musicstyle="off" type="button">بدون</button>
+    <button class="adv-toggle" data-musicstyle="piano" type="button">🎹 بيانو</button>
+    <button class="adv-toggle" data-musicstyle="ambient" type="button">🌊 هادئة</button>
+  </div>
+</div>
+<div class="setting-row">
+  <div><div class="row-label">خلفية الطاولة</div></div>
+  <div style="display:flex;gap:4px">
+    <button class="adv-toggle table-style-btn" data-style="dark" type="button">داكنة</button>
+    <button class="adv-toggle table-style-btn" data-style="light" type="button">فاتحة</button>
+    <button class="adv-toggle table-style-btn" data-style="neon" type="button">نيون</button>
+    <button class="adv-toggle table-style-btn" data-style="wood" type="button">خشبية</button>
+  </div>
+</div>
+<h3>حجم البطاقات</h3>
       <div class="setting-row">
         <div><div class="row-label">حجم البطاقة</div></div>
         <div style="display:flex;gap:4px">
@@ -641,6 +660,7 @@
     <h2>🎒 المخزون</h2>
     <div id="inventoryMsg" style="display:none;text-align:center;font-size:12px;font-weight:800;padding:9px;margin-bottom:10px;border-radius:8px;background:rgba(0,0,0,0.35);border:1px solid var(--border-1)"></div>
     <div id="inventoryItems"></div>
+    <button class="primary" id="openShopFromInventory" type="button" style="background:linear-gradient(160deg,#a855f7,#7c3aed);color:#fff;margin-bottom:7px;font-weight:800">🛒 افتح المتجر</button>
     <button class="primary" id="closeInventory" type="button">إغلاق</button>
   </div>
 </div>
@@ -652,6 +672,36 @@
     <button class="primary" id="closePlayersList" type="button">إغلاق</button>
   </div>
 </div>
+<div id="dailyLbModal" class="modal hidden" role="dialog" aria-modal="true">
+  <div class="modal-content">
+    <h2>🏆 متصدرو التحدي اليومي</h2>
+    <div class="lb-tabs">
+      <button class="lb-tab active" data-lbtab="score" type="button">أقل نقاط</button>
+      <button class="lb-tab" data-lbtab="rounds" type="button">أسرع وقت</button>
+    </div>
+    <div id="dailyLbBody"></div>
+    <button class="primary" id="closeDailyLb" type="button">إغلاق</button>
+  </div>
+</div>
+
+<div id="forceDiscModal" class="modal hidden" role="dialog" aria-modal="true">
+  <div class="modal-content">
+    <h2>⚔️ تخلص إجباري</h2>
+    <p style="text-align:center;font-size:11.5px;opacity:.85;margin-bottom:12px">اختر خصماً ليتخلص من أفضل بطاقة عنده</p>
+    <div id="forceDiscTargets"></div>
+    <button class="ghost" id="closeForceDisc" type="button">إلغاء</button>
+  </div>
+</div>
+
+<div id="spyModal" class="modal hidden" role="dialog" aria-modal="true">
+  <div class="modal-content">
+    <h2>🔍 كشف يد الخصم</h2>
+    <div id="spyBody"></div>
+    <div class="spy-timer" id="spyTimer">⏱ 15 ثانية متبقية</div>
+    <button class="primary" id="closeSpy" type="button">إغلاق</button>
+  </div>
+</div>
+
 <div id="achToast" class="achievement-toast" role="status" aria-live="polite">
   <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="30" height="30"><path d="M6 3h12v5a6 6 0 0 1-12 0z"/><path d="M6 5H3v2a4 4 0 0 0 4 4M18 5h3v2a4 4 0 0 1-4 4"/><path d="M10 14v4M14 14v4M8 20h8"/></svg></div>
   <div class="text">
@@ -855,7 +905,7 @@ input, textarea { font-family: inherit; }
 .topbar { width: 100%; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 5px; align-items: center; flex-shrink: 0; min-height: 34px; padding: 3px 5px; background: linear-gradient(90deg, rgba(0,0,0,0.5), rgba(0,0,0,0.2)); border-radius: 9px; border: 1px solid var(--border-1); position: relative; }
 .turn-info { display: flex; align-items: center; gap: 6px; min-width: 0; padding: 0 3px; overflow: hidden; flex: 1 1 auto; }
 .turn-icon { color: var(--gold); flex-shrink: 0; display: flex; align-items: center; font-size: 14px; }
-.turn-name { font-size: 12.5px; font-weight: 800; color: var(--gold); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1 1 auto; min-width: 0; max-width: none; text-align: right; line-height: 1.1; }
+.turn-name { font-size: 12.5px; font-weight: 800; color: var(--gold); white-space: nowrap; overflow: visible; text-overflow: clip; flex: 1 1 auto; min-width: 0; max-width: none; text-align: right; line-height: 1.1; display: flex; align-items: center; justify-content: flex-start; gap: 4px; }
 .cur-stats { display: inline-flex; gap: 5px; align-items: center; flex-shrink: 0; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
 .cur-stats::-webkit-scrollbar { display: none; }
 .cur-chip { display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px; border-radius: 8px; background: rgba(0,0,0,0.4); border: 1px solid var(--gold-alpha-30); white-space: nowrap; font-size: 10.5px; font-weight: 800; color: var(--gold); }
@@ -1714,6 +1764,126 @@ body.no-glow .pile .clickable::after { display: none !important; }
 @keyframes resultPop { 0% { transform: scale(0.3); opacity: 0; } 60% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
 .big-result-overlay.hide { opacity: 0; }
 
+/* SCREEN SHAKE */
+@keyframes screenShake {
+  0%, 100% { transform: translate(0, 0); }
+  15% { transform: translate(-4px, 3px); }
+  30% { transform: translate(3px, -2px); }
+  45% { transform: translate(-2px, -3px); }
+  60% { transform: translate(3px, 2px); }
+  75% { transform: translate(-2px, 1px); }
+  90% { transform: translate(1px, -1px); }
+}
+body.screen-shake { animation: screenShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+
+/* SHOP BUNDLES */
+.shop-bundle {
+  background: linear-gradient(160deg, rgba(168,85,247,0.2), rgba(168,85,247,0.05));
+  border: 1.5px solid rgba(168,85,247,0.5);
+  border-radius: 12px; padding: 12px; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 10px;
+}
+.shop-bundle .bundle-info { flex: 1; text-align: right; }
+.shop-bundle .bundle-name { font-size: 13px; font-weight: 900; color: #c4b5fd; }
+.shop-bundle .bundle-desc { font-size: 10px; opacity: 0.8; margin-top: 3px; }
+.shop-bundle .bundle-price { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.shop-bundle .price-new { font-size: 13px; font-weight: 900; color: #f4b942; }
+.shop-bundle .price-old { font-size: 9px; text-decoration: line-through; opacity: 0.6; color: #ef4444; }
+.shop-bundle .bundle-buy {
+  background: linear-gradient(160deg, #a855f7, #7c3aed);
+  color: #fff; padding: 9px 14px; border-radius: 9px;
+  font-size: 11px; font-weight: 900; border: 0; cursor: pointer; white-space: nowrap;
+}
+.shop-bundle .bundle-buy:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* DAILY DISCOUNT */
+.daily-discount-banner {
+  background: linear-gradient(160deg, rgba(239,68,68,0.25), rgba(239,68,68,0.08));
+  border: 1.5px solid rgba(239,68,68,0.5);
+  border-radius: 10px; padding: 8px 12px; margin-bottom: 12px;
+  text-align: center; font-size: 11px; font-weight: 800; color: #ff8b95;
+}
+.shop-item { position: relative; }
+.shop-item .discount-badge {
+  position: absolute; top: -6px; left: -6px;
+  background: linear-gradient(160deg, #ef4444, #991b1b);
+  color: #fff; font-size: 9px; font-weight: 900;
+  padding: 2px 7px; border-radius: 8px; border: 1.5px solid #1a1a1a;
+  animation: pulseDiscount 1.5s infinite; z-index: 2;
+}
+@keyframes pulseDiscount {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* FORCE DISC MODAL */
+#forceDiscModal .modal-content { max-width: 400px; }
+.fd-target-btn {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px; background: rgba(0,0,0,0.35);
+  border: 1.5px solid var(--border-1); border-radius: 10px;
+  margin-bottom: 8px; width: 100%; cursor: pointer;
+  color: var(--text-primary); text-align: right;
+  transition: background 0.15s, border-color 0.15s;
+}
+.fd-target-btn:hover { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.5); }
+.fd-target-btn:active { transform: scale(0.98); }
+.fd-target-name { flex: 1; font-size: 13px; font-weight: 800; color: var(--gold); }
+.fd-target-info { font-size: 10px; opacity: 0.7; }
+
+/* SPY MODAL */
+#spyModal .modal-content { max-width: 500px; }
+.spy-hand-row {
+  display: flex; gap: 4px; flex-wrap: wrap;
+  padding: 10px; background: rgba(0,0,0,0.3);
+  border-radius: 8px; margin-bottom: 6px; justify-content: center;
+}
+.spy-timer {
+  text-align: center; font-size: 12px; font-weight: 900;
+  color: #f4b942; padding: 8px; margin-top: 8px;
+  background: rgba(0,0,0,0.4); border-radius: 8px;
+}
+.spy-timer.warn { color: #ef4444; animation: timerPulse 0.5s infinite; }
+
+/* --- PHASE 2: AVATARS, STREAKS, THEMES, DAILY LB --- */
+.avatar-circle {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 900; color: #fff; font-size: 13px;
+  flex-shrink: 0; border: 2px solid rgba(255,255,255,0.2);
+  box-shadow: inset 0 -2px 4px rgba(0,0,0,0.3), 0 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  vertical-align: middle; margin-left: 6px;
+}
+.avatar-circle.lg { width: 80px; height: 80px; font-size: 36px; margin: 0 auto 10px; border-width: 3px; }
+.avatar-circle.md { width: 46px; height: 46px; font-size: 20px; }
+
+html.theme-wood {
+  --bg-primary: #2a1a10; --bg-secondary: #140a05;
+  --bg-glow-1: #4a2a1a; --bg-glow-2: #2a1005;
+  --surface-1: rgba(255,255,255,0.08); --surface-2: rgba(0,0,0,0.5);
+}
+html.theme-wood body {
+  background: radial-gradient(ellipse at 50% 0%, #5a3a2a, #1a0a05);
+  background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.1) 0 2px, transparent 2px 8px), radial-gradient(ellipse at 50% 0%, #5a3a2a, #1a0a05);
+}
+
+.streak-badge {
+  display: inline-block; background: linear-gradient(160deg, #ff6b00, #cc3300);
+  color: #fff; font-size: 9px; font-weight: 900; padding: 2px 6px;
+  border-radius: 6px; margin-right: 4px; vertical-align: middle;
+  box-shadow: 0 2px 5px rgba(255,100,0,0.5);
+}
+
+#dailyLbModal .modal-content { max-width: 450px; }
+.lb-tabs { display: flex; gap: 4px; margin-bottom: 12px; justify-content: center; }
+.lb-tab { flex: 1; padding: 8px; background: var(--surface-1); border: 1px solid var(--border-1); border-radius: 8px; font-size: 11px; font-weight: 700; color: var(--text-secondary); cursor: pointer; }
+.lb-tab.active { background: linear-gradient(160deg, var(--gold-light), var(--gold-dark)); color: #241a00; border-color: var(--gold-light); }
+.lb-row { display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 8px; margin-bottom: 6px; }
+.lb-rank { font-size: 16px; font-weight: 900; color: var(--gold); width: 30px; text-align: center; }
+.lb-name { flex: 1; font-size: 13px; font-weight: 800; color: #fff; padding: 0 10px; }
+.lb-val { font-size: 13px; font-weight: 900; color: var(--green); }
+
 /* UPDATE BANNER */
 #updateAvailable {
   position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
@@ -2237,7 +2407,45 @@ body.no-glow .pile .clickable::after { display: none !important; }
   border: 1px dashed rgba(244,185,66,0.5);
   box-shadow: inset 0 0 18px rgba(244,185,66,0.15);
 }
+/* ===== 3D Card Tilt ===== */
+.hand .card-slot .p10-card {
+  transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.3, 1), box-shadow 0.15s;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.p10-card.tilting {
+  box-shadow: 0 22px 50px rgba(0,0,0,0.6), 0 0 30px rgba(244,185,66,0.5) !important;
+}
+.p10-card .center-dot, .p10-card .tl-corner, .p10-card .br-corner {
+  transform: translateZ(8px);
+}
+.p10-card .tl-num, .p10-card .br-num { transform: translateZ(14px); }
+.p10-card .center-num { transform: translateZ(18px); text-shadow: 0 2px 6px rgba(0,0,0,0.4); }
 
+/* ===== Exclusive Faces ===== */
+.p10-card.face-exclusive-gold {
+  background: linear-gradient(135deg, #ffe985 0%, #f4b942 50%, #c98a05 100%);
+  border: 3px solid #fff;
+  box-shadow: inset 0 0 20px rgba(255,255,255,0.6), 0 0 25px rgba(244,185,66,0.6) !important;
+}
+.p10-card.face-exclusive-gold .center-num { color: #7a4d00 !important; text-shadow: 0 2px 0 #fff, 0 4px 8px rgba(0,0,0,0.4) !important; }
+.p10-card.face-exclusive-carbon {
+  background: repeating-linear-gradient(45deg, #0a0a0a 0 4px, #1a1a1a 4px 8px);
+  border: 3px solid #4a4a4a;
+}
+.p10-card.face-exclusive-carbon .center-num { color: #00ff88 !important; text-shadow: 0 0 15px #00ff88, 0 0 30px #00ff88 !important; }
+.p10-card.face-exclusive-crystal {
+  background: linear-gradient(135deg, #e0f7ff 0%, #a0d8ff 40%, #5ba0ff 100%);
+  border: 3px solid #fff;
+  box-shadow: inset 0 0 30px rgba(255,255,255,0.9), 0 0 25px rgba(120,200,255,0.7) !important;
+}
+.p10-card.face-exclusive-crystal .center-num { color: #0a52cc !important; text-shadow: 0 1px 0 #fff, 0 3px 8px rgba(0,0,0,0.3) !important; }
+.p10-card.face-exclusive-neon {
+  background: radial-gradient(circle at 50% 50%, #1a0a2a 0%, #05010a 100%);
+  border: 3px solid #ff00ff;
+  box-shadow: inset 0 0 30px rgba(255,0,255,0.5), 0 0 30px rgba(0,255,255,0.6) !important;
+}
+.p10-card.face-exclusive-neon .center-num { color: #00ffff !important; text-shadow: 0 0 10px #00ffff, 0 0 25px #ff00ff !important; }
 /* 6️⃣ تصحيح البطاقات الصغيرة في القوائم والمعروضات */
 .setting-item .preview-card .p10-card .center-num,
 .meld .p10-card .center-num {
@@ -2257,9 +2465,9 @@ body.no-glow .pile .clickable::after { display: none !important; }
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '21.6.4';
+var APP_VERSION = '22.0.0';
 var APP_BUILD_DATE = '1-9-2026';
-var APP_LAST_UPDATE = '17-10-2026';
+var APP_LAST_UPDATE = '27-10-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
 var UPDATE_CHECK_INTERVAL_MS = 30 * 60 * 1000; /* 30 دقيقة */
 
@@ -2384,7 +2592,11 @@ var SPECIAL_MODES = [
   { key: 'chaos', name: 'فوضى', desc: 'الأيدي مكشوفة للجميع', startHand: 10, drawCount: 1, openHands: true },
   { key: 'sniper', name: 'قناص', desc: 'بدون Wild أو Skip', startHand: 10, drawCount: 1, noWild: true, noSkip: true },
   { key: 'triple', name: 'ثلاثي', desc: 'اسحب 3 وتخلص من 3', startHand: 10, drawCount: 3, discardCount: 3 },
-  { key: 'harvest', name: 'حصاد', desc: 'الضرب على أوراقك فقط', startHand: 10, drawCount: 1, onlyOwnHit: true }
+  { key: 'harvest', name: 'حصاد', desc: 'الضرب على أوراقك فقط', startHand: 10, drawCount: 1, onlyOwnHit: true },
+  { key: 'timerush', name: '⏱ اندفاع', desc: 'كل دور 15 ثانية فقط', startHand: 10, drawCount: 1, turnTimer: 15 },
+  { key: 'tiny',     name: '🎴 قبضة',   desc: 'تبدأ بـ 5 بطاقات فقط',   startHand: 5,  drawCount: 1 },
+  { key: 'massive',  name: '🎒 حِمل',   desc: 'تبدأ بـ 15 بطاقة',        startHand: 15, drawCount: 1 },
+  { key: 'nomercy',  name: '⚔️ بلا رحمة', desc: 'بلا Wild/Skip + 15 ثانية', startHand: 10, drawCount: 1, noWild: true, noSkip: true, turnTimer: 15 }
 ];
 
 var FACE_STYLES = [
@@ -2404,7 +2616,11 @@ var FACE_STYLES = [
   { key: 'face-grid-thick',     name: 'شبكة سميكة' },
   { key: 'face-radial-line',    name: 'خطوط شعاعية' },
   { key: 'face-wavy-bands',     name: 'أشرطة متموّجة' },
-  { key: 'face-diag-stripe',    name: 'أشرطة قطرية' }
+  { key: 'face-diag-stripe',    name: 'أشرطة قطرية' },
+  { key: 'face-exclusive-gold',    name: '✨ ذهبي',    exclusive: 'firstWin' },
+  { key: 'face-exclusive-carbon',  name: '⬛ كربوني',  exclusive: 'win5Games' },
+  { key: 'face-exclusive-crystal', name: '💎 كريستال', exclusive: 'completeAllPhases' },
+  { key: 'face-exclusive-neon',    name: '🔮 نيون',    exclusive: 'winStreak10' }
 ];
 
 var BACK_STYLES = [
@@ -2575,6 +2791,174 @@ function copyToClipboard(text) {
 /* ============================================================
    SOUND
    ============================================================ */
+var BackgroundMusic = (function() {
+  var ctx = null, masterGain = null;
+  var currentStyle = 'off', schedulerTimer = null;
+  var chordIndex = 0, tension = 0, activeNodes = [];
+
+  // 🎼 6 كوردات بـ 7th chords (أغنى بكثير من 4 triads)
+  var PIANO_PROG = [
+    { notes: [261.63, 329.63, 392.00, 493.88], bass: 130.81, melody: [523.25, 659.25, 783.99] }, // Cmaj7
+    { notes: [220.00, 261.63, 329.63, 392.00], bass: 110.00, melody: [440.00, 523.25, 659.25] }, // Am7
+    { notes: [174.61, 220.00, 261.63, 349.23], bass: 87.31,  melody: [349.23, 440.00, 523.25] }, // Fmaj7
+    { notes: [196.00, 246.94, 293.66, 349.23], bass: 98.00,  melody: [392.00, 493.88, 587.33] }, // G7
+    { notes: [164.81, 196.00, 246.94, 329.63], bass: 82.41,  melody: [329.63, 415.30, 523.25] }, // Em7
+    { notes: [146.83, 174.61, 220.00, 293.66], bass: 73.42,  melody: [293.66, 349.23, 440.00] }  // Dm7
+  ];
+  var AMBIENT_PROG = [
+    { notes: [130.81, 196.00, 261.63, 329.63], bass: 65.41 },
+    { notes: [110.00, 164.81, 220.00, 261.63], bass: 55.00 },
+    { notes: [87.31, 130.81, 174.61, 220.00],  bass: 43.65 },
+    { notes: [98.00, 146.83, 196.00, 246.94],  bass: 49.00 }
+  ];
+
+  function init() {
+    if (ctx) return;
+    var C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return;
+    try {
+      ctx = new C();
+      masterGain = ctx.createGain();
+      masterGain.gain.value = 0;
+      masterGain.connect(ctx.destination);
+    } catch (e) { ctx = null; }
+  }
+  function cleanupNode(node) {
+    var i = activeNodes.indexOf(node);
+    if (i >= 0) activeNodes.splice(i, 1);
+  }
+  function playNote(freq, offset, duration, vol, type) {
+    if (!ctx) return;
+    var t0 = ctx.currentTime + offset;
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.type = type || 'triangle';
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0, t0);
+    gain.gain.linearRampToValueAtTime(vol, t0 + 0.03);
+    gain.gain.exponentialRampToValueAtTime(vol * 0.5, t0 + duration * 0.3);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
+    osc.connect(gain); gain.connect(masterGain);
+    osc.start(t0); osc.stop(t0 + duration + 0.15);
+    activeNodes.push(osc);
+    setTimeout(function() { cleanupNode(osc); }, (duration + 0.5) * 1000);
+  }
+  var _musicCycle = 0;
+function playPianoChord() {
+  if (!ctx) return;
+  var chord = PIANO_PROG[chordIndex % PIANO_PROG.length];
+  chordIndex++;
+  _musicCycle++;
+  var spd = tension > 0 ? 0.7 : 1;
+  // ✨ تطور تدريجي: يبدأ هادئاً ويقوى مع كل دورة
+  var intensity = Math.min(1.0, 0.55 + _musicCycle * 0.025);
+  var baseVol = 0.06 * intensity;
+  // باص عميق (دائماً موجود)
+  playNote(chord.bass, 0, 4.5, baseVol * 0.9, 'sine');
+  // كوردات متدرجة (Arpeggio) — الطبقة الأساسية
+  for (var i = 0; i < chord.notes.length; i++) {
+    playNote(chord.notes[i], i * 0.16, 3.0, baseVol * 1.2, 'triangle');
+  }
+  // 🎵 طبقة ميلودي — تظهر بوضوح من الدورة الثانية (كانت أضعف من الكوردات)
+  if (_musicCycle >= 2) {
+    for (var m = 0; m < chord.melody.length; m++) {
+      playNote(chord.melody[m], 0.7 + m * 0.55 * spd, 1.6, baseVol * 1.8, 'sine');
+    }
+  }
+  // ✨ بريق عالٍ — يظهر من الدورة الرابعة
+  if (_musicCycle >= 4 && chordIndex % 2 === 0) {
+    playNote(chord.notes[chord.notes.length - 1] * 2, 1.6, 1.4, baseVol * 0.6, 'sine');
+  }
+  // 🌊 طبقة Pad خلفية — تنضم من الدورة الثالثة
+  if (_musicCycle >= 3) {
+    for (var p = 0; p < chord.notes.length; p += 2) {
+      playNote(chord.notes[p] / 2, 0, 4.0, baseVol * 0.4, 'sine');
+    }
+  }
+  // 🔊 شدّة ديناميكية تصاعدية
+  try {
+    var swell = Math.min(1.0, 0.75 + _musicCycle * 0.03);
+    masterGain.gain.cancelScheduledValues(ctx.currentTime);
+    masterGain.gain.setValueAtTime(masterGain.gain.value, ctx.currentTime);
+    masterGain.gain.linearRampToValueAtTime(swell, ctx.currentTime + 1.5);
+  } catch (e) {}
+}
+  function playAmbientPad() {
+    if (!ctx) return;
+    var chord = AMBIENT_PROG[chordIndex % AMBIENT_PROG.length];
+    chordIndex++;
+    var t0 = ctx.currentTime;
+    var bass = ctx.createOscillator(), bg = ctx.createGain();
+    bass.type = 'sine'; bass.frequency.value = chord.bass;
+    bg.gain.setValueAtTime(0, t0);
+    bg.gain.linearRampToValueAtTime(0.03, t0 + 2);
+    bg.gain.linearRampToValueAtTime(0.018, t0 + 5);
+    bg.gain.linearRampToValueAtTime(0, t0 + 8);
+    bass.connect(bg); bg.connect(masterGain);
+    bass.start(t0); bass.stop(t0 + 8.5);
+    activeNodes.push(bass);
+    setTimeout(function() { cleanupNode(bass); }, 9000);
+    for (var i = 0; i < chord.notes.length; i++) {
+      var o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = chord.notes[i];
+      var off = i * 0.7;
+      g.gain.setValueAtTime(0, t0 + off);
+      g.gain.linearRampToValueAtTime(0.035, t0 + off + 2);
+      g.gain.linearRampToValueAtTime(0.02, t0 + off + 5);
+      g.gain.linearRampToValueAtTime(0, t0 + off + 7.5);
+      o.connect(g); g.connect(masterGain);
+      o.start(t0 + off); o.stop(t0 + off + 8);
+      activeNodes.push(o);
+      (function(oo, d) { setTimeout(function() { cleanupNode(oo); }, d); })(o, (off + 8.5) * 1000);
+    }
+  }
+  function stopAllNodes() {
+    for (var i = 0; i < activeNodes.length; i++) { try { activeNodes[i].stop(); } catch (e) {} }
+    activeNodes = [];
+  }
+  function schedule() {
+    if (!ctx || currentStyle === 'off') return;
+    if (currentStyle === 'piano') {
+      playPianoChord();
+      var interval = tension > 0 ? 2900 : 3700;
+      schedulerTimer = setTimeout(schedule, interval);
+    } else if (currentStyle === 'ambient') {
+      playAmbientPad();
+      schedulerTimer = setTimeout(schedule, 8000);
+    }
+  }
+  return {
+    setStyle: function(style) {
+      init(); if (!ctx) return;
+      if (schedulerTimer) { clearTimeout(schedulerTimer); schedulerTimer = null; }
+      stopAllNodes();
+      currentStyle = style || 'off';
+      if (currentStyle === 'off') {
+        try { masterGain.gain.cancelScheduledValues(ctx.currentTime);
+          masterGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.5); } catch (e) {}
+        return;
+      }
+      if (ctx.state === 'suspended') { try { ctx.resume(); } catch (e) {} }
+      try {
+        masterGain.gain.cancelScheduledValues(ctx.currentTime);
+        masterGain.gain.setValueAtTime(0.001, ctx.currentTime);
+        masterGain.gain.linearRampToValueAtTime(1, ctx.currentTime + 1.5);
+      } catch (e) {}
+      chordIndex = 0;
+      schedule();
+    },
+    stop: function() {
+      if (schedulerTimer) { clearTimeout(schedulerTimer); schedulerTimer = null; }
+      stopAllNodes();
+      currentStyle = 'off';
+      if (ctx && masterGain) {
+        try { masterGain.gain.cancelScheduledValues(ctx.currentTime);
+          masterGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.5); } catch (e) {}
+      }
+    },
+    setTension: function(level) { tension = level > 0 ? 1 : 0; }
+  };
+})();
 var SoundFX = (function() {
   var ctx = null; var enabled = true;
   function ensure() {
@@ -2633,7 +3017,24 @@ var SoundFX = (function() {
       }
     } catch (err) {}
   }
-  return { play: play, setEnabled: function(v) { enabled = !!v; }, ensureContext: ensure };
+  function playEscalatingHit(count) {
+  if (!enabled) return;
+  var c = ensure(); if (!c) return;
+  var n = Math.min(count, 6);
+  var freqs = [660, 740, 830, 880, 990, 1100];
+  var vol = Math.min(0.09 + n * 0.025, 0.22);
+  for (var i = 0; i < n; i++) {
+    playNote(c, freqs[i], 'triangle', 0.32, 0.01, 0.16, vol, i * 0.085);
+  }
+  if (n >= 5) {
+    setTimeout(function() {
+      playNote(c, 1318, 'sine', 0.5, 0.02, 0.3, 0.15, 0);
+      playNote(c, 1567, 'sine', 0.5, 0.02, 0.3, 0.12, 0.1);
+    }, n * 90);
+  }
+}
+return { play: play, playEscalatingHit: playEscalatingHit,
+         setEnabled: function(v) { enabled = !!v; }, ensureContext: ensure };
 })();
 
 /* ============================================================
@@ -2701,6 +3102,55 @@ function floatScore(x, y, text, color) {
   if (color) el.style.color = color;
   document.body.appendChild(el);
   setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 1400);
+}
+function showHitBurst(count) {
+  if (!shouldRunAnimations()) return;
+  var sr = getRect($('meldsScroll')); if (!sr) return;
+  // اهتزاز متدرّج
+  var shakeDur = count >= 5 ? 700 : (count >= 3 ? 480 : 250);
+  document.body.classList.add('screen-shake');
+  setTimeout(function() { document.body.classList.remove('screen-shake'); }, shakeDur);
+  // جسيمات متدرّجة
+  var particles = count >= 5 ? 40 : (count >= 3 ? 20 : 8);
+  var colors = ['#ffd75e','#5be08f','#4ade80','#f4b942','#ff8b95'];
+  for (var i = 0; i < particles; i++) {
+    (function(idx) {
+      setTimeout(function() {
+        var p = document.createElement('div');
+        p.style.cssText = 'position:fixed;width:6px;height:6px;border-radius:50%;' +
+          'background:' + colors[idx % colors.length] + ';' +
+          'left:' + (sr.centerX + (Math.random()-0.5)*200) + 'px;' +
+          'top:' + (sr.centerY + (Math.random()-0.5)*120) + 'px;' +
+          'z-index:9999;pointer-events:none;' +
+          'box-shadow:0 0 8px currentColor;';
+        document.body.appendChild(p);
+        var angle = Math.random() * Math.PI * 2;
+        var dist = 60 + Math.random() * 120;
+        p.animate([
+          { transform: 'translate(0,0) scale(1)', opacity: 1 },
+          { transform: 'translate(' + Math.cos(angle)*dist + 'px,' +
+                        Math.sin(angle)*dist + 'px) scale(0)', opacity: 0 }
+        ], { duration: 700 + Math.random()*400, easing: 'cubic-bezier(0,0.5,0.3,1)' });
+        setTimeout(function() { if (p.parentNode) p.parentNode.removeChild(p); }, 1200);
+      }, idx * 18);
+    })(i);
+  }
+  // نص عائم
+  var txt = count === 1 ? '+1' : (count === 2 ? '×2!' : (count === 3 ? '×3 🔥' : (count === 4 ? '×4 💥' : '×' + count + ' ⚡🔥')));
+  var color = count >= 5 ? '#ffd75e' : (count >= 3 ? '#ff8b95' : '#4ade80');
+  floatScore(sr.centerX, sr.centerY, txt, color);
+  // اهتزاز
+  vibrateOn(count >= 5 ? 'hit5' : (count >= 3 ? 'hit3' : 'discard'));
+  // Overlay للضربات الكبيرة
+  if (count >= 5) {
+    var ov = document.createElement('div');
+    ov.className = 'big-result-overlay win-result';
+    ov.style.cssText = 'background:radial-gradient(ellipse at 50% 50%, rgba(244,185,66,0.35), rgba(0,0,0,0.65))';
+    ov.innerHTML = '<div class="result-text" style="font-size:48px">⚡ ×' + count + ' ⚡</div>';
+    document.body.appendChild(ov);
+    setTimeout(function() { ov.classList.add('hide'); }, 1200);
+    setTimeout(function() { if (ov.parentNode) ov.parentNode.removeChild(ov); }, 1800);
+  }
 }
 function showConfetti() {
   if (!shouldRunAnimations()) return;
@@ -2829,8 +3279,10 @@ function checkNearWinAlert(state) {
   if (danger) {
     el.textContent = '⚠ ' + danger.name + ' قريب من الفوز (' + danger.hand.length + ' بطاقات)!';
     el.classList.remove('hidden');
+    BackgroundMusic.setTension(1);
   } else {
     el.classList.add('hidden');
+    BackgroundMusic.setTension(0);
   }
 }
 
@@ -2843,7 +3295,8 @@ var DEFAULT_SETTINGS = {
   cardSize: 'medium', cpuSpeed: 'normal', animations: true, glow: true,
   autoHint: true, soundEnabled: true, theme: 'dark', autoSave: true,
   specialMode: 'classic', phasePack: 'classic', tutorialSeen: false,
-  turnTimerEnabled: false, turnTimerSeconds: 30
+  turnTimerEnabled: false, turnTimerSeconds: 30,
+  musicStyle: 'off', tableStyle: 'dark'
 };
 function cloneDefaults() { var r = {}; for (var k in DEFAULT_SETTINGS) r[k] = DEFAULT_SETTINGS[k]; return r; }
 function loadSettingsFromStorage() {
@@ -2869,14 +3322,15 @@ function saveSettingsToStorage() {
   try { localStorage.setItem('p10v21_settings', JSON.stringify(app.settings)); } catch (err) {}
 }
 function applySettingsToDOM() {
-  _cardHTMLCache = {};
-  _cardHTMLCacheCount = 0;
+  _cardHTMLCache = {}; _cardHTMLCacheCount = 0;
   document.body.classList.toggle('no-anim', !app.settings.animations);
   document.body.classList.toggle('no-glow', !app.settings.glow);
   var root = document.documentElement;
-  root.classList.toggle('theme-light', app.settings.theme === 'light');
-  root.classList.toggle('theme-neon', app.settings.theme === 'neon');
+  root.classList.toggle('theme-light', app.settings.tableStyle === 'light');
+  root.classList.toggle('theme-neon', app.settings.tableStyle === 'neon');
+  root.classList.toggle('theme-wood', app.settings.tableStyle === 'wood');
   SoundFX.setEnabled(app.settings.soundEnabled !== false);
+  BackgroundMusic.setStyle(app.settings.musicStyle || 'off');
   var s = app.settings.cardSize || 'medium';
   if (s === 'small') {
     root.style.setProperty('--card-width', '42px'); root.style.setProperty('--card-height', '62px');
@@ -2906,6 +3360,59 @@ function saveAchievementsToStorage() {
 function getAchievementByKey(key) {
   for (var i = 0; i < ACHIEVEMENTS_LIST.length; i++) if (ACHIEVEMENTS_LIST[i].key === key) return ACHIEVEMENTS_LIST[i];
   return null;
+}
+function updateFaceBackCounts() {
+  var unlockedFaces = 0;
+  for (var i = 0; i < FACE_STYLES.length; i++) {
+    if (!FACE_STYLES[i].exclusive || app.achievements[FACE_STYLES[i].exclusive]) unlockedFaces++;
+  }
+  var backCount = BACK_STYLES.length;
+  var sTabs = document.querySelectorAll('.settings-tab[data-tab="face"]');
+  for (var j = 0; j < sTabs.length; j++) sTabs[j].textContent = 'الأوجه (' + unlockedFaces + ')';
+  var bTabs = document.querySelectorAll('.settings-tab[data-tab="back"]');
+  for (var k = 0; k < bTabs.length; k++) bTabs[k].textContent = 'الظهور (' + backCount + ')';
+  var gTabs = document.querySelectorAll('.settings-tab[data-gtab="faces"]');
+  for (var l = 0; l < gTabs.length; l++) gTabs[l].textContent = 'الأوجه (' + unlockedFaces + ')';
+  var gbTabs = document.querySelectorAll('.settings-tab[data-gtab="backs"]');
+  for (var m = 0; m < gbTabs.length; m++) gbTabs[m].textContent = 'الظهور (' + backCount + ')';
+  var faceSub = document.querySelector('#tab-face p');
+  if (faceSub) faceSub.textContent = unlockedFaces + ' تصميم يتبع لون البطاقة';
+  var backSub = document.querySelector('#tab-back p');
+  if (backSub) backSub.textContent = backCount + ' تصميم ظهور فريد';
+}
+var TITLES_LIST = [
+  { key: 'novice',    name: '🌱 مبتدئ',   unlock: function() { return (app.stats.gamesPlayed||0) >= 1; } },
+  { key: 'fighter',   name: '⚔️ مقاتل',   unlock: function() { return (app.stats.totalWins||0) >= 3; } },
+  { key: 'champion',  name: '🏆 بطل',      unlock: function() { return (app.stats.totalWins||0) >= 10; } },
+  { key: 'legend',    name: '👑 أسطورة',   unlock: function() { return (app.stats.totalWins||0) >= 25; } },
+  { key: 'streak3',   name: '🔥 متوهّج',    unlock: function() { return (app.stats.winStreak||0) >= 3; } },
+  { key: 'streak10',  name: '⚡ لا يُهزم',  unlock: function() { return (app.stats.winStreak||0) >= 10; } },
+  { key: 'collector', name: '💎 جامع',     unlock: function() { return Object.keys(app.achievements).filter(function(k){return app.achievements[k];}).length >= 10; } },
+  { key: 'perfectionist', name: '✨ مثالي', unlock: function() { return !!app.achievements.noPoints; } },
+  { key: 'daily',     name: '🎯 يومي',     unlock: function() { return (app.stats.dailyStreak||0) >= 3; } },
+  { key: 'master',    name: '🎓 معلّم',    unlock: function() { return !!app.achievements.completeAllPhases; } }
+];
+function refreshTitles() {
+  for (var i = 0; i < TITLES_LIST.length; i++) {
+    var t = TITLES_LIST[i];
+    if (t.unlock() && !app.titles[t.key]) { app.titles[t.key] = true; }
+  }
+  try { localStorage.setItem('p10v21_titles', JSON.stringify(app.titles)); } catch (e) {}
+}
+function getDisplayName(name) {
+  if (!app.equippedTitle) return name;
+  for (var i = 0; i < TITLES_LIST.length; i++) {
+    if (TITLES_LIST[i].key === app.equippedTitle && app.titles[app.equippedTitle]) {
+      return TITLES_LIST[i].name + ' ' + name;
+    }
+  }
+  return name;
+}
+function equipTitle(key) {
+  app.equippedTitle = key;
+  try { localStorage.setItem('p10v21_equippedTitle', key); } catch (e) {}
+  if (app.state) { resetRenderCache(); scheduleRender(); }
+  SoundFX.play('reward');
 }
 function getTotalCoins() {
   var total = 0;
@@ -2962,6 +3469,7 @@ function updateSettingsCoinPreview() {
 function unlockAchievement(key) {
   if (!key || app.achievements[key]) return false;
   app.achievements[key] = true; saveAchievementsToStorage();
+  try { updateFaceBackCounts(); } catch (e) {}  // ← أضف هذا السطر
   var info = getAchievementByKey(key);
   if (info) {
     showAchievementToast(info);
@@ -3027,17 +3535,20 @@ var app = {
   pendingMode: null, localPlayerCount: 2, localCpuCount: 1,
   localNames: ['لاعب 1', 'لاعب 2', 'لاعب 3', 'لاعب 4', 'لاعب 5', 'لاعب 6', 'لاعب 7', 'لاعب 8'],
   achievements: loadAchievementsFromStorage(),
-  undoStack: [], handOrder: [], dealing: false,
+titles: (function() { try { return JSON.parse(localStorage.getItem('p10v21_titles') || '{}'); } catch (e) { return {}; } })(),
+equippedTitle: (function() { try { return localStorage.getItem('p10v21_equippedTitle') || ''; } catch (e) { return ''; } })(),
+undoStack: [], handOrder: [], dealing: false,
   suppressRender: false, pendingRoundScore: false,
 pendingNewRound: null,
 pendingStalemate: false,
   customAdvancedPhases: null,
   matchRewards: { coinsEarned: 0, achievementsUnlocked: [] },
   stats: {
-    gamesPlayed: 0, winStreak: 0, currentStreak: 0, totalWins: 0, totalLosses: 0,
-    hintsUsed: 0, hintsUsedThisMatch: 0, skipsUsed: 0, totalPenalty: 0,
-    cpuSkill: GAME_CONST.CPU_SKILL_START, dailyChallengeDone: {}
-  },
+  gamesPlayed: 0, winStreak: 0, currentStreak: 0, totalWins: 0, totalLosses: 0,
+  hintsUsed: 0, hintsUsedThisMatch: 0, skipsUsed: 0, totalPenalty: 0,
+  cpuSkill: GAME_CONST.CPU_SKILL_START, dailyChallengeDone: {},
+  dailyStreak: 0, lastDailyDate: '', dailyLb: []
+},
   tutorialStep: 0,
   dailyChallengeActive: false,
   dailyChallengePhase: null,
@@ -3364,7 +3875,7 @@ function newGame(configs, spCfg, packKey) {
   for (var j = 0; j < configs.length; j++) {
     var c = configs[j];
     var dn = c.isCPU ? 'CPU ' + (j + 1) : 'لاعب ' + (j + 1);
-    players.push({ id: j, name: c.name || dn, isCPU: !!c.isCPU, hand: [], melds: [], phase: 0, score: 0, hitsThisTurn: 0 });
+    players.push({ id: j, name: c.name || dn, isCPU: !!c.isCPU, hand: [], melds: [], phase: 0, score: 0, hitsThisTurn: 0, shieldRounds: 0, skipImmune: false, autoCompleted: false, laidThisTurn: false });
   }
   assignPersonalities(players);
   var deck = createDeck(spCfg);
@@ -3379,9 +3890,10 @@ function newGame(configs, spCfg, packKey) {
   phasesLimit: spCfg.phasesLimit || phases.length,
   phasesList: phases, phasePackKey: pack.key,
   turnNumber: 1, aiFirstLayTurn: {}, actionLog: [],
+  lastDiscard: {}, extraTurnFor: null,
   /* ✅ مزامنة إعدادات المضيف للجميع */
-  turnTimerEnabled: app.settings.turnTimerEnabled === true,
-  turnTimerSeconds: app.settings.turnTimerSeconds || 30
+  turnTimerEnabled: spCfg.turnTimer ? true : (app.settings.turnTimerEnabled === true),
+  turnTimerSeconds: spCfg.turnTimer || app.settings.turnTimerSeconds || 30
 };
 }
 function startNewRound(state, winnerId) {
@@ -3459,26 +3971,50 @@ function resetRoundForState(state, winnerId) {
     state.players[k].hand = deck.splice(0, startHand);
     state.players[k].melds = [];
     state.players[k].hitsThisTurn = 0;
+    state.players[k].laidThisTurn = false;
   }
   var fd = pickInitialDiscard(deck);
   state.discard = fd ? [fd] : [];
   state.turnIndex = winnerId;
   state.hasDrawn = false; state.selected = []; state.hintCards = [];
   state.turnNumber = 1;
-  state.aiFirstLayTurn = {};
-  if (!state.actionLog) state.actionLog = [];
+state.aiFirstLayTurn = {};
+state.lastDiscard = {};
+state.extraTurnFor = null;
+if (!state.actionLog) state.actionLog = [];
   state.actionLog.push({ ts: Date.now(), pid: -1, name: '', action: 'round', details: 'بدأت الجولة ' + state.round });
 }
 function advanceTurn(state, skipCount) {
   skipCount = skipCount || 1;
-  state.turnIndex = (state.turnIndex + skipCount) % state.playerCount;
+  var actualAdvance = 0;
+  var currentIdx = state.turnIndex;
+  var safety = 0;
+  while (actualAdvance < skipCount && safety < 20) {
+    currentIdx = (currentIdx + 1) % state.playerCount;
+    var target = state.players[currentIdx];
+    if (target && target.skipImmune && skipCount > 1) {
+      target.skipImmune = false;
+      setStatus('🚫 ' + target.name + ' محصّن ضد Skip!', 'var(--purple)');
+      pushActionLog(state, -1, 'skip', '🚫 ' + target.name + ' محصّن ضد Skip');
+      safety++;
+      continue;
+    }
+    actualAdvance++;
+    safety++;
+  }
+  state.turnIndex = currentIdx;
+  for (var si = 0; si < state.players.length; si++) {
+    if (state.players[si].shieldRounds > 0) state.players[si].shieldRounds--;
+  }
   state.hasDrawn = false; state.selected = []; state.hintCards = [];
-  for (var i = 0; i < state.players.length; i++) state.players[i].hitsThisTurn = 0;
+  for (var i = 0; i < state.players.length; i++) {
+    state.players[i].hitsThisTurn = 0;
+    state.players[i].laidThisTurn = false;
+  }
   state.turnNumber = (state.turnNumber || 1) + 1;
   app.undoStack = [];
   var np = state.players[state.turnIndex];
   if (np) pushActionLog(state, -1, 'turn', 'الدور على ' + escapeHTML(np.name));
-  /* ⛑️ شبكة أمان: لو اللاعب التالي يده فارغة → أعد فحص الفوز */
   if (np && np.hand.length === 0) {
     setTimeout(function() {
       if (app.state === state && !state.gameOver) {
@@ -4063,8 +4599,9 @@ function findAllMeldsForCard(state, pId, card) {
   for (var i = 0; i < state.players.length; i++) {
     var p = state.players[i]; if (!p.melds) continue;
     if (cfg.noOpponentHit && p.id !== pId) continue;
-    if (cfg.onlyOwnHit && p.id !== pId) continue;
-    for (var j = 0; j < p.melds.length; j++) {
+if (cfg.onlyOwnHit && p.id !== pId) continue;
+if (p.id !== pId && p.shieldRounds > 0) continue;
+for (var j = 0; j < p.melds.length; j++) {
       var h = canHitMeld(card, p.melds[j]);
       if (h) {
         if (p.id === pId) ownResults.push(h);
@@ -4294,23 +4831,67 @@ function buildPreviewCardHTML(faceStyle, backStyle, colorKey, value) {
    ============================================================ */
 function fitTurnName() {
   var el = $('turnIndicator'); if (!el) return;
-  var maxSize = 12.5, minSize = 6.5;
+  var maxSize = 12.5, minSize = 8; // تم رفع الحد الأدنى قليلاً ليبقى مقروءاً
   var size = maxSize;
   el.style.fontSize = size + 'px';
   var guard = 0;
-  /* نصغّر الخط تدريجياً حتى يتسع الاسم كاملاً — لا نقصّه */
   while (el.scrollWidth > el.clientWidth + 1 && size > minSize && guard < 30) {
     size = Math.max(minSize, size - 0.5);
     el.style.fontSize = size + 'px';
     guard++;
   }
-  /* لو ما زال الفائض حتى أصغر حجم، نخفي القص الاحتياطي */
-  el.style.textOverflow = (el.scrollWidth > el.clientWidth + 1) ? 'ellipsis' : 'clip';
 }
 
 /* ============================================================
    PLAYERS LIST MODAL (file 3)
    ============================================================ */
+function generateAvatarHTML(name, sizeClass) {
+  if (!name) name = '?';
+  var initial = name.charAt(0).toUpperCase();
+  var colors = [
+    ['#ff3b4e','#c21430'], ['#2e8bff','#0a52cc'], ['#12d17a','#069c56'],
+    ['#ffcb1f','#d19000'], ['#a855f7','#7c3aed'], ['#f97316','#ea580c'],
+    ['#06b6d4','#0891b2'], ['#ec4899','#be185d']
+  ];
+  var hash = 0;
+  for (var i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  var color = colors[Math.abs(hash) % colors.length];
+  var bg = 'linear-gradient(135deg, ' + color[0] + ', ' + color[1] + ')';
+  return '<div class="avatar-circle ' + (sizeClass || '') + '" style="background:' + bg + '">' + escapeHTML(initial) + '</div>';
+}
+
+function showDailyLeaderboard() {
+  var modal = $('dailyLbModal'); if (!modal) return;
+  modal.classList.remove('hidden');
+  var tabs = document.querySelectorAll('.lb-tab[data-lbtab]');
+  var currentTab = 'score';
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].onclick = function() {
+      for (var j = 0; j < tabs.length; j++) tabs[j].classList.remove('active');
+      this.classList.add('active');
+      currentTab = this.getAttribute('data-lbtab');
+      renderDailyLbBody(currentTab);
+    };
+  }
+  renderDailyLbBody('score');
+}
+
+function renderDailyLbBody(type) {
+  var body = $('dailyLbBody');
+  var lb = app.stats.dailyLb || [];
+  if (lb.length === 0) { body.innerHTML = '<div style="text-align:center;padding:20px;opacity:.6">لا توجد نتائج اليوم بعد</div>'; return; }
+  lb.sort(function(a, b) { return type === 'score' ? a.score - b.score : a.rounds - b.rounds; });
+  var html = '';
+  for (var i = 0; i < lb.length && i < 10; i++) {
+    var item = lb[i];
+    var val = type === 'score' ? (item.score + ' نقطة') : (item.rounds + ' جولة');
+    var medal = i === 0 ? '🥇' : (i === 1 ? '🥈' : (i === 2 ? '🥉' : (i + 1)));
+    html += '<div class="lb-row"><span class="lb-rank">' + medal + '</span>';
+    html += '<span class="lb-name">' + escapeHTML(item.name) + '</span>';
+    html += '<span class="lb-val">' + val + '</span></div>';
+  }
+  body.innerHTML = html;
+}
 function renderPlayerListModal(state) {
   var body = $('playersListBody'); if (!body || !state) return;
   var html = '';
@@ -4364,7 +4945,7 @@ function renderPlayersList() {
     var phTxt = p.phase >= state.phasesLimit ? '✓ مكتملة' : ((p.phase + 1) + ' / ' + state.phasesLimit);
     html += '<div class="' + cls + '">';
     html += '<span class="plist-rank">' + (i + 1) + '</span>';
-    html += '<span class="plist-name">' + escapeHTML(p.name) + (isMe ? ' (أنت)' : '') + '</span>';
+    html += '<span class="plist-name" style="display:flex;align-items:center;gap:6px">' + generateAvatarHTML(p.name) + escapeHTML(p.name) + (isMe ? ' (أنت)' : '') + '</span>'; 
     html += '<span class="plist-ph" title="المرحلة">' + phTxt + '</span>';
     html += '<span class="plist-cards" title="البطاقات">🃏 ' + p.hand.length + '</span>';
     html += '<span class="plist-score" title="النقاط">⭐ ' + p.score + '</span>';
@@ -4424,7 +5005,8 @@ function renderPlayerChips(state, vId) {
     var pht = (p.phase >= lim) ? '✓' : phn;
     html += '<div class="' + cls + '" data-pid="' + p.id + '"' + persAttr + ' role="listitem">' + kick;
     var pIcon = (p.isCPU && p.personalityIcon) ? '<span class="personality-icon" title="' + escapeHTML(p.personalityName || '') + '">' + p.personalityIcon + '</span>' : '';
-    html += '<div class="pname">' + pIcon + eye + (p.id === vId ? '[أنت] ' : '') + escapeHTML(p.name) + '</div>';
+    var displayName = getDisplayName(p.name);
+html += '<div class="pname" style="display:flex;align-items:center;justify-content:center;gap:4px">' + generateAvatarHTML(p.name) + pIcon + eye + (p.id === vId ? '[أنت] ' : '') + escapeHTML(displayName) + '</div>';
     html += '<div class="prow">';
     html += '<span class="hand-count" title="عدد البطاقات"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="13" height="17" rx="2"/><path d="M7 2h10a2 2 0 0 1 2 2v12"/></svg><b>' + p.hand.length + '</b></span>';
     html += '<span class="phase-num-badge">' + pht + '</span>';
@@ -4453,7 +5035,10 @@ if ($('playersStrip')) renderPlayerChips(state, vId);
   if (ts !== renderCache.turnSig) {
     renderCache.turnSig = ts;
     var cp = state.players[state.turnIndex];
-    if (cp) { $('turnIndicator').textContent = cp.name; fitTurnName(); }
+    if (cp) { 
+  $('turnIndicator').innerHTML = generateAvatarHTML(cp.name) + ' <span style="white-space:nowrap">' + escapeHTML(getDisplayName(cp.name)) + '</span>'; 
+  fitTurnName(); 
+}
   }
   var sh = sortHandCards(vp.hand, app.sortMode);
   var hs = computeHandSignature(sh, state);
@@ -4517,56 +5102,50 @@ function renderPhaseBox(player, hasLaid) {
     $('phaseBox').innerHTML = '<span class="phase-num">المرحلة ' + lim + '/' + lim + '</span><span class="desc">أكملت كل المراحل! بانتظار الآخرين</span><div class="phase-progress"><div class="fill" style="width:100%"></div></div>';
     return;
   }
-  if (hasLaid && player.phase > 0) {
-    var completedIdx = player.phase - 1;
-    var completedPh = list ? list[completedIdx] : null;
-    var desc1 = completedPh ? escapeHTML(completedPh.desc || '') : '';
-    var pct1 = (player.phase / lim) * 100;
-    $('phaseBox').innerHTML = '<span class="phase-num">المرحلة ' + player.phase + '/' + lim + '</span><span class="desc">' + desc1 + '</span><span class="done-badge">تم</span><div class="phase-progress"><div class="fill" style="width:' + pct1 + '%"></div></div>';
-    return;
-  }
+  /* ✅ دائماً اعرض المرحلة الحالية (التالية للعب) — لا تعرض "تم" للمرحلة المنتهية */
   var ph = list ? list[player.phase] : null;
   var desc = ph ? escapeHTML(ph.desc || '') : '';
 
-// ✅ احتياطي: لو الوصف فارغ أو مجرد "مرحلة N"، ابنِه من المجموعات
-if (ph && (!desc || /^مرحلة\s*\d*\s*$/.test(desc))) {
-  var fallbackParts = [];
-  for (var fsi = 0; fsi < (ph.sets || []).length; fsi++)  fallbackParts.push('مجموعة ' + ph.sets[fsi]);
-  for (var fri = 0; fri < (ph.runs || []).length; fri++)  fallbackParts.push('متتالية ' + ph.runs[fri]);
-  if (ph.color) fallbackParts.push('لون ' + ph.color);
-  desc = fallbackParts.join(' + ');
-  if (!desc) desc = 'مرحلة مخصصة';
-}
-  if (ph && ph.constraints) {
-  var extras = [];
-  if (ph.constraints.minTotalPoints) extras.push('≥ ' + ph.constraints.minTotalPoints);
-  if (ph.constraints.maxTotalPoints) extras.push('≤ ' + ph.constraints.maxTotalPoints);
-  if (extras.length > 0) desc += ' • ' + extras.join(' • ');
+  // ✅ احتياطي: لو الوصف فارغ أو مجرد "مرحلة N"، ابنِه من المجموعات
+  if (ph && (!desc || /^مرحلة\s*\d*\s*$/.test(desc))) {
+    var fallbackParts = [];
+    for (var fsi = 0; fsi < (ph.sets || []).length; fsi++)  fallbackParts.push('مجموعة ' + ph.sets[fsi]);
+    for (var fri = 0; fri < (ph.runs || []).length; fri++)  fallbackParts.push('متتالية ' + ph.runs[fri]);
+    if (ph.color) fallbackParts.push('لون ' + ph.color);
+    desc = fallbackParts.join(' + ');
+    if (!desc) desc = 'مرحلة مخصصة';
+  }
 
-/* ✅ عرض قيد كل مجموعة/متتالية منفردة — مع منع التكرار */
-if (!/(فردي|زوجي)/.test(desc)) {
-  var parityItems = [];
-  var setCS = (ph.constraints.setConstraints || []);
-  var runCS = (ph.constraints.runConstraints || []);
-  var multiSets = setCS.length > 1;
-  var multiRuns = runCS.length > 1;
-  for (var sci = 0; sci < setCS.length; sci++) {
-    var sc = setCS[sci];
-    if (sc && sc.parity && sc.parity !== 'any') {
-      var lbl = multiSets ? ('مجموعة ' + (sci + 1)) : 'مجموعة';
-      parityItems.push(lbl + ' ' + (sc.parity === 'odd' ? 'فردية' : 'زوجية'));
+  if (ph && ph.constraints) {
+    var extras = [];
+    if (ph.constraints.minTotalPoints) extras.push('≥ ' + ph.constraints.minTotalPoints);
+    if (ph.constraints.maxTotalPoints) extras.push('≤ ' + ph.constraints.maxTotalPoints);
+    if (extras.length > 0) desc += ' • ' + extras.join(' • ');
+
+    if (!/(فردي|زوجي)/.test(desc)) {
+      var parityItems = [];
+      var setCS = (ph.constraints.setConstraints || []);
+      var runCS = (ph.constraints.runConstraints || []);
+      var multiSets = setCS.length > 1;
+      var multiRuns = runCS.length > 1;
+      for (var sci = 0; sci < setCS.length; sci++) {
+        var sc = setCS[sci];
+        if (sc && sc.parity && sc.parity !== 'any') {
+          var lbl = multiSets ? ('مجموعة ' + (sci + 1)) : 'مجموعة';
+          parityItems.push(lbl + ' ' + (sc.parity === 'odd' ? 'فردية' : 'زوجية'));
+        }
+      }
+      for (var rci = 0; rci < runCS.length; rci++) {
+        var rc = runCS[rci];
+        if (rc && rc.parity && rc.parity !== 'any') {
+          var lbl2 = multiRuns ? ('متتالية ' + (rci + 1)) : 'متتالية';
+          parityItems.push(lbl2 + ' ' + (rc.parity === 'odd' ? 'فردية' : 'زوجية'));
+        }
+      }
+      if (parityItems.length > 0) desc += ' • ' + parityItems.join(' • ');
     }
   }
-  for (var rci = 0; rci < runCS.length; rci++) {
-    var rc = runCS[rci];
-    if (rc && rc.parity && rc.parity !== 'any') {
-      var lbl2 = multiRuns ? ('متتالية ' + (rci + 1)) : 'متتالية';
-      parityItems.push(lbl2 + ' ' + (rc.parity === 'odd' ? 'فردية' : 'زوجية'));
-    }
-  }
-  if (parityItems.length > 0) desc += ' • ' + parityItems.join(' • ');
-}
-}
+
   var pct = (player.phase / lim) * 100;
   $('phaseBox').innerHTML = '<span class="phase-num">المرحلة ' + (player.phase + 1) + '/' + lim + '</span><span class="desc">' + desc + '</span><div class="phase-progress"><div class="fill" style="width:' + pct + '%"></div></div>';
 }
@@ -4644,8 +5223,7 @@ function updateActionsButtons() {
   var isMyTurn = (state.turnIndex === vId);
   var sel = [];
   for (var i = 0; i < state.selected.length; i++) for (var j = 0; j < player.hand.length; j++) if (player.hand[j].id === state.selected[i]) { sel.push(player.hand[j]); break; }
-  var hasLaid = false;
-  for (var k = 0; k < player.melds.length; k++) if (player.melds[k].phase === player.phase - 1) { hasLaid = true; break; }
+  var hasLaid = player.laidThisTurn === true;
   var canDraw = isMyTurn && !state.hasDrawn && state.deck.length > 0;
   var cp = state.phasesList ? state.phasesList[player.phase] : null;
   var canLay = isMyTurn && state.hasDrawn && !hasLaid && player.phase < state.phasesLimit && sel.length > 0 && analyzeSelection(sel, cp) !== null;
@@ -4682,7 +5260,7 @@ if (bDraw) {
     bDraw.onclick = function() { actionDraw('deck'); };
   }
 }
-$('btnLay').disabled = false;
+$('btnLay').disabled = !canLay;
 $('btnLay').style.opacity = canLay ? '1' : '0.35';
 $('btnLay').style.cursor = canLay ? 'pointer' : 'not-allowed';
 $('btnClear').disabled = !canClear;
@@ -4928,9 +5506,12 @@ function buildStateForPeer(state, vId) {
     players.push({
       id: p.id, name: p.name, isCPU: p.isCPU, hand: hc, handCount: p.hand.length,
       melds: mc, phase: p.phase, score: p.score, hitsThisTurn: p.hitsThisTurn || 0,
-      personality: p.personality, personalityIcon: p.personalityIcon,
-      personalityName: p.personalityName, skipNext: p.skipNext || 0
-    });
+        personality: p.personality, personalityIcon: p.personalityIcon,
+  personalityName: p.personalityName, skipNext: p.skipNext || 0,
+  shieldRounds: p.shieldRounds || 0, skipImmune: !!p.skipImmune,
+  autoCompleted: !!p.autoCompleted,
+  laidThisTurn: !!p.laidThisTurn
+});
   }
   var dc = [];
   for (var d = 0; d < state.deck.length; d++) dc.push({ type: 'num', value: 0, col: 0, id: '_d' + d, _hidden: true });
@@ -5148,15 +5729,22 @@ function handleGuestMessage(conn, msg) {
     return;
   }
   if (msg.type === 'shopAction') {
-    if (!isHost() || !app.state) return;
-    var g2 = net.guestConns[_connKey];
-    if (!g2) return;
-    var itemKey = msg.itemKey;
-    var r = applyShopEffect(app.state, g2.playerId, itemKey, true);
-    if (r && r.ok) { resetRenderCache(); scheduleRender(); syncStateToPeers(); }
-    sendToGuestConn(conn, { type: 'shopResult', ok: !!(r && r.ok), reason: r ? r.reason : '', message: r ? r.message : '' });
-    return;
-  }
+  if (!isHost() || !app.state) return;
+  var g2 = net.guestConns[_connKey];
+  if (!g2) return;
+  var itemKey = msg.itemKey;
+  var clientPrice = (typeof msg.price === 'number') ? msg.price : 0;
+  var r = applyShopEffect(app.state, g2.playerId, itemKey, true);
+  if (r && r.ok) { resetRenderCache(); scheduleRender(); syncStateToPeers(); }
+  sendToGuestConn(conn, {
+    type: 'shopResult',
+    ok: !!(r && r.ok),
+    reason: r ? r.reason : '',
+    message: r ? r.message : '',
+    price: (r && r.ok) ? clientPrice : 0
+  });
+  return;
+}
   if (msg.type === 'peekRequest') {
     if (!isHost() || !app.state) return;
     var g3 = net.guestConns[_connKey];
@@ -5239,8 +5827,8 @@ function handleGuestAction(pId, msg) {
           state.players[pId].hitsThisTurn = (state.players[pId].hitsThisTurn || 0) + hAdded.length;
           state.selected = state.selected.filter(function(id) { return hAdded.indexOf(id) < 0; });
           state.hintCards = [];
-          SoundFX.play('hit');
-          pushActionLog(state, pId, 'hit', 'ضرب ' + hAdded.length + ' بطاقة على ' + state.players[hTp].name);
+          SoundFX.playEscalatingHit(hAdded.length);
+pushActionLog(state, pId, 'hit', 'ضرب ' + hAdded.length + ' بطاقة');
           setStatus(state.players[pId].name + ' ضرب ' + hAdded.length + ' بطاقة');
         }
       }
@@ -5438,10 +6026,20 @@ function handleHostMessage(msg) {
   if (msg.type === 'error') { setRoomStatus('خطأ: ' + msg.message, 'err'); return; }
   if (msg.type === 'kicked') { alert('تم طردك من الغرفة'); leaveCurrentGame(); return; }
   if (msg.type === 'shopResult') {
-    if (msg.ok) { shopMsg('✓ ' + (msg.message || 'تم')); SoundFX.play('reward'); }
-    else { shopMsg('تعذّر: ' + (msg.reason || 'غير معروف'), true); SoundFX.play('error'); }
-    return;
+  if (msg.ok) {
+    // خصم العملات الآن فقط بعد تأكيد المضيف
+    if (msg.price && msg.price > 0) {
+      spendCoins(msg.price);
+      refreshAllCoinDisplays();
+    }
+    shopMsg('✓ ' + (msg.message || 'تم'));
+    SoundFX.play('reward');
+  } else {
+    shopMsg('تعذّر: ' + (msg.reason || 'غير معروف'), true);
+    SoundFX.play('error');
   }
+  return;
+}
   if (msg.type === 'peekResult') { showPeekResult(msg.cards); return; }
   if (msg.type === 'ping') { handlePing(); return; }
   if (msg.type === 'pong') { handlePong(); return; }
@@ -6090,12 +6688,12 @@ function renderDailyBadge() {
   b.classList.remove('hidden');
   b.classList.toggle('done', done);
   b.textContent = done ? '✓' : 'NEW';
-  /* تحديث نص الزر ليُظهر المرحلة والمكافأة */
+  
   var btn = $('dailyChallengeBtn');
   if (btn && !done) {
     try {
       var d = getDailyChallenge();
-      var baseText = '🎯 التحدي اليومي';
+      var streak = app.stats.dailyStreak || 0;
       var span = btn.querySelector('.daily-subtitle');
       if (!span) {
         span = document.createElement('div');
@@ -6103,7 +6701,8 @@ function renderDailyBadge() {
         span.style.cssText = 'font-size:9.5px;opacity:.75;margin-top:2px;font-weight:600';
         btn.appendChild(span);
       }
-      span.textContent = d.desc + ' — +' + d.reward + ' عملة';
+      var streakHtml = streak > 0 ? '<span class="streak-badge">🔥 ' + streak + '</span>' : '';
+      span.innerHTML = streakHtml + d.desc + ' — +' + d.reward + ' عملة';
     } catch (e) {}
   }
 }
@@ -6274,6 +6873,11 @@ function actionLayPhase() {
   if (!state.hasDrawn) { setStatus('اسحب بطاقة أولاً', 'var(--red)'); SoundFX.play('error'); return; }
   if (app.busy) return;
   var player = state.players[pId];
+  if (player.laidThisTurn) {
+    setStatus('وضعت مرحلتك بالفعل هذا الدور', 'var(--red)');
+    SoundFX.play('error');
+    return;
+  }
   var sel = [];
   for (var i = 0; i < state.selected.length; i++) for (var j = 0; j < player.hand.length; j++) if (player.hand[j].id === state.selected[i]) { sel.push(player.hand[j]); break; }
   if (sel.length === 0) {
@@ -6309,6 +6913,7 @@ function actionLayPhase() {
   for (var a2 = 0; a2 < sel.length; a2++) for (var b = 0; b < player.hand.length; b++) if (player.hand[b].id === sel[a2].id) { player.hand.splice(b, 1); break; }
   for (var c = 0; c < melds.length; c++) { melds[c].phase = player.phase; player.melds.push(melds[c]); }
   player.phase++;
+  player.laidThisTurn = true;
   var laidThisTurn = state.turnNumber || 1;
   if (!state.aiFirstLayTurn) state.aiFirstLayTurn = {};
   if (state.aiFirstLayTurn[pId] === undefined) state.aiFirstLayTurn[pId] = laidThisTurn;
@@ -6391,6 +6996,11 @@ function actionHit() {
 }
 function executeHitOnCards(state, pId, hittable) {
   var player = state.players[pId];
+  if (!app._lastHitTime) app._lastHitTime = 0;
+  var comboTimer = Date.now() - app._lastHitTime;
+  if (comboTimer < 3000) { app._comboCount = (app._comboCount || 0) + 1; }
+  else { app._comboCount = 1; }
+  app._lastHitTime = Date.now();
   var sources = [];
   for (var h = 0; h < hittable.length; h++) {
     var el = document.querySelector('.card-slot[data-id="' + hittable[h].id + '"] .p10-card');
@@ -6425,8 +7035,8 @@ function executeHitOnCards(state, pId, hittable) {
     if (targets[mt].pid >= 0) recordCpuMemoryHit(state, pId, targets[mt].pid);
   }
   state.selected = []; state.hintCards = [];
-  SoundFX.play('hit');
-  pushActionLog(state, pId, 'hit', 'ضرب ' + done.length + ' بطاقة');
+SoundFX.playEscalatingHit(done.length);
+pushActionLog(state, pId, 'hit', 'ضرب ' + done.length + ' بطاقة');
   setStatus(player.name + ' ضرب ' + done.length + ' ' + (done.length === 1 ? 'بطاقة' : 'بطاقات'));
   resetRenderCache(); scheduleRender(); syncStateToPeers();
   if (shouldRunAnimations() && done.length > 0) {
@@ -6450,13 +7060,25 @@ function executeHitOnCards(state, pId, hittable) {
           }, idx * 55);
         })(z);
       }
-      setTimeout(function() { var sr = getRect($('meldsScroll')); if (sr) floatScore(sr.centerX, sr.centerY, '+' + done.length, '#4ade80'); }, 300);
+      setTimeout(function() { if (done.length > 0) showHitBurst(done.length); }, 300);
     });
   }
-  if (pId === app.myPlayerId) {
-    if (done.length >= 3) unlockAchievement('multiHit3');
-    if (done.length >= 5) unlockAchievement('multiHit5');
+  
+  if (app._comboCount >= 2) {
+    setTimeout(function() {
+      var comboEl = document.createElement('div');
+      comboEl.textContent = '🔥 COMBO ×' + app._comboCount;
+      comboEl.style.cssText = 'position:fixed;left:50%;top:30%;transform:translateX(-50%);font-size:32px;font-weight:900;color:#ff6b00;text-shadow:0 0 20px #ff6b00,0 0 40px #ffd75e;z-index:9999;pointer-events:none';
+      document.body.appendChild(comboEl);
+      comboEl.animate([{opacity:1, transform:'translateX(-50%) scale(0.5)'},{opacity:1, transform:'translateX(-50%) scale(1.2)'},{opacity:0, transform:'translateX(-50%) scale(1)'}],{duration:1200, easing:'ease-out'});
+      setTimeout(function(){ if(comboEl.parentNode) comboEl.parentNode.removeChild(comboEl); }, 1300);
+    }, 500);
   }
+  
+if (pId === app.myPlayerId) {
+  if (done.length >= 3) unlockAchievement('multiHit3');
+  if (done.length >= 5) unlockAchievement('multiHit5');
+}
   if (player.hand.length === 0) checkWinOrNewRound(state, pId);
   autoSaveGame();
 }
@@ -6538,10 +7160,12 @@ function handleMeldClick(pid, midx) {
     for (var a = 0; a < added.length; a++) hitMap[added[a]] = true;
     state.selected = state.selected.filter(function(id) { return !hitMap[id]; });
     state.hintCards = [];
-    SoundFX.play('hit');
-    pushActionLog(state, vId, 'hit', 'ضرب ' + added.length + ' بطاقة على ' + tp.name);
+    SoundFX.playEscalatingHit(added.length);
+pushActionLog(state, vId, 'hit', 'ضرب ' + added.length + ' بطاقة على ' + tp.name);
     setStatus(player.name + ' ضرب ' + added.length + ' بطاقة');
-    resetRenderCache(); scheduleRender(); syncStateToPeers();
+    resetRenderCache(); scheduleRender(); 
+setTimeout(function() { if (added.length > 0) showHitBurst(added.length); }, 250);
+syncStateToPeers();
     var mEl = document.querySelector('.meld[data-pid="' + pid + '"][data-midx="' + midx + '"]');
     if (mEl) { mEl.classList.add('just-hit'); setTimeout(function() { mEl.classList.remove('just-hit'); }, 850); }
     if (player.hand.length === 0) checkWinOrNewRound(state, vId);
@@ -6594,7 +7218,10 @@ function actionDiscard() {
     if (dc.type === 'skip') skipCount++;
   }
   if (discarded.length === 0) return;
-  recordCpuMemoryDiscard(state, pId, discarded);
+if (!state.lastDiscard) state.lastDiscard = {};
+state.lastDiscard[pId] = discarded[discarded.length - 1];
+vibrateOn('discard');
+recordCpuMemoryDiscard(state, pId, discarded);
   var discHTML = '';
   for (var dci = 0; dci < discarded.length; dci++) discHTML += logCardHTML(discarded[dci]);
   pushActionLog(state, pId, 'discard', 'تخلص من ' + discHTML + (skipCount > 0 ? ' (Skip ×' + skipCount + ')' : ''));
@@ -6625,8 +7252,19 @@ function actionDiscard() {
     if (app.stats.skipsUsed >= 5) unlockAchievement('useSkip5');
   }
   var adv = 1 + skipCount;
-  pushActionLog(state, pId, 'skip', '⏭️ تخطّى ' + skipCount + ' لاعب');
+pushActionLog(state, pId, 'skip', '⏭️ تخطّى ' + skipCount + ' لاعب');
+if (state.extraTurnFor === pId) {
+  state.extraTurnFor = null;
+  state.hasDrawn = false; state.selected = []; state.hintCards = [];
+  state.turnNumber = (state.turnNumber || 1) + 1;
+  for (var es = 0; es < state.players.length; es++) {
+    if (state.players[es].shieldRounds > 0) state.players[es].shieldRounds--;
+  }
+  pushActionLog(state, pId, 'turn', '⚡ دور إضافي');
+  setStatus('⚡ دور إضافي لك!', 'var(--purple)');
+} else {
   advanceTurn(state, adv);
+}
   if (state.playerCount === 2) setStatus('Skip! دورك مجدداً');
   else setStatus('Skip ×' + skipCount + '! تخطي ' + skipCount + ' لاعبين');
   if (player.hand.length === 0) { checkWinOrNewRound(state, pId); return; }
@@ -6645,8 +7283,19 @@ function actionDiscard() {
   autoSaveGame();
   return;
 }
+  if (state.extraTurnFor === pId) {
+  state.extraTurnFor = null;
+  state.hasDrawn = false; state.selected = []; state.hintCards = [];
+  state.turnNumber = (state.turnNumber || 1) + 1;
+  for (var es2 = 0; es2 < state.players.length; es2++) {
+    if (state.players[es2].shieldRounds > 0) state.players[es2].shieldRounds--;
+  }
+  pushActionLog(state, pId, 'turn', '⚡ دور إضافي');
+  setStatus('⚡ دور إضافي لك!', 'var(--purple)');
+} else {
   advanceTurn(state, 1);
-  setStatus(player.name + ' تخلص' + (discarded.length > 1 ? ' من ' + discarded.length + ' بطاقات' : ''));
+}
+setStatus(player.name + ' تخلص' + (discarded.length > 1 ? ' من ' + discarded.length + ' بطاقات' : ''));
   resetRenderCache(); scheduleRender(); syncStateToPeers();
   if (player.hand.length === 0) { checkWinOrNewRound(state, pId); return; }
   setTimeout(function() { if (app.state === state && !state.gameOver) startTurnIfNeeded(); }, 700);
@@ -6730,6 +7379,7 @@ function handleWinAchievements() {
   var matchReward = computeMatchReward(true);
   awardMatchCoins(matchReward);
   app.matchRewards = { coinsEarned: matchReward, achievementsUnlocked: [] };
+  
   function unlockAndTrack(key) {
     var before = !!app.achievements[key];
     if (unlockAchievement(key) && !before) {
@@ -6737,6 +7387,7 @@ function handleWinAchievements() {
       if (a) { app.matchRewards.coinsEarned += a.coins; app.matchRewards.achievementsUnlocked.push(a.name); }
     }
   }
+  
   unlockAndTrack('firstWin'); unlockAndTrack('completeGame');
   app.stats.gamesPlayed++; app.stats.totalWins++; app.stats.currentStreak++;
   app.stats.winStreak = Math.max(app.stats.winStreak, app.stats.currentStreak);
@@ -6768,8 +7419,25 @@ function handleWinAchievements() {
   if (app.dailyChallengeActive && app.dailyChallengeDateKey) {
     if (!app.stats.dailyChallengeDone) app.stats.dailyChallengeDone = {};
     app.stats.dailyChallengeDone[app.dailyChallengeDateKey] = true;
+    
+    // --- التحديث الجديد: حساب الستريك وحفظ لوحة الشرف ---
+    var today = new Date().toISOString().slice(0, 10);
+    var yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    if (app.stats.lastDailyDate === yesterday) {
+      app.stats.dailyStreak = (app.stats.dailyStreak || 0) + 1;
+    } else if (app.stats.lastDailyDate !== today) {
+      app.stats.dailyStreak = 1;
+    }
+    app.stats.lastDailyDate = today;
+
+    if (!app.stats.dailyLb) app.stats.dailyLb = [];
+    var myName = app.settings.playerName || 'لاعب';
+    app.stats.dailyLb = app.stats.dailyLb.filter(function(x) { return x.date === today && x.name === myName; });
+    var myScore = state.players[app.myPlayerId] ? state.players[app.myPlayerId].score : 0;
+    app.stats.dailyLb.push({ date: today, name: myName, score: myScore, rounds: state.round });
+    // ------------------------------------------------
+
     saveStatsToStorage();
-    // ✅ مكافأة إضافية بحسب صعوبة المرحلة
     var bonus = app.dailyChallengeReward || 50;
     awardMatchCoins(bonus);
     app.matchRewards.coinsEarned += bonus;
@@ -6891,6 +7559,36 @@ function safeCpuStep(stepFn, pId, state) {
     }
   }
 }
+function isCardUsefulToOpponent(state, pId, card) {
+  if (!state || !state.players || !card) return false;
+  if (card.type === 'skip' || card.type === 'wild') return false;
+  for (var i = 0; i < state.players.length; i++) {
+    var op = state.players[i];
+    if (op.id === pId) continue;
+    for (var j = 0; j < op.melds.length; j++) {
+      if (canHitMeld(card, op.melds[j])) return true;
+    }
+  }
+  return false;
+}
+
+function getOpponentDangerLevel(state, pId) {
+  if (!state || !state.players) return 0;
+  var maxDanger = 0;
+  for (var i = 0; i < state.players.length; i++) {
+    var p = state.players[i];
+    if (p.id === pId) continue;
+    var danger = 0;
+    if (p.phase >= state.phasesLimit) danger += 25;
+    else if (p.phase >= state.phasesLimit - 1) danger += 12;
+    if (p.hand.length <= 2) danger += 30;
+    else if (p.hand.length <= 4) danger += 15;
+    else if (p.hand.length <= 6) danger += 5;
+    if (danger > maxDanger) maxDanger = danger;
+  }
+  return maxDanger;
+}
+
 function cpuTakeTurn() {
   var state = app.state; if (!state || state.gameOver) return;
   var pId = state.turnIndex; var p = state.players[pId];
@@ -6959,7 +7657,9 @@ var hasLaid = false;
     if (pers.key === 'trickster') layPatience = 0.15;
     if (pers.key === 'hunter') layPatience = 0.10;
   }
-  var shouldLay = melds && melds.length > 0 && !hasLaid && (skill >= 5 ? true : Math.random() > getCpuLaySkipChance());
+  // 🧠 إذا كان خصم على وشك الفوز، ضع المرحلة فوراً حتى لو كنت ضعيف المستوى
+var dangerLvl = getOpponentDangerLevel(state, pId);
+var shouldLay = melds && melds.length > 0 && !hasLaid && ((skill >= 5 || dangerLvl >= 12) ? true : Math.random() > getCpuLaySkipChance());
   if (shouldLay) {
     if (melds) adjustWildPositions(melds, p);
     var allIds = [];
@@ -6991,7 +7691,13 @@ function cpuHitStep(pId) {
   if (adjChance > 0.95) adjChance = 0.95;
   if (adjChance < 0.01) adjChance = 0.01;
   if (pers && pers.key === 'hunter' && p.memory && p.memory.yourHits > 3) adjChance *= 0.7;
-  var shouldHit = hittable.length > 0 && Math.random() > adjChance;
+
+// 🧠 وعي بالخطر: إذا اقترب خصم من الفوز، ضرب بشراسة أكبر (لتفرّغ يدك أسرع)
+var dangerLvl = getOpponentDangerLevel(state, pId);
+if (dangerLvl >= 25) adjChance *= 0.4;
+else if (dangerLvl >= 12) adjChance *= 0.7;
+
+var shouldHit = hittable.length > 0 && Math.random() > adjChance;
   if (shouldHit) {
     var maxHits = skill >= 8 ? hittable.length : (skill >= 6 ? Math.min(4, hittable.length) : Math.min(2, hittable.length));
     var picked = hittable.slice(0, maxHits);
@@ -7002,7 +7708,11 @@ function cpuHitStep(pId) {
     SoundFX.play('hit');
     resetRenderCache(); scheduleRender(); syncStateToPeers();
     if (done.length > 0) pushActionLog(state, pId, 'hit', 'ضرب ' + done.length + ' بطاقة');
-    if (done.length > 0) setStatus(p.name + ' ضرب ' + done.length + ' بطاقات');
+if (done.length > 0) setStatus(p.name + ' ضرب ' + done.length + ' بطاقات');
+if (done.length >= 3) {
+  document.body.classList.add('screen-shake');
+  setTimeout(function() { document.body.classList.remove('screen-shake'); }, 420);
+}
     if (p.hand.length === 0) { checkWinOrNewRound(state, pId); cpuContext.active = false; return; }
   }
   cpuContext.timeout = setTimeout(function() { safeCpuStep(cpuDiscardStep, pId, state); }, getCpuDelay('discard'));
@@ -7039,8 +7749,44 @@ function cpuDiscardStep(pId) {
     } else if (c.type === 'wild') usefulness += 15;
     else if (c.type === 'skip') usefulness += 3;
     var finalScore = usefulness * 10 - value;
-    finalScore += (Math.random() - 0.5) * getCpuMistakeChance() * 30;
-    scored.push({ card: c, idx: i, score: finalScore });
+finalScore += (Math.random() - 0.5) * getCpuMistakeChance() * 30;
+
+// 🧠 لا تتخلص من بطاقة يمكن أن يضربها الخصم على مجموعاته
+if (c.type === 'num' && isCardUsefulToOpponent(state, pId, c)) {
+  finalScore += 120;
+}
+
+// 🧠 وعي بالطاولة: إذا كان الرقم موجوداً بكثرة في مجموعات الخصوم، قيمته أقل
+if (c.type === 'num') {
+  var sameOnTable = 0;
+  for (var opT = 0; opT < state.players.length; opT++) {
+    if (opT === pId) continue;
+    var otherT = state.players[opT];
+    for (var mt = 0; mt < otherT.melds.length; mt++) {
+      var mCardsT = otherT.melds[mt].cards;
+      for (var mct = 0; mct < mCardsT.length; mct++) {
+        if (mCardsT[mct].type === 'num' && mCardsT[mct].value === c.value) sameOnTable++;
+      }
+    }
+  }
+  if (sameOnTable >= 3) finalScore -= 15;
+}
+
+// 🧠 إذا كان اللاعب التالي على وشك الفوز، أعطِ أولوية للتخلص من Skip
+if (c.type === 'skip') {
+  var nextIdx = (state.turnIndex + 1) % state.playerCount;
+  if (nextIdx !== pId) {
+    var nextP = state.players[nextIdx];
+    if (nextP) {
+      var nextDanger = 0;
+      if (nextP.phase >= state.phasesLimit) nextDanger += 25;
+      if (nextP.hand.length <= 3) nextDanger += 20;
+      if (nextDanger > 0) finalScore -= 200;
+    }
+  }
+}
+
+scored.push({ card: c, idx: i, score: finalScore });
   }
   var pers = p.personality ? getPersonalityByKey(p.personality) : null;
   if (pers) {
@@ -7165,7 +7911,7 @@ function renderLobbyPlayers(ps) {
   for (var i = 0; i < ps.length; i++) {
     var p = ps[i];
     var cls = 'lobby-player' + (p.isMe ? ' you' : '');
-    html += '<div class="' + cls + '"><span class="lname">' + (p.isMe ? '[أنت] ' : (p.isHost ? '[مضيف] ' : '')) + escapeHTML(p.name) + '</span><span class="badge">' + (p.isHost ? 'مضيف' : 'لاعب') + '</span></div>';
+    html += '<div class="' + cls + '"><span class="lname" style="display:flex;align-items:center;gap:6px">' + generateAvatarHTML(p.name) + (p.isMe ? '[أنت] ' : (p.isHost ? '[مضيف] ' : '')) + escapeHTML(p.name) + '</span><span class="badge">' + (p.isHost ? 'مضيف' : 'لاعب') + '</span></div>';
   }
   for (var j = ps.length; j < total; j++) html += '<div class="lobby-player empty"><span class="lname">في انتظار لاعب...</span><span class="badge"><span class="spinner"></span></span></div>';
   c.innerHTML = html;
@@ -7326,9 +8072,13 @@ function serializePlayer(p) {
     hand: hand, melds: melds,
     phase: (typeof p.phase === 'number') ? p.phase : 0,
     score: (typeof p.score === 'number') ? p.score : 0,
-    hitsThisTurn: p.hitsThisTurn || 0,
-    skipNext: p.skipNext || 0
-  };
+      hitsThisTurn: p.hitsThisTurn || 0,
+  skipNext: p.skipNext || 0,
+  shieldRounds: p.shieldRounds || 0,
+  skipImmune: !!p.skipImmune,
+  autoCompleted: !!p.autoCompleted,
+  laidThisTurn: !!p.laidThisTurn
+};
   if (p.personality) out.personality = p.personality;
   if (p.personalityIcon) out.personalityIcon = p.personalityIcon;
   if (p.personalityName) out.personalityName = p.personalityName;
@@ -7351,9 +8101,13 @@ function deserializePlayer(o) {
     hand: [], melds: [],
     phase: (typeof o.phase === 'number') ? o.phase : 0,
     score: (typeof o.score === 'number') ? o.score : 0,
-    hitsThisTurn: o.hitsThisTurn || 0,
-    skipNext: o.skipNext || 0
-  };
+      hitsThisTurn: o.hitsThisTurn || 0,
+  skipNext: o.skipNext || 0,
+  shieldRounds: o.shieldRounds || 0,
+  skipImmune: !!o.skipImmune,
+  autoCompleted: !!o.autoCompleted,
+  laidThisTurn: !!o.laidThisTurn
+};
   for (var i = 0; i < (o.hand || []).length; i++) {
     var c = deserializeCard(o.hand[i]);
     if (c) p.hand.push(c);
@@ -7615,6 +8369,39 @@ function attachHandDragHandlers() {
     if (!m) return;
     handleMeldClick(parseInt(m.getAttribute('data-pid'), 10), parseInt(m.getAttribute('data-midx'), 10));
   });
+  // 3D Card Tilt
+  handEl.addEventListener('mousemove', function(e) {
+  if (app.dealing || app.busy) return;
+  var slot = e.target.closest('.card-slot');
+  var card = slot ? slot.querySelector('.p10-card') : null;
+  // ⚠️ امسح أي بطاقة أخرى مُمالة (سابقاً كانت تبقى مائلة)
+  var tilted = handEl.querySelectorAll('.p10-card.tilting');
+  for (var i = 0; i < tilted.length; i++) {
+    if (tilted[i] !== card) {
+      tilted[i].style.transform = '';
+      tilted[i].classList.remove('tilting');
+    }
+  }
+  if (!card) return;
+  // ⚠️ لا تُمِل البطاقة المحددة (CSS .selected يرفعها — لا تتعارض معه)
+  if (card.classList.contains('selected') || slot.classList.contains('dragging')) {
+    if (card.classList.contains('tilting')) {
+      card.style.transform = '';
+      card.classList.remove('tilting');
+    }
+    return;
+  }
+  var r = card.getBoundingClientRect();
+  var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  var dx = (e.clientX - cx) / (r.width / 2), dy = (e.clientY - cy) / (r.height / 2);
+  dx = Math.max(-1, Math.min(1, dx)); dy = Math.max(-1, Math.min(1, dy));
+  card.style.transform = 'perspective(600px) rotateY(' + (dx * 12) + 'deg) rotateX(' + (-dy * 12) + 'deg) translateZ(10px)';
+  card.classList.add('tilting');
+});
+  handEl.addEventListener('mouseleave', function() {
+    var cards = handEl.querySelectorAll('.p10-card.tilting');
+    for (var i = 0; i < cards.length; i++) { cards[i].style.transform = ''; cards[i].classList.remove('tilting'); }
+  });
 }
 function onHandPointerDown(ev) {
   if (!app.state || app.dealing || app.busy) return;
@@ -7851,11 +8638,13 @@ function buildFaceGrid() {
   var g = $('faceGrid'); if (!g) return;
   var html = '';
   for (var i = 0; i < FACE_STYLES.length; i++) {
-    var s = FACE_STYLES[i];
-    var a = app.settings.faceStyle === s.key;
+  var s = FACE_STYLES[i];
+  if (s.exclusive && !app.achievements[s.exclusive]) continue;
+  var a = app.settings.faceStyle === s.key;
     html += '<div class="setting-item' + (a ? ' active' : '') + '" data-face="' + s.key + '" role="button" tabindex="0"><span class="check">✓</span><div class="preview-card">' + buildPreviewCardHTML(s.key, null, 'col-red', '5') + '</div><div class="label">' + escapeHTML(s.name) + '</div></div>';
   }
   g.innerHTML = html;
+  try { updateFaceBackCounts(); } catch (e) {}
 }
 function buildBackGrid() {
   var g = $('backGrid'); if (!g) return;
@@ -7899,11 +8688,13 @@ function buildGalleryGrid(mode) {
   } else {
     for (var j = 0; j < FACE_STYLES.length; j++) {
       var s2 = FACE_STYLES[j];
+      if (s2.exclusive && !app.achievements[s2.exclusive]) continue; // ← فلترة
       var a2 = app.settings.faceStyle === s2.key;
       html += '<div class="setting-item' + (a2 ? ' active' : '') + '" data-face="' + s2.key + '"><span class="check">✓</span><div class="preview-card">' + buildPreviewCardHTML(s2.key, null, 'col-red', '5') + '</div><div class="label">' + escapeHTML(s2.name) + '</div></div>';
     }
   }
   g.innerHTML = html;
+  try { updateFaceBackCounts(); } catch (e) {}
 }
 function buildAchievementsList() {
   var b = $('achievementsBody'); if (!b) return;
@@ -8269,15 +9060,51 @@ function openAdvancedBuilder() {
    SHOP & INVENTORY
    ============================================================ */
 var SHOP_ITEMS = [
-  { key: 'sort',     name: '🔄 ترتيب اليد',    desc: 'إعادة ترتيب بطاقاتك',         price: 15,  cat: 'يدك',     needsGame: false },
-  { key: 'hint',     name: '💡 تلميح',         desc: 'اقتراح البطاقات للمرحلة',     price: 20,  cat: 'يدك',     needsGame: false },
-  { key: 'peek',     name: '👁 نظرة الرزمة',   desc: 'اكشف 3 بطاقات علوية',        price: 30,  cat: 'يدك',     needsGame: false },
-  { key: 'deck',     name: '➕ 5 بطاقات',      desc: 'أضف 5 بطاقات للرزمة',        price: 40,  cat: 'الرزمة',  needsGame: false },
-  { key: 'wild',     name: '🃏 Wild إضافي',    desc: 'أضف Wild إلى يدك',           price: 75,  cat: 'الرزمة',  needsGame: false },
-  { key: 'discard',  name: '🎯 إزالة عشوائية', desc: 'أزل بطاقة عشوائية من خصم',   price: 55,  cat: 'خصوم',    needsGame: false },
-  { key: 'freeze',   name: '❄ تجميد خصم',     desc: 'الخصم التالي يفقد دوره',      price: 60,  cat: 'خصوم',    needsGame: false },
-  { key: 'complete', name: '⚡ إكمال المرحلة',  desc: 'تلميح قوي لإنهاء مرحلتك',    price: 250, cat: 'خارقة',   needsGame: false }
+  { key: 'wild',      name: '🃏 Wild إضافي',        desc: 'أضف Wild إلى يدك',                        price: 75,  cat: 'يدك',     needsGame: false },
+  { key: 'swap',      name: '🔄 استبدال بطاقة',      desc: 'استبدل أسوأ بطاقة ببطاقة من الرزمة',      price: 40,  cat: 'يدك',     needsGame: false },
+  { key: 'recover',   name: '↩️ استرجاع آخر بطاقة',   desc: 'استعد آخر بطاقة رميتها',                   price: 25,  cat: 'يدك',     needsGame: false },
+  { key: 'shield',    name: '🛡 حماية مجموعات',      desc: 'مجموعاتك آمنة من الضرب لمدة 4 أدوار',    price: 50,  cat: 'دفاع',    needsGame: false },
+  { key: 'skipGuard', name: '🚫 مضاد Skip',          desc: 'لا يمكن لأحد تخطيك بالـ Skip مرة واحدة',  price: 30,  cat: 'دفاع',    needsGame: false },
+  { key: 'discard',   name: '🎯 إزالة عشوائية',      desc: 'أزل بطاقة عشوائية من خصم',                price: 55,  cat: 'هجوم',    needsGame: false },
+  { key: 'forceDisc', name: '⚔️ تخلص إجباري',        desc: 'اختر خصماً يتخلص من أفضل بطاقة عنده',     price: 60,  cat: 'هجوم',    needsGame: false },
+  { key: 'freeze',    name: '❄ تجميد خصم',          desc: 'الخصم التالي يفقد دوره',                   price: 60,  cat: 'هجوم',    needsGame: false },
+  { key: 'peek',      name: '👁 نظرة الرزمة',        desc: 'اكشف 3 بطاقات علوية من الرزمة',           price: 30,  cat: 'معلومات', needsGame: false },
+  { key: 'spy',       name: '🔍 كشف يد خصم',         desc: 'اكشف يد خصم لمدة 15 ثانية',               price: 45,  cat: 'معلومات', needsGame: false },
+  { key: 'extraTurn', name: '⚡ دور إضافي',          desc: 'خذ دوراً آخر فوراً بعد تخلصك',             price: 100, cat: 'قوية',    needsGame: false },
+
+{ key: 'complete',  name: '🏆 إكمال المرحلة',      desc: 'يكمل مرحلتك بدون شروط — مرة واحدة لكل مباراة · 🚫 ممنوع في المرحلة الأخيرة', price: 600, cat: 'قوية',    needsGame: false }
 ];
+
+var SHOP_BUNDLES = [
+  { key: 'attack', name: '⚔️ حزمة الهجوم',  desc: 'تخلص إجباري + تجميد + إزالة', items: ['forceDisc','freeze','discard'], price: 155, originalPrice: 175 },
+  { key: 'defend', name: '🛡 حزمة الدفاع',  desc: 'حماية + مضاد Skip + استرجاع', items: ['shield','skipGuard','recover'], price: 95,  originalPrice: 105 },
+  { key: 'pro',    name: '💎 حزمة المحترف', desc: 'Wild + دور إضافي + حماية',    items: ['wild','extraTurn','shield'],   price: 200, originalPrice: 225 },
+  { key: 'legend', name: '👑 حزمة الأسطورة', desc: 'كل الـ12 عنصراً + Wild إضافي', items: ['wild','wild','swap','recover','shield','skipGuard','discard','forceDisc','freeze','peek','spy','extraTurn','complete'], price: 700, originalPrice: 895 }
+];
+
+function getDailyDiscount() {
+  try {
+    var today = new Date();
+    var seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+    var s = seed;
+    var rng = function() { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+    var keys = ['wild','swap','recover','shield','skipGuard','discard','forceDisc','freeze','peek','spy','extraTurn','complete'];
+    var idx = Math.floor(rng() * keys.length);
+    return { key: keys[idx], discount: 0.4, dateKey: today.toISOString().slice(0, 10) };
+  } catch (e) { return null; }
+}
+
+function vibrateOn(event) {
+  if (!navigator.vibrate) return;
+  var patterns = {
+    draw: [20], lay: [30, 20, 30], hit3: [50, 30, 50, 30, 100],
+    hit5: [80, 40, 80, 40, 150], discard: [15], win: [100, 60, 100, 60, 200],
+    lose: [300], error: [100, 50, 100], skip: [40, 20, 40],
+    freeze: [60, 30, 60, 30, 60], achievement: [50, 30, 100]
+  };
+  var p = patterns[event] || [15];
+  try { navigator.vibrate(p); } catch (e) {}
+}
 function getSpentCoins() {
   try { return parseInt(localStorage.getItem('p10v21_spent') || localStorage.getItem('p10v19_spent') || '0', 10) || 0; }
   catch (e) { return 0; }
@@ -8328,63 +9155,127 @@ function shopMsg(msg, isErr) {
   clearTimeout(el._t);
   el._t = setTimeout(function () { el.style.display = 'none'; }, 2800);
 }
+/* ⚠️ تحذير قبل إكمال المرحلة إذا كانت البطاقات غير كافية */
+function confirmForcedComplete() {
+  if (!app.state || app.state.gameOver) return true;
+  var me = app.state.players[app.viewerId];
+  if (!me) return true;
+  // لو استُخدم مسبقاً أو أكمل كل المراحل → اترك applyShopEffect يعرض الخطأ المناسب
+  if (me.autoCompleted || me.phase >= app.state.phasesLimit) return true;
+  var phaseObj = app.state.phasesList[me.phase];
+  if (!phaseObj) return true;
+  var melds = findBestMeldsForPhase(me.hand, phaseObj);
+  if (melds && melds.length > 0) return true; // البطاقات كافية — لا تحذير
+  return confirm(
+    '⚠️ تنبيه\n\n' +
+    'بطاقاتك الحالية لا تكفي لتكوين المجموعات المطلوبة للمرحلة ' + (me.phase + 1) + '.\n\n' +
+    'سيتم إكمال المرحلة بدون وضع مجموعات على الطاولة، وستبقى بطاقاتك في يدك.\n\n' +
+    'هل تريد المتابعة؟'
+  );
+}
 function openShop() {
   var m = $('shopModal'); if (!m) return;
   $('shopCoins').innerHTML = 'العملات: ' + buildCoinHTML(getAvailableCoins());
   var inGame = !!(app.state && !app.state.gameOver);
+  var dailyDiscount = getDailyDiscount();
+  var html = '';
+  if (dailyDiscount) {
+    var discItem = null;
+    for (var di = 0; di < SHOP_ITEMS.length; di++) if (SHOP_ITEMS[di].key === dailyDiscount.key) { discItem = SHOP_ITEMS[di]; break; }
+    if (discItem) html += '<div class="daily-discount-banner">🔥 خصم اليوم 40% على <b>' + discItem.name + '</b></div>';
+  }
+  html += '<div style="font-size:11px;font-weight:800;color:#c4b5fd;margin:6px 0 8px;padding:3px 9px;background:rgba(168,85,247,0.15);border-radius:6px;display:inline-block">🎁 الحزم</div>';
+  for (var bi = 0; bi < SHOP_BUNDLES.length; bi++) {
+    var bundle = SHOP_BUNDLES[bi];
+    var canAfford = getAvailableCoins() >= bundle.price;
+    html += '<div class="shop-bundle"><div class="bundle-info"><div class="bundle-name">' + bundle.name + '</div><div class="bundle-desc">' + bundle.desc + '</div></div>';
+    html += '<div class="bundle-price"><div class="price-new">' + bundle.price + ' ⛁</div>';
+    if (bundle.originalPrice) html += '<div class="price-old">' + bundle.originalPrice + '</div>';
+    html += '</div><button class="bundle-buy" data-bundle="' + bundle.key + '" ' + (canAfford ? '' : 'disabled') + '>شراء</button></div>';
+  }
   var cats = {};
   for (var i = 0; i < SHOP_ITEMS.length; i++) {
     var c = SHOP_ITEMS[i].cat || 'عام';
     if (!cats[c]) cats[c] = [];
     cats[c].push(SHOP_ITEMS[i]);
   }
-  var html = '';
-  var catOrder = ['يدك', 'الرزمة', 'خصوم', 'خارقة'];
+  var catOrder = ['يدك', 'دفاع', 'هجوم', 'معلومات', 'قوية'];
   for (var ci = 0; ci < catOrder.length; ci++) {
     var cat = catOrder[ci];
     if (!cats[cat]) continue;
-    html += '<div style="font-size:11px;font-weight:800;color:var(--gold);margin:10px 0 6px;padding:3px 9px;background:rgba(244,185,66,0.12);border-radius:6px;display:inline-block">' + cat + '</div>';
+    html += '<div style="font-size:11px;font-weight:800;color:var(--gold);margin:12px 0 6px;padding:3px 9px;background:rgba(244,185,66,0.12);border-radius:6px;display:inline-block">' + cat + '</div>';
     for (var j = 0; j < cats[cat].length; j++) {
       var it = cats[cat][j];
       var disabled = (!inGame && it.needsGame);
-      html += '<div style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(0,0,0,0.3);border-radius:9px;margin-bottom:7px;border:1px solid var(--border-1)' + (disabled ? ';opacity:.5' : '') + '">';
+      var isDiscounted = (dailyDiscount && dailyDiscount.key === it.key);
+      var displayPrice = isDiscounted ? Math.round(it.price * 0.6) : it.price;
+      var canBuy = getAvailableCoins() >= displayPrice && !disabled;
+      html += '<div class="shop-item" style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(0,0,0,0.3);border-radius:9px;margin-bottom:7px;border:1px solid ' + (isDiscounted ? 'rgba(239,68,68,0.5)' : 'var(--border-1)') + (disabled ? ';opacity:.5' : '') + '">';
+      if (isDiscounted) html += '<span class="discount-badge">🔥 -40%</span>';
       html += '<div style="flex:1;text-align:right"><div style="font-size:12.5px;font-weight:800;color:#f4b942">' + it.name + '</div>';
-      html += '<div style="font-size:10px;opacity:.75;margin-top:2px">' + it.desc + (disabled ? ' <span style="color:#f4b942">(داخل اللعبة فقط)</span>' : '') + '</div></div>';
-      html += '<button class="btn-gold" data-buy="' + it.key + '" ' + (disabled ? 'disabled' : '') + ' style="padding:8px 13px;border-radius:8px;font-weight:800;font-size:11px;white-space:nowrap">' + it.price + ' ⛁</button>';
-      html += '</div>';
+      var disabledReason = '';
+if (disabled) {
+  if (it.key === 'complete') {
+    var meC = app.state && app.state.players ? app.state.players[app.viewerId] : null;
+    if (meC && meC.autoCompleted) {
+      disabledReason = ' <span style="color:#ef4444">(استُخدم في هذه المباراة)</span>';
+    } else if (meC && app.state && (app.state.phasesLimit - meC.phase <= 1)) {
+      disabledReason = ' <span style="color:#ef4444">(ممنوع في المرحلة الأخيرة)</span>';
+    } else {
+      disabledReason = ' <span style="color:#f4b942">(داخل اللعبة فقط)</span>';
+    }
+  } else {
+    disabledReason = ' <span style="color:#f4b942">(داخل اللعبة فقط)</span>';
+  }
+}
+var descText = it.desc;
+if (it.key === 'complete') {
+  descText = descText.replace('· 🚫 ممنوع في المرحلة الأخيرة', '· <span style="color:#ef4444;font-weight:800">🚫 ممنوع في المرحلة الأخيرة</span>');
+}
+html += '<div style="font-size:10px;opacity:.75;margin-top:2px">' + descText + disabledReason + '</div></div>';
+      html += '<button class="btn-gold" data-buy="' + it.key + '" data-price="' + displayPrice + '" ' + (canBuy ? '' : 'disabled') + ' style="padding:8px 13px;border-radius:8px;font-weight:800;font-size:11px;white-space:nowrap">' + displayPrice + ' ⛁</button></div>';
     }
   }
   $('shopItems').innerHTML = html;
   m.classList.remove('hidden');
 }
-function buyShopItem(key) {
+function buyShopItem(key, explicitPrice) {
+  for (var bi = 0; bi < SHOP_BUNDLES.length; bi++) {
+    if (SHOP_BUNDLES[bi].key === key) { buyShopBundle(SHOP_BUNDLES[bi]); return; }
+  }
   var item = null;
   for (var i = 0; i < SHOP_ITEMS.length; i++) if (SHOP_ITEMS[i].key === key) { item = SHOP_ITEMS[i]; break; }
   if (!item) return;
-  if (getAvailableCoins() < item.price) {
-    shopMsg('عملات غير كافية — لديك: ' + getAvailableCoins() + ' (تحتاج ' + item.price + ')', true);
-    SoundFX.play('error');
+  var price = (typeof explicitPrice === 'number') ? explicitPrice : item.price;
+  if (getAvailableCoins() < price) {
+    shopMsg('عملات غير كافية — لديك: ' + getAvailableCoins() + ' (تحتاج ' + price + ')', true);
+    SoundFX.play('error'); vibrateOn('error');
     return;
   }
   var inGame = !!(app.state && !app.state.gameOver);
-  if (!inGame) {
-    if (item.needsGame) { shopMsg('يجب أن تكون داخل اللعبة', true); return; }
-    spendCoins(item.price); addToInventory(key); refreshAllCoinDisplays();
-    shopMsg('✓ تم الشراء — محفوظ في مخزونك');
-    SoundFX.play('reward');
-    setTimeout(openShop, 250);
-    return;
+if (!inGame) {
+  if (item.needsGame) { shopMsg('يجب أن تكون داخل اللعبة', true); return; }
+  if (key === 'complete') {
+    if (!confirm('⚠️ تنبيه\n\nهذا العنصر يُكلف ' + price + ' عملة ويُستخدم مرة واحدة فقط داخل المباراة.\n\nهل أنت متأكد من الشراء؟')) return;
   }
-  if (app.mode === 'lan' && isGuest()) {
-    sendToHost({ type: 'shopAction', itemKey: key });
-    spendCoins(item.price);
-    refreshAllCoinDisplays();
-    shopMsg('✓ جاري تطبيق ' + item.name);
-    return;
-  }
+  spendCoins(price); addToInventory(key); refreshAllCoinDisplays();
+  shopMsg('✓ تم الشراء — محفوظ في مخزونك');
+  SoundFX.play('reward');
+  setTimeout(openShop, 250);
+  return;
+}
+
+/* ✅ تحذير قبل شراء "إكمال المرحلة" */
+if (key === 'complete' && !confirmForcedComplete()) return;
+
+if (app.mode === 'lan' && isGuest()) {
+  sendToHost({ type: 'shopAction', itemKey: key, price: price });
+  shopMsg('⏳ جاري تطبيق ' + item.name + '...');
+  return;
+}
   var r = applyShopEffect(app.state, app.viewerId, key, false);
   if (!r.ok) { shopMsg('تعذّر: ' + (r.reason || 'غير معروف'), true); SoundFX.play('error'); return; }
-  spendCoins(item.price); refreshAllCoinDisplays();
+  spendCoins(price); refreshAllCoinDisplays();
   SoundFX.play('reward');
   shopMsg('✓ ' + item.name);
   if (r.message) {
@@ -8395,38 +9286,96 @@ function buyShopItem(key) {
   if (app.mode === 'lan' && isHost()) syncStateToPeers();
   setTimeout(openShop, 250);
 }
+
+function buyShopBundle(bundle) {
+  if (getAvailableCoins() < bundle.price) {
+    shopMsg('عملات غير كافية — تحتاج ' + bundle.price, true);
+    SoundFX.play('error'); return;
+  }
+  var inGame = !!(app.state && !app.state.gameOver);
+
+  /* ✅ تحذير إذا احتوت الحزمة على "إكمال المرحلة" */
+  if (bundle.items.indexOf('complete') >= 0 && inGame) {
+    if (!confirmForcedComplete()) return;
+  }
+
+  var appliedCount = 0;
+  for (var i = 0; i < bundle.items.length; i++) {
+    var key = bundle.items[i];
+    if (inGame && !(app.mode === 'lan' && isGuest())) {
+      var r = applyShopEffect(app.state, app.viewerId, key, false);
+      if (r.ok) appliedCount++;
+    } else if (inGame) {
+      sendToHost({ type: 'shopAction', itemKey: key });
+      appliedCount++;
+    } else {
+      addToInventory(key); appliedCount++;
+    }
+  }
+  spendCoins(bundle.price); refreshAllCoinDisplays();
+  SoundFX.play('reward');
+  shopMsg('✓ ' + bundle.name + ' — ' + appliedCount + ' عنصر');
+  if (inGame) { resetRenderCache(); scheduleRender(); if (app.mode === 'lan' && isHost()) syncStateToPeers(); }
+  setTimeout(openShop, 400);
+}
 function applyShopEffect(state, pId, key, fromGuest) {
   var me = state.players[pId];
   if (!me) return { ok: false, reason: 'لاعب غير موجود' };
-  if (key === 'sort') { app.handOrder = []; saveHandOrderToStorage(); return { ok: true }; }
-  if (key === 'hint') {
-    var cp = state.phasesList ? state.phasesList[me.phase] : null;
-    var ids = findBestHintForPhase(me.hand, cp);
-    if (ids.length === 0) return { ok: false, reason: 'لا يوجد تلميح متاح' };
-    state.hintCards = ids;
-    if (pId === app.viewerId) state.selected = ids.slice();
-    return { ok: true };
+
+  if (key === 'wild') {
+    me.hand.push({ type: 'wild', id: nextUniqueId() });
+    return { ok: true, message: 'أُضيف Wild إلى يدك' };
   }
-  if (key === 'peek') {
+
+  if (key === 'swap') {
+    if (me.hand.length === 0) return { ok: false, reason: 'يدك فارغة' };
     if (state.deck.length === 0) return { ok: false, reason: 'الرزمة فارغة' };
-    var top = state.deck.slice(-3).reverse();
-    var cards = [];
-    for (var p = 0; p < top.length; p++) {
-      var c = top[p];
-      if (c._hidden) cards.push({ hidden: true });
-      else if (c.type === 'wild') cards.push({ type: 'wild' });
-      else if (c.type === 'skip') cards.push({ type: 'skip' });
-      else cards.push({ type: 'num', value: c.value, col: c.col });
+    var worstIdx = -1, worstScore = -Infinity;
+    for (var i = 0; i < me.hand.length; i++) {
+      var c = me.hand[i];
+      if (c.type === 'wild') continue;
+      var usefulness = 0;
+      if (c.type === 'num') {
+        for (var j = 0; j < me.hand.length; j++) {
+          if (i === j) continue;
+          var o = me.hand[j];
+          if (o.type === 'num' && o.value === c.value) usefulness += 8;
+          if (o.type === 'num' && o.col === c.col && Math.abs(o.value - c.value) === 1) usefulness += 6;
+        }
+      }
+      var score = getCardValue(c) * 2 - usefulness;
+      if (score > worstScore) { worstScore = score; worstIdx = i; }
     }
-    return { ok: true, peekCards: cards, message: 'أعلى الرزمة' };
+    if (worstIdx < 0) return { ok: false, reason: 'لا يمكن الاستبدال (Wild فقط)' };
+    var oldCard = me.hand.splice(worstIdx, 1)[0];
+    var newCard = state.deck.pop();
+    me.hand.push(newCard);
+    state.discard.push(oldCard);
+    return { ok: true, message: 'استُبدلت بطاقة' };
   }
-  if (key === 'deck') {
-    var fresh = createDeck({ noWild: true, noSkip: true });
-    for (var d = 0; d < 5 && d < fresh.length; d++) state.deck.push(fresh[d]);
-    shuffleArray(state.deck);
-    return { ok: true };
+
+  if (key === 'recover') {
+    if (!state.lastDiscard || !state.lastDiscard[pId]) return { ok: false, reason: 'لا توجد بطاقة لاسترجاعها' };
+    var recovered = state.lastDiscard[pId];
+    var dIdx = -1;
+    for (var di = 0; di < state.discard.length; di++) if (state.discard[di].id === recovered.id) { dIdx = di; break; }
+    if (dIdx < 0) return { ok: false, reason: 'البطاقة لم تعد متاحة' };
+    state.discard.splice(dIdx, 1);
+    me.hand.push(recovered);
+    delete state.lastDiscard[pId];
+    return { ok: true, message: 'استُعيدت آخر بطاقة' };
   }
-  if (key === 'wild') { me.hand.push({ type: 'wild', id: nextUniqueId() }); return { ok: true }; }
+
+  if (key === 'shield') {
+    me.shieldRounds = 4;
+    return { ok: true, message: '🛡 مجموعاتك محمية 4 أدوار' };
+  }
+
+  if (key === 'skipGuard') {
+    me.skipImmune = true;
+    return { ok: true, message: '🚫 محصّن ضد Skip مرة واحدة' };
+  }
+
   if (key === 'discard') {
     var ops = [];
     for (var ci = 0; ci < state.players.length; ci++) {
@@ -8434,49 +9383,162 @@ function applyShopEffect(state, pId, key, fromGuest) {
       if (pl.id !== pId && pl.hand.length > 0) ops.push(pl);
     }
     if (ops.length === 0) return { ok: false, reason: 'لا يوجد خصوم' };
-    var cpus = ops.filter(function (x) { return x.isCPU; });
+    var cpus = ops.filter(function(x) { return x.isCPU; });
     var pool = cpus.length > 0 ? cpus : ops;
     var tgt = pool[Math.floor(Math.random() * pool.length)];
     var ri = Math.floor(Math.random() * tgt.hand.length);
     var rm = tgt.hand.splice(ri, 1)[0];
     state.discard.push(rm);
-    return { ok: true };
+    return { ok: true, message: 'أُزيلت بطاقة من ' + tgt.name };
   }
+
+  if (key === 'forceDisc') {
+    var ops2 = [];
+    for (var ci2 = 0; ci2 < state.players.length; ci2++) {
+      var pl2 = state.players[ci2];
+      if (pl2.id !== pId && pl2.hand.length > 0) ops2.push(pl2);
+    }
+    if (ops2.length === 0) return { ok: false, reason: 'لا يوجد خصوم' };
+    if (fromGuest) {
+      var bestTarget = ops2[0];
+      for (var oi = 1; oi < ops2.length; oi++) {
+        if (ops2[oi].phase > bestTarget.phase ||
+           (ops2[oi].phase === bestTarget.phase && ops2[oi].hand.length < bestTarget.hand.length)) {
+          bestTarget = ops2[oi];
+        }
+      }
+      var bestIdx = 0, bestScore = -Infinity;
+      for (var bi = 0; bi < bestTarget.hand.length; bi++) {
+        var bc = bestTarget.hand[bi];
+        var buse = (bc.type === 'wild') ? 20 : 0;
+        if (bc.type === 'num') {
+          for (var bj = 0; bj < bestTarget.hand.length; bj++) {
+            if (bi === bj) continue;
+            var bo = bestTarget.hand[bj];
+            if (bo.type === 'num' && bo.value === bc.value) buse += 10;
+            if (bo.type === 'num' && bo.col === bc.col && Math.abs(bo.value - bc.value) === 1) buse += 8;
+          }
+        }
+        if (buse > bestScore) { bestScore = buse; bestIdx = bi; }
+      }
+      var removed = bestTarget.hand.splice(bestIdx, 1)[0];
+      state.discard.push(removed);
+      pushActionLog(state, pId, 'discard', '⚔️ أجبر ' + bestTarget.name + ' على التخلص من بطاقة');
+      return { ok: true, message: '⚔️ أجبرت ' + bestTarget.name };
+    }
+    showForceDiscModal(state, pId, ops2);
+    return { ok: true, message: 'اختر خصماً' };
+  }
+
   if (key === 'freeze') {
-    for (var fi = 0; fi < state.players.length; fi++) {
-      var fpl = state.players[fi];
-      if (fpl.id !== pId) { fpl.skipNext = (fpl.skipNext || 0) + 1; return { ok: true }; }
-    }
-    return { ok: false, reason: 'لا يوجد خصوم' };
-  }
-  if (key === 'complete') {
-    if (me.phase >= state.phasesLimit) return { ok: false, reason: 'أكملت المراحل' };
-    var phase = state.phasesList[me.phase];
-    var realIds = findBestHintForPhase(me.hand, phase);
-    if (realIds.length > 0) {
-      state.hintCards = realIds;
-      if (pId === app.viewerId) state.selected = realIds.slice();
-      return { ok: true, message: '⚡ اقتراح قوي لإكمال المرحلة' };
-    }
-    var totalNeeded = 0;
-    for (var s = 0; s < (phase.sets || []).length; s++) totalNeeded += phase.sets[s];
-    for (var r2 = 0; r2 < (phase.runs || []).length; r2++) totalNeeded += phase.runs[r2];
-    totalNeeded += phase.color || 0;
-    var testHand = me.hand.slice();
-    for (var w = 0; w < Math.min(6, totalNeeded); w++) testHand.push({ type: 'wild', id: '_testw' + w });
-    var testIds = findBestHintForPhase(testHand, phase);
-    if (testIds.length === 0) return { ok: false, reason: 'تعذر إكمال المرحلة' };
-    var realSubset = [];
-    for (var ti = 0; ti < testIds.length; ti++) {
-      for (var bi = 0; bi < me.hand.length; bi++) {
-        if (me.hand[bi].id === testIds[ti]) { realSubset.push(testIds[ti]); break; }
+    var nextIdx = (state.turnIndex + 1) % state.players.length;
+    var target = null;
+    if (state.players[nextIdx] && state.players[nextIdx].id !== pId) target = state.players[nextIdx];
+    else {
+      for (var fi = 0; fi < state.players.length; fi++) {
+        var fpl = state.players[fi];
+        if (fpl.id !== pId) { target = fpl; break; }
       }
     }
-    state.hintCards = realSubset;
-    if (pId === app.viewerId) state.selected = realSubset.slice();
-    var wildsNeeded = testIds.length - realSubset.length;
-    return { ok: true, message: '⚡ تحتاج ' + wildsNeeded + ' Wild — تم تحديد البطاقات الحقيقية' };
+    if (!target) return { ok: false, reason: 'لا يوجد خصوم' };
+    target.skipNext = (target.skipNext || 0) + 1;
+    return { ok: true, message: '❄ ' + target.name + ' مجمّد' };
   }
+
+  if (key === 'peek') {
+    if (state.deck.length === 0) return { ok: false, reason: 'الرزمة فارغة' };
+    var top = state.deck.slice(-3).reverse();
+    var cards = [];
+    for (var p = 0; p < top.length; p++) {
+      var cc = top[p];
+      if (cc._hidden) cards.push({ hidden: true });
+      else if (cc.type === 'wild') cards.push({ type: 'wild' });
+      else if (cc.type === 'skip') cards.push({ type: 'skip' });
+      else cards.push({ type: 'num', value: cc.value, col: cc.col });
+    }
+    return { ok: true, peekCards: cards, message: 'أعلى الرزمة' };
+  }
+
+  if (key === 'spy') {
+    var ops3 = [];
+    for (var ci3 = 0; ci3 < state.players.length; ci3++) {
+      var pl3 = state.players[ci3];
+      if (pl3.id !== pId && pl3.hand.length > 0) ops3.push(pl3);
+    }
+    if (ops3.length === 0) return { ok: false, reason: 'لا يوجد خصوم' };
+    if (fromGuest) return { ok: false, reason: 'غير متاح للضيوف في LAN' };
+    showSpyModal(ops3[0]);
+    return { ok: true, message: '🔍 يد ' + ops3[0].name };
+  }
+
+  if (key === 'extraTurn') {
+    state.extraTurnFor = pId;
+    return { ok: true, message: '⚡ دور إضافي في نهاية دورك' };
+  }
+
+  if (key === 'complete') {
+  // ⚠️ مرة واحدة لكل مباراة
+  if (me.autoCompleted) return { ok: false, reason: 'استُخدم بالفعل مرة واحدة في هذه المباراة' };
+  if (me.phase >= state.phasesLimit) return { ok: false, reason: 'أكملت كل المراحل' };
+
+  /* ✅ منع الإكمال في المرحلة الأخيرة — يحمي من pay-to-win */
+  if (state.phasesLimit - me.phase <= 1) {
+    return { ok: false, reason: 'لا يمكن استخدامه في المرحلة الأخيرة — أكملها بنفسك' };
+  }
+
+  var phaseObj = state.phasesList[me.phase];
+  var melds = findBestMeldsForPhase(me.hand, phaseObj);
+  var placedRealMelds = !!(melds && melds.length > 0);
+
+  // ✅ إكمال إجباري: المرحلة تُحسب دائماً، سواء توفرت البطاقات أم لا
+  if (placedRealMelds) {
+    adjustWildPositions(melds, me);
+    var allIds = [];
+    for (var m = 0; m < melds.length; m++)
+      for (var c3 = 0; c3 < melds[m].cards.length; c3++)
+        allIds.push(melds[m].cards[c3].id);
+    for (var ai = 0; ai < allIds.length; ai++) {
+      for (var hj = 0; hj < me.hand.length; hj++) {
+        if (me.hand[hj].id === allIds[ai]) { me.hand.splice(hj, 1); break; }
+      }
+    }
+    for (var mk = 0; mk < melds.length; mk++) {
+      melds[mk].phase = me.phase;
+      me.melds.push(melds[mk]);
+    }
+  }
+  // لو مفيش بطاقات كافية: نتقدم للمرحلة التالية بدون وضع مجموعات
+
+  me.phase++;
+  me.laidThisTurn = true;
+  me.autoCompleted = true;
+  if (!state.aiFirstLayTurn) state.aiFirstLayTurn = {};
+  if (state.aiFirstLayTurn[pId] === undefined) state.aiFirstLayTurn[pId] = state.turnNumber || 1;
+  state.selected = []; state.hintCards = [];
+
+  pushActionLog(state, pId, 'lay',
+    '🏆 إكمال المرحلة ' + me.phase + ' تلقائياً' +
+    (placedRealMelds ? '' : ' (بدون مجموعات — لم تكفِ البطاقات)'));
+
+  SoundFX.play('phase');
+
+  // فحص الفوز الفوري إن كانت اليد قد فرغت
+  if (me.hand.length === 0) {
+    setTimeout(function() {
+      if (app.state === state && !state.gameOver) checkWinOrNewRound(state, pId);
+    }, 500);
+  }
+
+  return {
+    ok: true,
+    message: '🏆 تم إكمال المرحلة ' + me.phase +
+             (placedRealMelds
+               ? ' ووضع المجموعات'
+               : ' — لكن لم تكن لديك البطاقات المطلوبة') +
+             ' — لا يمكن استخدامه مرة أخرى'
+  };
+}
+
   return { ok: false, reason: 'عنصر غير معروف' };
 }
 function showPeekResult(cards) {
@@ -8516,23 +9578,58 @@ function openInventory() {
   var inv = loadInventory();
   var inGame = !!(app.state && !app.state.gameOver);
   var html = '';
-  if (inv.length === 0) html = '<p style="text-align:center;opacity:.6;padding:20px">مخزونك فارغ — اشترِ من المتجر</p>';
-  else {
+  if (inv.length === 0) {
+    html = '<div style="text-align:center;padding:20px">' +
+             '<div style="font-size:32px;margin-bottom:8px;opacity:.5">🎒</div>' +
+             '<p style="opacity:.7;font-size:12px;margin-bottom:12px">مخزونك فارغ</p>' +
+             '<p style="opacity:.55;font-size:10.5px">اضغط "🛒 افتح المتجر" بالأسفل لشراء عناصر</p>' +
+           '</div>';
+  } else {
+    /* ✅ تجميع العناصر المتشابهة حسب key */
+    var grouped = {};
+    var order = [];
     for (var i = 0; i < inv.length; i++) {
+      var k = inv[i].key;
+      if (!grouped[k]) { grouped[k] = { key: k, count: 0 }; order.push(k); }
+      grouped[k].count++;
+    }
+    /* شريط الإجمالي */
+    html += '<div style="text-align:center;font-size:11px;opacity:.75;margin-bottom:10px;padding:6px;background:rgba(168,85,247,0.12);border-radius:7px;border:1px solid rgba(168,85,247,0.3)">' +
+              'لديك <b style="color:#c4b5fd;font-size:13px">' + inv.length + '</b> عنصر' +
+            '</div>';
+    for (var oi = 0; oi < order.length; oi++) {
+      var g = grouped[order[oi]];
       var item = null;
-      for (var j = 0; j < SHOP_ITEMS.length; j++) if (SHOP_ITEMS[j].key === inv[i].key) { item = SHOP_ITEMS[j]; break; }
+      for (var j = 0; j < SHOP_ITEMS.length; j++) if (SHOP_ITEMS[j].key === g.key) { item = SHOP_ITEMS[j]; break; }
       if (!item) continue;
       var disabled = !inGame;
       html += '<div style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(0,0,0,0.3);border-radius:9px;margin-bottom:7px;border:1px solid var(--border-1)' + (disabled ? ';opacity:.6' : '') + '">';
-      html += '<div style="flex:1;text-align:right"><div style="font-size:12.5px;font-weight:800;color:#f4b942">' + item.name + '</div>';
-      html += '<div style="font-size:10px;opacity:.75;margin-top:2px">' + item.desc + (disabled ? ' <span style="color:#f4b942">(داخل اللعبة فقط)</span>' : '') + '</div></div>';
-      html += '<button class="btn-gold" data-use-inv="' + i + '" ' + (disabled ? 'disabled' : '') + ' style="padding:8px 13px;border-radius:8px;font-weight:800;font-size:11px;white-space:nowrap">استخدم</button>';
+      html += '<div style="flex:1;text-align:right">';
+      html += '<div style="font-size:12.5px;font-weight:800;color:#f4b942">' + item.name + ' ' +
+                '<span style="background:linear-gradient(160deg,#a855f7,#7c3aed);color:#fff;padding:1px 8px;border-radius:10px;font-size:10.5px;margin-right:4px;display:inline-block;line-height:1.5;font-weight:900">×' + g.count + '</span>' +
+              '</div>';
+      var itemDesc = item.desc;
+      if (item.key === 'complete') {
+        itemDesc = itemDesc.replace('· 🚫 ممنوع في المرحلة الأخيرة', '· <span style="color:#ef4444;font-weight:800">🚫 ممنوع في المرحلة الأخيرة</span>');
+      }
+      html += '<div style="font-size:10px;opacity:.75;margin-top:2px">' + itemDesc + (disabled ? ' <span style="color:#f4b942">(داخل اللعبة فقط)</span>' : '') + '</div>';
+      html += '</div>';
+      html += '<button class="btn-gold" data-use-key="' + g.key + '" ' + (disabled ? 'disabled' : '') + ' style="padding:8px 13px;border-radius:8px;font-weight:800;font-size:11px;white-space:nowrap">استخدم</button>';
       html += '</div>';
     }
   }
   $('inventoryItems').innerHTML = html;
   m.classList.remove('hidden');
 }
+/* ✅ دالة جديدة: استخدام أول عنصر من نوع معين */
+function useInventoryItemByKey(key) {
+  var inv = loadInventory();
+  for (var i = 0; i < inv.length; i++) {
+    if (inv[i].key === key) { useInventoryItem(i); return; }
+  }
+  invMsg('العنصر غير موجود في المخزون', true);
+}
+
 function useInventoryItem(idx) {
   var inv = loadInventory();
   if (idx < 0 || idx >= inv.length) return;
@@ -8540,9 +9637,22 @@ function useInventoryItem(idx) {
   var item = null;
   for (var i = 0; i < SHOP_ITEMS.length; i++) if (SHOP_ITEMS[i].key === key) { item = SHOP_ITEMS[i]; break; }
   if (!item) { removeFromInventoryByIndex(idx); invMsg('عنصر غير معروف — أُزيل', true); return; }
-  var inGame = !!(app.state && !app.state.gameOver);
-  if (!inGame) { invMsg('استخدم هذا العنصر داخل اللعبة', true); return; }
-  if (app.mode === 'lan' && isGuest()) {
+var inGame = !!(app.state && !app.state.gameOver);
+if (!inGame) { invMsg('استخدم هذا العنصر داخل اللعبة', true); return; }
+
+/* ✅ تحذير قبل استخدام "إكمال المرحلة" من المخزون */
+if (key === 'complete') {
+  var meNow = app.state && app.state.players ? app.state.players[app.viewerId] : null;
+  if (meNow && app.state && (app.state.phasesLimit - meNow.phase <= 1)) {
+    shopMsg('🚫 لا يمكن استخدامه في المرحلة الأخيرة — أكملها بنفسك', true);
+    SoundFX.play('error');
+    return;
+  }
+  if (!confirmForcedComplete()) return;
+}
+
+
+ if (app.mode === 'lan' && isGuest()) {
     sendToHost({ type: 'shopAction', itemKey: key });
     removeFromInventoryByIndex(idx);
     invMsg('✓ جاري تطبيق ' + item.name);
@@ -8561,15 +9671,112 @@ function useInventoryItem(idx) {
   if (app.mode === 'lan' && isHost()) syncStateToPeers();
   setTimeout(openInventory, 300);
 }
+/* ─── Force Discard Modal ─── */
+var _forceDiscContext = null;
+function showForceDiscModal(state, pId, targets) {
+  var modal = $('forceDiscModal'); if (!modal) return;
+  _forceDiscContext = { state: state, pId: pId };
+  var html = '';
+  for (var i = 0; i < targets.length; i++) {
+    var t = targets[i];
+    html += '<button class="fd-target-btn" data-fd-target="' + t.id + '" type="button">';
+    html += '<span class="fd-target-name">' + escapeHTML(t.name) + '</span>';
+    html += '<span class="fd-target-info">مرحلة ' + Math.min(t.phase + 1, state.phasesLimit) + ' · ' + t.hand.length + ' بطاقة</span>';
+    html += '</button>';
+  }
+  $('forceDiscTargets').innerHTML = html;
+  modal.classList.remove('hidden');
+}
+
+function executeForceDiscOnTarget(targetId) {
+  if (!_forceDiscContext) return;
+  var state = _forceDiscContext.state;
+  var pId = _forceDiscContext.pId;
+  _forceDiscContext = null;
+  $('forceDiscModal').classList.add('hidden');
+  var target = state.players[targetId];
+  if (!target || target.hand.length === 0) { setStatus('الخصم ليس لديه بطاقات', 'var(--red)'); return; }
+  var bestIdx = 0, bestScore = -Infinity;
+  for (var i = 0; i < target.hand.length; i++) {
+    var c = target.hand[i];
+    var usefulness = (c.type === 'wild') ? 20 : 0;
+    if (c.type === 'num') {
+      for (var j = 0; j < target.hand.length; j++) {
+        if (i === j) continue;
+        var o = target.hand[j];
+        if (o.type === 'num' && o.value === c.value) usefulness += 10;
+        if (o.type === 'num' && o.col === c.col && Math.abs(o.value - c.value) === 1) usefulness += 8;
+      }
+    }
+    if (usefulness > bestScore) { bestScore = usefulness; bestIdx = i; }
+  }
+  var removed = target.hand.splice(bestIdx, 1)[0];
+  state.discard.push(removed);
+  pushActionLog(state, pId, 'discard', '⚔️ أجبر ' + target.name + ' على التخلص من بطاقة');
+  setStatus('⚔️ ' + target.name + ' تخلص من بطاقة قوية', 'var(--purple)');
+  SoundFX.play('kick'); vibrateOn('hit3');
+  resetRenderCache(); scheduleRender();
+  if (app.mode === 'lan' && isHost()) syncStateToPeers();
+}
+
+/* ─── Spy Modal ─── */
+var _spyTimer = null;
+function showSpyModal(target) {
+  var modal = $('spyModal'); if (!modal) return;
+  var body = $('spyBody');
+  var html = '<div style="font-size:12px;font-weight:900;color:var(--gold);text-align:center;margin-bottom:10px">' + escapeHTML(target.name) + ' — مرحلة ' + Math.min(target.phase + 1, 10) + '</div>';
+  html += '<div class="spy-hand-row">';
+  for (var i = 0; i < target.hand.length; i++) {
+    var c = target.hand[i];
+    var cls = app.settings.faceStyle;
+    var disp = '?';
+    if (c._hidden) { cls = 'back ' + app.settings.backStyle; disp = ''; }
+    else if (c.type === 'wild') { cls += ' wild'; disp = 'W'; }
+    else if (c.type === 'skip') { cls += ' skip'; disp = 'S'; }
+    else { cls += ' ' + COLORS[c.col].key; disp = c.value; }
+    html += '<div class="p10-card ' + cls + '" style="width:38px;height:56px;position:relative">';
+    if (!c._hidden) {
+      html += '<div class="tl-corner"><div class="tl-num">' + disp + '</div></div>';
+      html += '<div class="center-layer"><div class="center-dot"><div class="center-num">' + disp + '</div></div></div>';
+      html += '<div class="br-corner"><div class="br-num">' + disp + '</div></div>';
+    }
+    html += '</div>';
+  }
+  html += '</div>';
+  body.innerHTML = html;
+  modal.classList.remove('hidden');
+  var remaining = 15;
+  var timerEl = $('spyTimer');
+  timerEl.textContent = '⏱ ' + remaining + ' ثانية متبقية';
+  timerEl.classList.remove('warn');
+  if (_spyTimer) clearInterval(_spyTimer);
+  _spyTimer = setInterval(function() {
+    remaining--;
+    if (remaining <= 0) {
+      clearInterval(_spyTimer); _spyTimer = null;
+      modal.classList.add('hidden');
+      return;
+    }
+    timerEl.textContent = '⏱ ' + remaining + ' ثانية متبقية';
+    timerEl.classList.toggle('warn', remaining <= 5);
+  }, 1000);
+}
+
 function attachInventoryHandlers() {
   /* زر المخزون الآن داخل #actions ويُربط في updateActionsButtons */
   var cl = $('closeInventory');
   if (cl) cl.onclick = function () { $('inventoryModal').classList.add('hidden'); };
-  var ic = $('inventoryItems');
-  if (ic) ic.onclick = function (ev) {
-    var bt = ev.target.closest('[data-use-inv]');
-    if (!bt || bt.disabled) return;
-    useInventoryItem(parseInt(bt.getAttribute('data-use-inv'), 10));
+var ic = $('inventoryItems');
+if (ic) ic.onclick = function (ev) {
+  var bt = ev.target.closest('[data-use-key]');
+  if (!bt || bt.disabled) return;
+  useInventoryItemByKey(bt.getAttribute('data-use-key'));
+};
+  /* ✅ زر المتجر داخل المخزون */
+  var osb = $('openShopFromInventory');
+  if (osb) osb.onclick = function () {
+    $('inventoryModal').classList.add('hidden');
+    setTimeout(function () { openShop(); }, 100);
   };
 }
 function attachShopHandlers() {
@@ -8577,9 +9784,25 @@ function attachShopHandlers() {
   var cl = $('closeShop'); if (cl) cl.onclick = function () { $('shopModal').classList.add('hidden'); };
   var sc = $('shopItems');
   if (sc) sc.onclick = function (ev) {
+    var bundleBtn = ev.target.closest('[data-bundle]');
+    if (bundleBtn && !bundleBtn.disabled) { buyShopItem(bundleBtn.getAttribute('data-bundle')); return; }
     var b = ev.target.closest('[data-buy]');
     if (!b || b.disabled) return;
-    buyShopItem(b.getAttribute('data-buy'));
+    var price = parseInt(b.getAttribute('data-price'), 10);
+    buyShopItem(b.getAttribute('data-buy'), isNaN(price) ? undefined : price);
+  };
+  var fdt = $('forceDiscTargets');
+  if (fdt) fdt.onclick = function(ev) {
+    var b = ev.target.closest('[data-fd-target]');
+    if (!b) return;
+    executeForceDiscOnTarget(parseInt(b.getAttribute('data-fd-target'), 10));
+  };
+  var cfd = $('closeForceDisc');
+  if (cfd) cfd.onclick = function() { _forceDiscContext = null; $('forceDiscModal').classList.add('hidden'); };
+  var cs = $('closeSpy');
+  if (cs) cs.onclick = function() {
+    if (_spyTimer) { clearInterval(_spyTimer); _spyTimer = null; }
+    $('spyModal').classList.add('hidden');
   };
 }
 
@@ -8834,7 +10057,7 @@ function buildProfileScreen() {
   var name = app.settings.playerName || 'لاعب';
   var initial = name.charAt(0).toUpperCase();
   var headerHTML =
-    '<div class="profile-avatar">' + escapeHTML(initial) + '</div>' +
+    generateAvatarHTML(name, 'lg') +
     '<div class="profile-name">' + escapeHTML(name) + '</div>' +
     '<div class="profile-level">المستوى ' + levelInfo.level + ' — ' + levelInfo.totalXP + ' نقطة خبرة</div>' +
     '<div class="xp-bar"><div class="xp-fill" style="width:' + (levelInfo.progress * 100) + '%"></div></div>' +
@@ -8951,11 +10174,18 @@ var gb = $('galleryBtn'); if (gb) gb.onclick = function() {
   $('galleryModal').classList.remove('hidden');
 };
 var ttb = $('themeToggleBtn'); if (ttb) ttb.onclick = function() {
-  var ts = ['dark', 'light', 'neon'];
-  var c = ts.indexOf(app.settings.theme);
+  // ⚠️ applySettingsToDOM يقرأ من tableStyle — لنستخدمه هو لا theme
+  var ts = ['dark', 'light', 'neon', 'wood'];
+  var c = ts.indexOf(app.settings.tableStyle);
   if (c < 0) c = 0;
-  app.settings.theme = ts[(c + 1) % ts.length];
-  saveSettingsToStorage(); applySettingsToDOM();
+  app.settings.tableStyle = ts[(c + 1) % ts.length];
+  saveSettingsToStorage();
+  applySettingsToDOM();
+  // مزامنة أزرار الثيم داخل نافذة الإعدادات (إن كانت مفتوحة)
+  var tStyles = document.querySelectorAll('.table-style-btn');
+  for (var i = 0; i < tStyles.length; i++) {
+    tStyles[i].classList.toggle('active', tStyles[i].getAttribute('data-style') === app.settings.tableStyle);
+  }
 };
   var fsb = $('fullscreenBtn');
 if (fsb) fsb.onclick = toggleFullscreen;
@@ -8974,6 +10204,8 @@ if (ffb) ffb.onclick = function() {
   if (tutBtn) tutBtn.onclick = function() { openTutorial(0); };
   var rb = $('resumeBtn');
   if (rb) rb.onclick = function() { resumeSavedGame(); };
+  var dlb = $('dailyLeaderboardBtn'); if (dlb) dlb.onclick = showDailyLeaderboard;
+  var cdlb = $('closeDailyLb'); if (cdlb) cdlb.onclick = function() { $('dailyLbModal').classList.add('hidden'); };
   var dcb = $('dailyChallengeBtn');
 if (dcb) dcb.onclick = function() {
   if (isDailyChallengeDone()) {
@@ -9404,7 +10636,32 @@ function attachSettingsHandlers() {
     buildGalleryGrid(n);
     resetRenderCache(); scheduleRender();
   };
-  var ttsInp = $('turnTimerSecs');
+  var musicBtns = document.querySelectorAll('[data-musicstyle]');
+for (var mb = 0; mb < musicBtns.length; mb++) {
+  (function(btn) {
+    btn.onclick = function() {
+      var style = btn.getAttribute('data-musicstyle');
+      app.settings.musicStyle = style;
+      saveSettingsToStorage();
+      for (var k = 0; k < musicBtns.length; k++) {
+        musicBtns[k].classList.toggle('active', musicBtns[k] === btn);
+      }
+      BackgroundMusic.setStyle(style);
+    };
+    btn.classList.toggle('active', (app.settings.musicStyle || 'off') === btn.getAttribute('data-musicstyle'));
+  })(musicBtns[mb]);
+}
+var tStyles = document.querySelectorAll('.table-style-btn');
+for (var ts = 0; ts < tStyles.length; ts++) {
+  (function(b) {
+    b.onclick = function() {
+      app.settings.tableStyle = b.getAttribute('data-style');
+      for (var k = 0; k < tStyles.length; k++) tStyles[k].classList.toggle('active', tStyles[k] === b);
+      saveSettingsToStorage(); applySettingsToDOM();
+    };
+  })(tStyles[ts]);
+}
+var ttsInp = $('turnTimerSecs');
   if (ttsInp) ttsInp.addEventListener('change', function() {
     var v = parseInt(ttsInp.value, 10);
     if (isNaN(v) || v < 10) v = 10;
@@ -9729,7 +10986,8 @@ function initializeApp() {
       var el3 = $('settingsNameInput'); if (el3) el3.value = app.settings.playerName;
     }
     try { updateCpuSkillDisplay(); } catch (e) {}
-    try { renderDailyBadge(); } catch (e) {}
+try { renderDailyBadge(); } catch (e) {}
+try { updateFaceBackCounts(); } catch (e) {}
 
     var sv = loadSavedGame();
     if (sv && app.settings.autoSave) {
