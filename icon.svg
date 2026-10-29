@@ -1,11 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="TYEYYIY Phase 10">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="38%" r="78%">
-      <stop offset="0%" stop-color="#214532"/>
-      <stop offset="48%" stop-color="#0d1f16"/>
+    <!-- خلفية اللعبة -->
+    <radialGradient id="bg" cx="50%" cy="40%" r="80%">
+      <stop offset="0%" stop-color="#183526"/>
+      <stop offset="60%" stop-color="#0a1811"/>
       <stop offset="100%" stop-color="#020604"/>
     </radialGradient>
 
+    <!-- تدرج الكرت الأحمر -->
     <linearGradient id="cardRed" x1="0" y1="0" x2="0.5" y2="1">
       <stop offset="0%" stop-color="#ff5c6e"/>
       <stop offset="35%" stop-color="#ef3a4d"/>
@@ -13,54 +15,69 @@
       <stop offset="100%" stop-color="#7a0413"/>
     </linearGradient>
 
+    <!-- تدرج الكرت الأسود (Wild) -->
+    <linearGradient id="cardWild" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2a2a2a"/>
+      <stop offset="100%" stop-color="#050505"/>
+    </linearGradient>
+
+    <!-- تدرج الذهبي لكرت Wild -->
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd75e"/>
+      <stop offset="100%" stop-color="#c98a05"/>
+    </linearGradient>
+
+    <!-- انعكاس ضوئي -->
     <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.65"/>
-      <stop offset="55%" stop-color="#ffffff" stop-opacity="0.08"/>
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.6"/>
       <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
     </linearGradient>
 
-    <filter id="cardShadow" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur in="SourceAlpha" stdDeviation="18" result="blur"/>
-      <feOffset in="blur" dy="14" result="offsetBlur"/>
-      <feFlood flood-color="#000000" flood-opacity="0.8"/>
-      <feComposite in2="offsetBlur" operator="in"/>
-      <feMerge>
-        <feMergeNode/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-
-    <filter id="ambientGlow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="48"/>
+    <!-- ظل الكروت -->
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="12" stdDeviation="15" flood-color="#000000" flood-opacity="0.75"/>
     </filter>
   </defs>
 
-  <!-- خلفية -->
+  <!-- خلفية الأيقونة -->
   <rect width="512" height="512" fill="url(#bg)"/>
 
-  <!-- توهج ذهبي خلفي -->
-  <ellipse cx="256" cy="290" rx="190" ry="200" fill="#f4b942" opacity="0.16" filter="url(#ambientGlow)"/>
-
-  <!-- الكرت الرئيسي -->
-  <g transform="translate(256 256) rotate(-9)" filter="url(#cardShadow)">
+  <!-- ========================================== -->
+  <!-- 1. كرت Wild (في الخلف) -->
+  <!-- ========================================== -->
+  <g transform="translate(310, 180) rotate(18)" filter="url(#shadow)">
     <!-- جسم الكرت -->
-    <rect x="-150" y="-210" width="300" height="420" rx="24" fill="url(#cardRed)" stroke="#ffffff" stroke-width="6"/>
-
+    <rect x="-90" y="-125" width="180" height="250" rx="14" fill="url(#cardWild)" stroke="#f4b942" stroke-width="4"/>
     <!-- إطار داخلي -->
-    <rect x="-138" y="-198" width="276" height="396" rx="16" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2.5"/>
+    <rect x="-82" y="-117" width="164" height="234" rx="9" fill="none" stroke="rgba(244,185,66,0.3)" stroke-width="2"/>
+    <!-- الدائرة الذهبية -->
+    <circle cx="0" cy="0" r="55" fill="url(#gold)"/>
+    <!-- حرف W -->
+    <text x="0" y="22" font-family="'Arial Black', Arial, sans-serif" font-size="72" font-weight="900" font-style="italic" fill="#050505" text-anchor="middle">W</text>
+    <!-- انعكاس -->
+    <rect x="-90" y="-125" width="180" height="80" rx="14" fill="url(#gloss)"/>
+  </g>
 
-    <!-- انعكاس ضوئي -->
-    <rect x="-150" y="-210" width="300" height="140" rx="24" fill="url(#gloss)"/>
+  <!-- ========================================== -->
+  <!-- 2. كرت 10 (في المقدمة) -->
+  <!-- ========================================== -->
+  <g transform="translate(220, 280) rotate(-8)" filter="url(#shadow)">
+    <!-- جسم الكرت -->
+    <rect x="-150" y="-210" width="300" height="420" rx="20" fill="url(#cardRed)" stroke="#ffffff" stroke-width="5"/>
+    <!-- إطار داخلي -->
+    <rect x="-138" y="-198" width="276" height="396" rx="14" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2.5"/>
 
     <!-- البيضة البيضاء -->
-    <ellipse cx="0" cy="-5" rx="108" ry="145" fill="#ffffff"/>
-    <ellipse cx="0" cy="-5" rx="108" ry="145" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3"/>
+    <ellipse cx="0" cy="-5" rx="105" ry="140" fill="#ffffff"/>
 
     <!-- الرقم 10 الكبير -->
-    <text x="0" y="52" font-family="'Arial Black', Arial, Helvetica, sans-serif" font-size="170" font-weight="900" font-style="italic" fill="#8e0c1c" text-anchor="middle" letter-spacing="-10">10</text>
+    <text x="0" y="55" font-family="'Arial Black', Arial, sans-serif" font-size="165" font-weight="900" font-style="italic" fill="#8e0c1c" text-anchor="middle" letter-spacing="-8">10</text>
 
     <!-- 10 صغيرة في الزوايا -->
-    <text x="-108" y="-158" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="-2">10</text>
-    <text x="108" y="180" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="-2">10</text>
+    <text x="-105" y="-155" font-family="Arial, sans-serif" font-size="38" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="-1">10</text>
+    <text x="105" y="180" font-family="Arial, sans-serif" font-size="38" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="-1">10</text>
+
+    <!-- انعكاس ضوئي على الكرت الأحمر -->
+    <rect x="-150" y="-210" width="300" height="130" rx="20" fill="url(#gloss)"/>
   </g>
 </svg>
