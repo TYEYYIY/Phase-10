@@ -2579,7 +2579,7 @@ html.theme-epic .p10-card[class*="face-"] {
    ============================================================ */
 (function protectDataForever() {
   var NEW_PREFIX = 'p10TYEYYIY_'; // ⚠️ هذا الاسم الثابت لا يجب تغييره أبداً في المستقبل
-  var OLD_PREFIXES = ['p10TYEYYIY_', 'p10v21_', 'p10v20_', 'p10v19_'];
+  var OLD_PREFIXES = ['p10v22_', 'p10v21_', 'p10v20_', 'p10v19_'];
   var keysToMigrate = [
     'settings', 'stats', 'achievements', 'matchCoins', 'spent',
     'inventory', 'matchHistory', 'leaderboard', 'advancedPhases',
@@ -2606,7 +2606,7 @@ html.theme-epic .p10-card[class*="face-"] {
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '22.1.2';
+var APP_VERSION = '22.2.1';
 var APP_BUILD_DATE = '1-9-2026';
 var APP_LAST_UPDATE = '30-10-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
@@ -3743,6 +3743,10 @@ function setBusy(v) {
    CPU SKILL
    ============================================================ */
 function getCpuSkill() {
+  /* ✅ إذا كانت اللعبة الحالية تحدد مستوى ذكاء معين (مثل التحدي اليومي) */
+  if (app.state && typeof app.state.cpuSkillOverride === 'number') {
+    return Math.max(GAME_CONST.CPU_SKILL_MIN, Math.min(GAME_CONST.CPU_SKILL_MAX, app.state.cpuSkillOverride));
+  }
   var s = app.stats.cpuSkill;
   if (typeof s !== 'number') s = GAME_CONST.CPU_SKILL_START;
   return Math.max(GAME_CONST.CPU_SKILL_MIN, Math.min(GAME_CONST.CPU_SKILL_MAX, s));
@@ -4181,6 +4185,7 @@ function handleDeckExhaustion(state) {
 function endRoundByDeckExhaustion() {
   var state = app.state; if (!state) return;
   app.dealing = false;
+  
   var summary = { winnerName: 'لا فائز (نفاد الرزمة)', players: [] };
   for (var i = 0; i < state.players.length; i++) {
     var p = state.players[i];
@@ -4190,45 +4195,72 @@ function endRoundByDeckExhaustion() {
     app.stats.totalPenalty += pen;
     summary.players.push({ id: p.id, name: p.name, points: pen, score: p.score, isWinner: false });
   }
+  
   state.roundLog.push({ round: state.round, exhausted: true, winner: -1 });
   state.round++;
   saveStatsToStorage();
-  if (app.mode === 'lan' && isHost()) broadcastToGuests({ type: 'roundScore', summary: summary });
-  var modal = $('roundScoreModal');
-  if (!modal) {
-    resetRoundForState(state, 0);
-    resetRenderCache(); scheduleRender(); syncStateToPeers();
-    setTimeout(function() { if (app.state === state && !state.gameOver) startTurnIfNeeded(); }, 800);
-    return;
-  }
-  $('roundScoreWinner').innerHTML = '🔄 <b style="color:#f4b942">انتهت الجولة (نفاد الرزمة)</b> — تُحسب النقاط';
-  var html = '';
-  for (var s = 0; s < summary.players.length; s++) {
-    var sp = summary.players[s];
-    html += '<div class="score-row"><span class="lose">' + escapeHTML(sp.name) + '</span><span class="mid">+ ' + sp.points + ' نقطة</span><span class="lose">' + sp.score + ' إجمالي</span></div>';
-  }
-  $('roundScoreBody').innerHTML = html;
-  modal.classList.remove('hidden');
-  SoundFX.play('reward');
-  $('roundScoreContinueBtn').onclick = function() {
-    modal.classList.add('hidden');
-    if (app.state !== state) return;
-    var first = 0, bestPhase = -1, bestScore = Infinity;
-    for (var k = 0; k < state.players.length; k++) {
-      var pl = state.players[k];
-      if (pl.phase > bestPhase || (pl.phase === bestPhase && pl.score < bestScore)) {
-        bestPhase = pl.phase; bestScore = pl.score; first = k;
-      }
+
+  // 🔍 البحث عن من أكمل المرحلة
+  var completedPlayers = state.players.filter(function(p) { return p.phase >= state.phasesLimit; });
+  var winner = null;
+
+  if (completedPlayers.length > 0) {
+    // 🏆 الحالة 1: يوجد من أكمل المرحلة -> الفائز هو الأقل نقاطاً
+    winner = completedPlayers[0];
+    for (var c = 1; c < completedPlayers.length; c++) {
+      if (completedPlayers[c].score < winner.score) winner = completedPlayers[c];
     }
-    resetRoundForState(state, first);
-    resetRenderCache(); previouslyRenderedMelds = {};
-    scheduleRender(); syncStateToPeers();
-    showRoundOverlay(state.round, function() {
-      if (app.state !== state) return;
-      resetRenderCache(); scheduleRender(); syncStateToPeers();
-      setTimeout(function() { if (app.state === state && !state.gameOver) startTurnIfNeeded(); }, 400);
-    });
-  };
+    
+    state.gameOver = true;
+    setStatus(winner.name + ' فاز (أكمل المرحلة والأقل نقاطاً)!', 'var(--green)');
+    try { recordWeeklyLeaderboard(); } catch (e) {}
+    SoundFX.play('win'); showConfetti();
+    if (winner.id === app.myPlayerId) handleWinAchievements();
+    else handleLossAchievements();
+    if (app.mode === 'lan' && isHost()) syncStateToPeers();
+    if (winner.id === app.myPlayerId) showWinOverlay();
+    else showLoseOverlay();
+    clearSavedGame();
+    setTimeout(function() { showGameOver(); }, 1400);
+    return;
+    
+  } else {
+    // 🔄 الحالة 2: لم يكمل أحد المرحلة -> إعادة التحدي من البداية
+    if (app.mode === 'lan' && isHost()) broadcastToGuests({ type: 'roundScore', summary: summary });
+    
+    // إعادة تعيين النقاط المكتسبة في هذه الجولة الفاشلة (حتى لا يتضخم مجموع النقاط)
+    for (var ri = 0; ri < state.players.length; ri++) {
+      state.players[ri].score -= summary.players[ri].points;
+    }
+    
+    var modal = $('roundScoreModal');
+    if (modal) {
+      $('roundScoreWinner').innerHTML = '🔄 <b style="color:#ef4444">انتهت الرزمة بدون إكمال المرحلة!</b><br><span style="font-size:11px">سيتم إعادة التحدي من البداية للجميع...</span>';
+      $('roundScoreBody').innerHTML = '';
+      modal.classList.remove('hidden');
+      SoundFX.play('error');
+      
+      $('roundScoreContinueBtn').onclick = function() {
+        modal.classList.add('hidden');
+        if (app.state !== state) return;
+        
+        // إعادة تصفير المراحل والبطاقات للجميع
+        for (var k = 0; k < state.players.length; k++) {
+          state.players[k].phase = 0; 
+          state.players[k].melds = [];
+          state.players[k].autoCompleted = false;
+        }
+        resetRoundForState(state, Math.floor(Math.random() * state.players.length));
+        resetRenderCache(); previouslyRenderedMelds = {};
+        scheduleRender(); syncStateToPeers();
+        showRoundOverlay(state.round, function() {
+          if (app.state !== state) return;
+          resetRenderCache(); scheduleRender(); syncStateToPeers();
+          setTimeout(function() { if (app.state === state && !state.gameOver) startTurnIfNeeded(); }, 400);
+        });
+      };
+    }
+  }
 }
 
 /* ============================================================
@@ -6864,12 +6896,24 @@ function beginDailyChallengeAfterConfirm() {
   app.dailyChallengeActive = true;
   app.dailyChallengeDateKey = d.dateKey;
   app.dailyChallengePhase = dailyPhase;
-  app.dailyChallengeReward = type.baseReward || d.reward;
+  
+  // استخدام القيم المختارة من الواجهة
+  app.dailyChallengeReward = app.pendingDailyReward || (type.baseReward || d.reward);
+  app.localCpuCount = app.pendingDailyOpponents || 3;
   app.phasePack = 'daily';
   app.specialMode = 'classic';
-  app.localCpuCount = 3;
 
   startCpuGame();
+  
+  // ✅ تطبيق صعوبة التحدي على مستوى الذكاء بشكل دائم (طوال المباراة)
+  if (app.state) {
+    var diffSkill = 6;
+    if (app.pendingDailyDiff === 'easy') diffSkill = 3;
+    else if (app.pendingDailyDiff === 'hard') diffSkill = 8.5;
+    else if (app.pendingDailyDiff === 'expert') diffSkill = 10;
+    app.state.cpuSkillOverride = diffSkill;
+  }
+
   setTimeout(function() {
     if (!app.state) return;
     app.state.dailyChallenge = initDailyChallengeState();
@@ -7019,15 +7063,70 @@ function openDailyRulesModal() {
   html += '<div style="font-size:12.5px;color:#f4b942;font-weight:800;padding:6px 0">' + daily.desc + '</div>';
   html += '</div>';
 
+  // ✅ إعدادات التحدي (خصوم وصعوبة)
+  html += '<div class="setup-box" style="margin-bottom:10px">';
+  html += '<div class="row-label">👥 عدد الخصوم</div>';
+  html += '<div class="count-selector" id="dcOpponents">';
+  for(var i=1; i<=7; i++) {
+    html += '<button class="count-btn' + (i===3?' active':'') + '" data-opp="'+i+'" type="button">'+i+'</button>';
+  }
+  html += '</div></div>';
+
+  html += '<div class="setup-box" style="margin-bottom:10px">';
+  html += '<div class="row-label">🔥 مستوى الصعوبة</div>';
+  html += '<div style="display:flex;gap:5px;justify-content:center">';
+  html += '<button class="adv-toggle" data-diff="easy" type="button">سهل</button>';
+  html += '<button class="adv-toggle active" data-diff="normal" type="button">عادي</button>';
+  html += '<button class="adv-toggle" data-diff="hard" type="button">صعب</button>';
+  html += '<button class="adv-toggle" data-diff="expert" type="button">محترف</button>';
+  html += '</div></div>';
+
   html += '<div class="setup-box" style="background:linear-gradient(160deg,rgba(74,222,128,0.15),rgba(74,222,128,0.05));border-color:rgba(74,222,128,0.4)">';
-  html += '<div class="row-label">💰 المكافأة</div>';
-  html += '<div style="font-size:20px;font-weight:900;color:#4ade80;text-align:center;padding:4px 0">+' + (type.baseReward || daily.reward) + ' عملة</div>';
+  html += '<div class="row-label">💰 المكافأة المتوقعة</div>';
+  html += '<div id="dcRewardDisplay" style="font-size:20px;font-weight:900;color:#4ade80;text-align:center;padding:4px 0">+' + (type.baseReward || daily.reward) + ' عملة</div>';
   html += '</div>';
 
-  html += '<p style="font-size:10.5px;color:#8fa5a0;text-align:center;margin-top:10px;line-height:1.6">⚠️ الفشل في أي شرط من الشروط أعلاه يُلغي التحدي فوراً بدون مكافأة</p>';
+  html += '<p style="font-size:10.5px;color:#8fa5a0;text-align:center;margin-top:10px;line-height:1.6">⚠️ الفشل في أي شرط يُلغي التحدي. زيادة الخصوم والصعوبة تزيد المكافأة!</p>';
 
   $('dailyRulesBody').innerHTML = html;
   
+  // تفاعل الخصوم والصعوبة لحساب المكافأة
+  var selectedOpponents = 3;
+  var selectedDiff = 'normal';
+  var baseReward = type.baseReward || daily.reward;
+
+  function updateReward() {
+    var oppMultiplier = 1 + ((selectedOpponents - 1) * 0.25); // 1 خصم = 1x، 3 خصوم = 1.5x، 7 خصوم = 2.5x
+    var diffMultiplier = { easy: 0.8, normal: 1.0, hard: 1.5, expert: 2.2 }[selectedDiff];
+    var finalReward = Math.round(baseReward * oppMultiplier * diffMultiplier);
+    $('dcRewardDisplay').innerHTML = '+' + finalReward + ' عملة';
+    app.pendingDailyReward = finalReward;
+    app.pendingDailyOpponents = selectedOpponents;
+    app.pendingDailyDiff = selectedDiff;
+  }
+
+  var oppBtns = document.querySelectorAll('#dcOpponents .count-btn');
+  oppBtns.forEach(function(b) {
+    b.onclick = function() {
+      oppBtns.forEach(function(x) { x.classList.remove('active'); });
+      b.classList.add('active');
+      selectedOpponents = parseInt(b.getAttribute('data-opp'));
+      updateReward();
+    };
+  });
+
+  var diffBtns = document.querySelectorAll('[data-diff]');
+  diffBtns.forEach(function(b) {
+    b.onclick = function() {
+      diffBtns.forEach(function(x) { x.classList.remove('active'); });
+      b.classList.add('active');
+      selectedDiff = b.getAttribute('data-diff');
+      updateReward();
+    };
+  });
+  
+  updateReward(); // تشغيل أولي
+
   var _dStart = $('dailyRulesStartBtn');
   if (_dStart) _dStart.onclick = function() {
     modal.classList.add('hidden');
@@ -8551,6 +8650,16 @@ function leaveCurrentGame() {
     var resumeBtn = $('resumeBtn');
     if (resumeBtn) resumeBtn.style.display = sv ? 'inline-block' : 'none';
   } else { clearSavedGame(); }
+  
+  /* ✅ إلغاء تفعيل التحدي اليومي عند الخروج */
+  app.dailyChallengeActive = false;
+  app.dailyChallengePhase = null;
+  app.dailyChallengeDateKey = null;
+  app.dailyChallengeReward = 0;
+  app.pendingDailyReward = null;
+  app.pendingDailyOpponents = null;
+  app.pendingDailyDiff = null;
+  
   showScreen('menu');
 }
 function handlePassAndPlayStart() {
@@ -11435,7 +11544,7 @@ function backupLocalStorageForUpdate() {
     for (var i = 0; i < localStorage.length; i++) {
       var k = localStorage.key(i);
       /* ⛑️ نجمع كل مفاتيح اللعبة أياً كان إصدارها (p10v19 / p10v20 / p10TYEYYIY ...) */
-      if (k && /^p10v\d+_/.test(k)) {
+      if (k && /^(p10v\d+|p10TYEYYIY)_/.test(k)) {
         snapshot[k] = localStorage.getItem(k);
       }
     }
