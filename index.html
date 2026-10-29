@@ -2573,9 +2573,40 @@ html.theme-epic .p10-card[class*="face-"] {
 "use strict";
 
 /* ============================================================
+   🛡️ نظام الحماية الدائم للبيانات
+   هذا الكود يبحث عن بيانات أي إصدار قديم (v19, v20, v21, v22) 
+   وينقلها إلى الاسم الثابت الجديد (p10TYEYYIY_) لكي لا تضيع أبداً.
+   ============================================================ */
+(function protectDataForever() {
+  var NEW_PREFIX = 'p10TYEYYIY_'; // ⚠️ هذا الاسم الثابت لا يجب تغييره أبداً في المستقبل
+  var OLD_PREFIXES = ['p10TYEYYIY_', 'p10v21_', 'p10v20_', 'p10v19_'];
+  var keysToMigrate = [
+    'settings', 'stats', 'achievements', 'matchCoins', 'spent',
+    'inventory', 'matchHistory', 'leaderboard', 'advancedPhases',
+    'savedGame', 'handOrder', 'titles', 'equippedTitle', 'weeklyLb'
+  ];
+  
+  keysToMigrate.forEach(function(key) {
+    var newKey = NEW_PREFIX + key;
+    // إذا لم تكن البيانات الجديدة موجودة، ابحث في الإصدارات القديمة وانقلها
+    if (!localStorage.getItem(newKey)) {
+      for (var i = 0; i < OLD_PREFIXES.length; i++) {
+        var oldKey = OLD_PREFIXES[i] + key;
+        var oldData = localStorage.getItem(oldKey);
+        if (oldData) {
+          localStorage.setItem(newKey, oldData);
+          console.log('✅ تم حفظ البيانات القديمة بنجاح: ' + oldKey + ' -> ' + newKey);
+          break;
+        }
+      }
+    }
+  });
+})();
+
+/* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '22.1.1';
+var APP_VERSION = '22.1.2';
 var APP_BUILD_DATE = '1-9-2026';
 var APP_LAST_UPDATE = '30-10-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
@@ -2585,7 +2616,7 @@ var UPDATE_CHECK_INTERVAL_MS = 30 * 60 * 1000; /* 30 دقيقة */
    CONSTANTS
    ============================================================ */
 var SAVE_VERSION = 1;
-var SAVE_KEY = 'p10v22_savedGame';
+var SAVE_KEY = 'p10TYEYYIY_savedGame';
 var SAVE_MAX_AGE_MS = 7 * 24 * 3600 * 1000;
 
 var COLORS = [
@@ -3411,7 +3442,7 @@ var DEFAULT_SETTINGS = {
 function cloneDefaults() { var r = {}; for (var k in DEFAULT_SETTINGS) r[k] = DEFAULT_SETTINGS[k]; return r; }
 function loadSettingsFromStorage() {
   try {
-    var s = localStorage.getItem('p10v22_settings') || localStorage.getItem('p10v19_settings');
+    var s = localStorage.getItem('p10TYEYYIY_settings') || localStorage.getItem('p10v19_settings');
     if (!s) return cloneDefaults();
     var p = JSON.parse(s);
     var result = {};
@@ -3429,7 +3460,7 @@ function loadSettingsFromStorage() {
   } catch (err) { return cloneDefaults(); }
 }
 function saveSettingsToStorage() {
-  try { localStorage.setItem('p10v22_settings', JSON.stringify(app.settings)); } catch (err) {}
+  try { localStorage.setItem('p10TYEYYIY_settings', JSON.stringify(app.settings)); } catch (err) {}
 }
 function applySettingsToDOM() {
   _cardHTMLCache = {}; _cardHTMLCacheCount = 0;
@@ -3465,13 +3496,13 @@ function applySettingsToDOM() {
    ============================================================ */
 function loadAchievementsFromStorage() {
   try {
-    var s = localStorage.getItem('p10v22_achievements') || localStorage.getItem('p10v19_achievements');
+    var s = localStorage.getItem('p10TYEYYIY_achievements') || localStorage.getItem('p10v19_achievements');
     if (s) return JSON.parse(s);
   } catch (err) {}
   return {};
 }
 function saveAchievementsToStorage() {
-  try { localStorage.setItem('p10v22_achievements', JSON.stringify(app.achievements)); } catch (err) {}
+  try { localStorage.setItem('p10TYEYYIY_achievements', JSON.stringify(app.achievements)); } catch (err) {}
 }
 function getAchievementByKey(key) {
   for (var i = 0; i < ACHIEVEMENTS_LIST.length; i++) if (ACHIEVEMENTS_LIST[i].key === key) return ACHIEVEMENTS_LIST[i];
@@ -3513,7 +3544,7 @@ function refreshTitles() {
     var t = TITLES_LIST[i];
     if (t.unlock() && !app.titles[t.key]) { app.titles[t.key] = true; }
   }
-  try { localStorage.setItem('p10v22_titles', JSON.stringify(app.titles)); } catch (e) {}
+  try { localStorage.setItem('p10TYEYYIY_titles', JSON.stringify(app.titles)); } catch (e) {}
 }
 function getDisplayName(name) {
   if (!app.equippedTitle) return name;
@@ -3526,7 +3557,7 @@ function getDisplayName(name) {
 }
 function equipTitle(key) {
   app.equippedTitle = key;
-  try { localStorage.setItem('p10v22_equippedTitle', key); } catch (e) {}
+  try { localStorage.setItem('p10TYEYYIY_equippedTitle', key); } catch (e) {}
   if (app.state) { resetRenderCache(); scheduleRender(); }
   SoundFX.play('reward');
 }
@@ -3538,14 +3569,14 @@ function getTotalCoins() {
       if (a) total += a.coins || 0;
     }
   }
-  try { total += parseInt(localStorage.getItem('p10v22_matchCoins') || localStorage.getItem('p10v19_matchCoins') || '0', 10); } catch (e) {}
+  try { total += parseInt(localStorage.getItem('p10TYEYYIY_matchCoins') || localStorage.getItem('p10v19_matchCoins') || '0', 10); } catch (e) {}
   return total;
 }
 function awardMatchCoins(amount) {
   if (!amount || amount <= 0) return;
   try {
-    var cur = parseInt(localStorage.getItem('p10v22_matchCoins') || '0', 10);
-    localStorage.setItem('p10v22_matchCoins', String(cur + amount));
+    var cur = parseInt(localStorage.getItem('p10TYEYYIY_matchCoins') || '0', 10);
+    localStorage.setItem('p10TYEYYIY_matchCoins', String(cur + amount));
   } catch (e) {}
   refreshAllCoinDisplays();
 }
@@ -3606,13 +3637,13 @@ function showAchievementToast(info) {
 }
 function loadLeaderboardFromStorage() {
   try {
-    var s = localStorage.getItem('p10v22_leaderboard') || localStorage.getItem('p10v19_leaderboard');
+    var s = localStorage.getItem('p10TYEYYIY_leaderboard') || localStorage.getItem('p10v19_leaderboard');
     if (s) return JSON.parse(s);
   } catch (err) {}
   return [];
 }
 function saveLeaderboardToStorage(lb) {
-  try { localStorage.setItem('p10v22_leaderboard', JSON.stringify(lb)); } catch (err) {}
+  try { localStorage.setItem('p10TYEYYIY_leaderboard', JSON.stringify(lb)); } catch (err) {}
 }
 function recordLeaderboard() {
   var name = app.settings.playerName || 'لاعب';
@@ -3638,8 +3669,8 @@ var app = {
   pendingMode: null, localPlayerCount: 2, localCpuCount: 1,
   localNames: ['لاعب 1', 'لاعب 2', 'لاعب 3', 'لاعب 4', 'لاعب 5', 'لاعب 6', 'لاعب 7', 'لاعب 8'],
   achievements: loadAchievementsFromStorage(),
-titles: (function() { try { return JSON.parse(localStorage.getItem('p10v22_titles') || '{}'); } catch (e) { return {}; } })(),
-equippedTitle: (function() { try { return localStorage.getItem('p10v22_equippedTitle') || ''; } catch (e) { return ''; } })(),
+titles: (function() { try { return JSON.parse(localStorage.getItem('p10TYEYYIY_titles') || '{}'); } catch (e) { return {}; } })(),
+equippedTitle: (function() { try { return localStorage.getItem('p10TYEYYIY_equippedTitle') || ''; } catch (e) { return ''; } })(),
 undoStack: [], handOrder: [], dealing: false,
   suppressRender: false, pendingRoundScore: false,
 pendingNewRound: null,
@@ -3664,11 +3695,11 @@ var lastNotifiedTurnKey = -1;
 app.specialMode = app.settings.specialMode || 'classic';
 app.phasePack = app.settings.phasePack || 'classic';
 try {
-  var ss = localStorage.getItem('p10v22_stats') || localStorage.getItem('p10v19_stats');
+  var ss = localStorage.getItem('p10TYEYYIY_stats') || localStorage.getItem('p10v19_stats');
   if (ss) { var ps = JSON.parse(ss); for (var sk in ps) app.stats[sk] = ps[sk]; }
 } catch (err) {}
 try {
-  var advStr = localStorage.getItem('p10v22_advancedPhases') || localStorage.getItem('p10v19_advancedPhases');
+  var advStr = localStorage.getItem('p10TYEYYIY_advancedPhases') || localStorage.getItem('p10v19_advancedPhases');
   if (advStr) app.customAdvancedPhases = JSON.parse(advStr);
 } catch (err) {}
 if (typeof app.stats.cpuSkill !== 'number') app.stats.cpuSkill = GAME_CONST.CPU_SKILL_START;
@@ -3676,15 +3707,15 @@ if (app.stats.cpuSkill < GAME_CONST.CPU_SKILL_MIN) app.stats.cpuSkill = GAME_CON
 if (app.stats.cpuSkill > GAME_CONST.CPU_SKILL_MAX) app.stats.cpuSkill = GAME_CONST.CPU_SKILL_MAX;
 if (typeof app.stats.hintsUsedThisMatch !== 'number') app.stats.hintsUsedThisMatch = 0;
 if (!app.stats.dailyChallengeDone) app.stats.dailyChallengeDone = {};
-function saveStatsToStorage() { try { localStorage.setItem('p10v22_stats', JSON.stringify(app.stats)); } catch (err) {} }
+function saveStatsToStorage() { try { localStorage.setItem('p10TYEYYIY_stats', JSON.stringify(app.stats)); } catch (err) {} }
 function loadHandOrderFromStorage() {
   try {
-    var s = localStorage.getItem('p10v22_handOrder') || localStorage.getItem('p10v19_handOrder');
+    var s = localStorage.getItem('p10TYEYYIY_handOrder') || localStorage.getItem('p10v19_handOrder');
     if (s) app.handOrder = JSON.parse(s) || [];
   } catch (err) { app.handOrder = []; }
 }
 function saveHandOrderToStorage() {
-  try { localStorage.setItem('p10v22_handOrder', JSON.stringify(app.handOrder.slice(0, 60))); } catch (err) {}
+  try { localStorage.setItem('p10TYEYYIY_handOrder', JSON.stringify(app.handOrder.slice(0, 60))); } catch (err) {}
 }
 loadHandOrderFromStorage();
 var cpuContext = { active: false, timeout: null };
@@ -5449,7 +5480,7 @@ function attemptFullReconnect() {
       if (isGuest() && app.state) { try { sendToHost({ type: 'ping', t: Date.now() }); } catch (e) {} }
     } else {
       if (isGuest() && net.peer && net.peer.open && net.roomCode) {
-        var hp = 'p10v22' + net.roomCode.toLowerCase();
+        var hp = 'p10TYEYYIY' + net.roomCode.toLowerCase();
         try {
           net.hostConn = net.peer.connect(hp, { reliable: true, metadata: { name: net.myName } });
           setupGuestHostConnHandlers(null);
@@ -5741,7 +5772,7 @@ function createRoom(attempt) {
   if (net.peer) { try { net.peer.destroy(); } catch (err) {} net.peer = null; }
   net.guestConns = {};
   var code = generateRoomCode();
-  var peerId = 'p10v22' + code.toLowerCase() + (attempt > 1 ? Math.floor(Math.random() * 1000) : '');
+  var peerId = 'p10TYEYYIY' + code.toLowerCase() + (attempt > 1 ? Math.floor(Math.random() * 1000) : '');
   net.roomCode = code; net.myPeerId = peerId; net.role = 'host'; net.connectionMode = 'internet';
   try { net.peer = new Peer(peerId, PEER_CONFIG); }
   catch (err) { setRoomStatus('خطأ في Peer: ' + err.message, 'err'); return; }
@@ -6012,7 +6043,7 @@ function setupGuestHostConnHandlers(connTimeout) {
         retryCount++;
         if (retryCount > 8) { setRoomStatus('فشل الاتصال بالغرفة', 'err'); return; }
         try {
-          var hp = 'p10v22' + (net.roomCode || '').toLowerCase();
+          var hp = 'p10TYEYYIY' + (net.roomCode || '').toLowerCase();
           net.hostConn = net.peer.connect(hp, { reliable: true, metadata: { name: net.myName } });
           setupGuestHostConnHandlers(null);
         } catch (e) { setTimeout(retryConnect, Math.min(1000 * Math.pow(1.5, retryCount), 8000)); }
@@ -6039,7 +6070,7 @@ function joinRoom(attempt) {
     stableUid = sessionStorage.getItem('p10_guest_uid');
     if (!stableUid) { stableUid = Math.random().toString(36).substring(2, 8) + Date.now().toString(36).slice(-4); sessionStorage.setItem('p10_guest_uid', stableUid); }
   } catch (e) { stableUid = Math.random().toString(36).substring(2, 10); }
-  var mpId = 'p10v22g' + code.toLowerCase() + '_' + stableUid;
+  var mpId = 'p10TYEYYIYg' + code.toLowerCase() + '_' + stableUid;
   net.myPeerId = mpId;
   try { net.peer = new Peer(mpId, PEER_CONFIG); }
   catch (err) { setRoomStatus('خطأ في Peer: ' + err.message, 'err'); return; }
@@ -6052,7 +6083,7 @@ function joinRoom(attempt) {
   }, 15000);
   net.peer.on('open', function() {
     requestWakeLock();
-    var hp = 'p10v22' + code.toLowerCase();
+    var hp = 'p10TYEYYIY' + code.toLowerCase();
     try { net.hostConn = net.peer.connect(hp, { reliable: true, metadata: { name: myName } }); }
     catch (err) { clearTimeout(connTimeout); setRoomStatus('خطأ الاتصال: ' + err.message, 'err'); return; }
     setupGuestHostConnHandlers(connTimeout);
@@ -7026,7 +7057,7 @@ function getWeekKey(date) {
 
 function loadWeeklyLb() {
   try {
-    var s = localStorage.getItem('p10v22_weeklyLb');
+    var s = localStorage.getItem('p10TYEYYIY_weeklyLb');
     if (s) return JSON.parse(s);
   } catch (e) {}
   return [];
@@ -7035,7 +7066,7 @@ function loadWeeklyLb() {
 function saveWeeklyLb(lb) {
   try {
     pruneOldWeeks(lb);
-    localStorage.setItem('p10v22_weeklyLb', JSON.stringify(lb));
+    localStorage.setItem('p10TYEYYIY_weeklyLb', JSON.stringify(lb));
   } catch (e) {}
 }
 
@@ -9617,7 +9648,7 @@ function attachAdvancedPhaseHandlers() {
   }
 }
 function saveAdvancedPhases() {
-  try { localStorage.setItem('p10v22_advancedPhases', JSON.stringify(app.customAdvancedPhases)); } catch (err) {}
+  try { localStorage.setItem('p10TYEYYIY_advancedPhases', JSON.stringify(app.customAdvancedPhases)); } catch (err) {}
 }
 function openAdvancedBuilder() {
   try {
@@ -9680,19 +9711,19 @@ function vibrateOn(event) {
   try { navigator.vibrate(p); } catch (e) {}
 }
 function getSpentCoins() {
-  try { return parseInt(localStorage.getItem('p10v22_spent') || localStorage.getItem('p10v19_spent') || '0', 10) || 0; }
+  try { return parseInt(localStorage.getItem('p10TYEYYIY_spent') || localStorage.getItem('p10v19_spent') || '0', 10) || 0; }
   catch (e) { return 0; }
 }
 function getAvailableCoins() { return Math.max(0, getTotalCoins() - getSpentCoins()); }
 function spendCoins(amount) {
-  try { localStorage.setItem('p10v22_spent', String(getSpentCoins() + amount)); } catch (e) {}
+  try { localStorage.setItem('p10TYEYYIY_spent', String(getSpentCoins() + amount)); } catch (e) {}
 }
 function loadInventory() {
-  try { return JSON.parse(localStorage.getItem('p10v22_inventory') || localStorage.getItem('p10v19_inventory') || '[]'); }
+  try { return JSON.parse(localStorage.getItem('p10TYEYYIY_inventory') || localStorage.getItem('p10v19_inventory') || '[]'); }
   catch (e) { return []; }
 }
 function saveInventory(inv) {
-  try { localStorage.setItem('p10v22_inventory', JSON.stringify(inv)); } catch (e) {}
+  try { localStorage.setItem('p10TYEYYIY_inventory', JSON.stringify(inv)); } catch (e) {}
 }
 function addToInventory(key) {
   var inv = loadInventory();
@@ -10572,11 +10603,11 @@ function recordCpuMemoryHit(state, hitterId, targetId) {
    PROGRESS & PROFILE
    ============================================================ */
 function loadMatchHistory() {
-  try { return JSON.parse(localStorage.getItem('p10v22_matchHistory') || localStorage.getItem('p10v19_matchHistory') || '[]'); }
+  try { return JSON.parse(localStorage.getItem('p10TYEYYIY_matchHistory') || localStorage.getItem('p10v19_matchHistory') || '[]'); }
   catch (e) { return []; }
 }
 function saveMatchHistory(history) {
-  try { localStorage.setItem('p10v22_matchHistory', JSON.stringify(history.slice(-GAME_CONST.MAX_HISTORY))); } catch (e) {}
+  try { localStorage.setItem('p10TYEYYIY_matchHistory', JSON.stringify(history.slice(-GAME_CONST.MAX_HISTORY))); } catch (e) {}
 }
 function recordMatchResult(result, score, rounds, mode, cpuSkill, opponents) {
   var history = loadMatchHistory();
@@ -10593,7 +10624,7 @@ function getPlayerLevel() {
       if (a) totalXP += a.coins || 0;
     }
   }
-  try { totalXP += parseInt(localStorage.getItem('p10v22_matchCoins') || '0', 10); } catch (e) {}
+  try { totalXP += parseInt(localStorage.getItem('p10TYEYYIY_matchCoins') || '0', 10); } catch (e) {}
   totalXP += (app.stats.totalWins || 0) * GAME_CONST.LEVEL_WIN_XP;
   var level = Math.floor(totalXP / GAME_CONST.LEVEL_XP_BASE) + 1;
   var currentXP = totalXP % GAME_CONST.LEVEL_XP_BASE;
@@ -11315,9 +11346,9 @@ var updateState = { lastCheck: 0, checking: false, found: false, latestVersion: 
 
 /* ✅ معاينة سريعة للبيانات المحفوظة (للتحقق من الأمان) */
 function _previewLocalStorage() {
-  var keys = ['p10v22_settings','p10v22_achievements','p10v22_stats',
-              'p10v22_matchCoins','p10v22_matchHistory','p10v22_leaderboard',
-              'p10v22_advancedPhases','p10v22_inventory','p10v22_spent'];
+  var keys = ['p10TYEYYIY_settings','p10TYEYYIY_achievements','p10TYEYYIY_stats',
+              'p10TYEYYIY_matchCoins','p10TYEYYIY_matchHistory','p10TYEYYIY_leaderboard',
+              'p10TYEYYIY_advancedPhases','p10TYEYYIY_inventory','p10TYEYYIY_spent'];
   var out = {};
   for (var i = 0; i < keys.length; i++) {
     try { out[keys[i]] = localStorage.getItem(keys[i]) || '(فارغ)'; } catch (e) {}
@@ -11403,7 +11434,7 @@ function backupLocalStorageForUpdate() {
     var snapshot = {};
     for (var i = 0; i < localStorage.length; i++) {
       var k = localStorage.key(i);
-      /* ⛑️ نجمع كل مفاتيح اللعبة أياً كان إصدارها (p10v19 / p10v20 / p10v22 ...) */
+      /* ⛑️ نجمع كل مفاتيح اللعبة أياً كان إصدارها (p10v19 / p10v20 / p10TYEYYIY ...) */
       if (k && /^p10v\d+_/.test(k)) {
         snapshot[k] = localStorage.getItem(k);
       }
@@ -11528,7 +11559,7 @@ function initializeApp() {
     app.settings = loadSettingsFromStorage();
     app.achievements = loadAchievementsFromStorage();
     try {
-      var ss = localStorage.getItem('p10v22_stats')
+      var ss = localStorage.getItem('p10TYEYYIY_stats')
             || localStorage.getItem('p10v20_stats')
             || localStorage.getItem('p10v19_stats');
       if (ss) { var ps = JSON.parse(ss); for (var sk in ps) app.stats[sk] = ps[sk]; }
@@ -11651,9 +11682,9 @@ window.p10Debug = {
   applyUpdate: applyUpdateNow,
   resetAll: function() {
     try {
-      ['p10v22_settings','p10v22_achievements','p10v22_stats','p10v22_handOrder',
-       'p10v22_leaderboard','p10v22_advancedPhases','p10v22_inventory','p10v22_spent',
-       'p10v22_matchCoins','p10v22_matchHistory','p10v22_savedGame'].forEach(function(k) {
+      ['p10TYEYYIY_settings','p10TYEYYIY_achievements','p10TYEYYIY_stats','p10TYEYYIY_handOrder',
+       'p10TYEYYIY_leaderboard','p10TYEYYIY_advancedPhases','p10TYEYYIY_inventory','p10TYEYYIY_spent',
+       'p10TYEYYIY_matchCoins','p10TYEYYIY_matchHistory','p10TYEYYIY_savedGame'].forEach(function(k) {
         localStorage.removeItem(k);
       });
       location.reload();
