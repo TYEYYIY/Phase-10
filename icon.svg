@@ -1,125 +1,119 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="TYEYYIY Phase 10 App Icon">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="50%" r="70%">
-      <stop offset="0" stop-color="#153022"/>
-      <stop offset="1" stop-color="#040a07"/>
+    <radialGradient id="bg" cx="50%" cy="45%" r="75%">
+      <stop offset="0%" stop-color="#183526"/>
+      <stop offset="62%" stop-color="#0a1811"/>
+      <stop offset="100%" stop-color="#040a07"/>
     </radialGradient>
-    <linearGradient id="redGrad" x1="0" y1="0" x2="1" y2="1">
+
+    <linearGradient id="red" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#ff3b4e"/>
       <stop offset="1" stop-color="#c21430"/>
     </linearGradient>
-    <linearGradient id="blueGrad" x1="0" y1="0" x2="1" y2="1">
+
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#2e8bff"/>
       <stop offset="1" stop-color="#0a52cc"/>
     </linearGradient>
-    <linearGradient id="greenGrad" x1="0" y1="0" x2="1" y2="1">
+
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#12d17a"/>
       <stop offset="1" stop-color="#069c56"/>
     </linearGradient>
-    <linearGradient id="wildGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#2a2a2a"/>
-      <stop offset="1" stop-color="#050505"/>
-    </linearGradient>
-    <linearGradient id="skipGrad" x1="0" y1="0" x2="1" y2="1">
+
+    <linearGradient id="skip" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#1a2a5a"/>
       <stop offset="1" stop-color="#0a123a"/>
     </linearGradient>
-    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffffff" stop-opacity="0.5"/>
-      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+
+    <linearGradient id="wild" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2a2a2a"/>
+      <stop offset="1" stop-color="#050505"/>
     </linearGradient>
-    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#ffd75e"/>
       <stop offset="1" stop-color="#c98a05"/>
     </linearGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#000" flood-opacity="0.65"/>
+
+    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.48"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+
+    <filter id="shadow" x="-35%" y="-35%" width="170%" height="170%">
+      <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#000000" flood-opacity="0.60"/>
     </filter>
-    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="30"/>
+
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="28"/>
     </filter>
   </defs>
-  
-  <!-- الخلفية -->
-  <rect width="512" height="512" rx="115" fill="url(#bg)"/>
-  <ellipse cx="256" cy="256" rx="160" ry="120" fill="#f4b942" opacity="0.15" filter="url(#glow)"/>
 
-  <!-- 🟢 هذا هو السطر السحري الذي يكبر البطاقات بنسبة 45% -->
-  <g transform="translate(256, 256) scale(1.45) translate(-256, -256)">
-    
-    <!-- البطاقة 1: حمراء 3 -->
-    <g transform="translate(90, 200) rotate(-22 50 75)">
-      <rect width="100" height="150" rx="8" fill="#000" opacity="0.5" filter="url(#shadow)"/>
-      <rect width="100" height="150" rx="8" fill="url(#redGrad)" stroke="#fff" stroke-width="3"/>
-      <rect x="4" y="4" width="92" height="142" rx="5" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
-      <rect width="100" height="50" rx="8" fill="url(#shine)"/>
-      <ellipse cx="50" cy="75" rx="32" ry="42" fill="#fff"/>
-      <text x="50" y="92" font-family="Arial,Helvetica,sans-serif" font-size="55" font-weight="900" font-style="italic" fill="#c21430" text-anchor="middle">3</text>
-      <text x="10" y="24" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="900" fill="#fff">3</text>
-      <g transform="rotate(180 90 140)">
-        <text x="90" y="140" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="900" fill="#fff" text-anchor="end">3</text>
-      </g>
+  <!-- خلفية كاملة: مناسبة لأيقونة التطبيق و maskable -->
+  <rect width="512" height="512" fill="url(#bg)"/>
+
+  <!-- توهج خلفي خفيف -->
+  <ellipse cx="256" cy="300" rx="185" ry="125" fill="#f4b942" opacity="0.11" filter="url(#glow)"/>
+
+  <!-- مجموعة الكروت: مصغّرة وممركزة بهامش أمان -->
+  <g transform="translate(256 256) scale(0.90) translate(-256 -256)">
+
+    <!-- 1) الكرت الأحمر 3 -->
+    <g transform="translate(90 200) rotate(-22 50 75)" filter="url(#shadow)">
+      <rect width="100" height="150" rx="10" fill="url(#red)" stroke="#ffffff" stroke-width="3"/>
+      <rect x="5" y="5" width="90" height="140" rx="7" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1.2"/>
+      <rect width="100" height="45" rx="10" fill="url(#shine)"/>
+      <ellipse cx="50" cy="75" rx="31" ry="42" fill="#ffffff"/>
+      <text x="50" y="93" font-family="Arial, Helvetica, sans-serif" font-size="55" font-weight="900" font-style="italic" fill="#c21430" text-anchor="middle">3</text>
+      <text x="12" y="22" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="900" fill="#ffffff">3</text>
+      <text x="88" y="136" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="900" fill="#ffffff" text-anchor="end">3</text>
     </g>
 
-    <!-- البطاقة 2: Skip -->
-    <g transform="translate(145, 175) rotate(-11 50 75)">
-      <rect width="100" height="150" rx="8" fill="#000" opacity="0.5" filter="url(#shadow)"/>
-      <rect width="100" height="150" rx="8" fill="url(#skipGrad)" stroke="#4a69bd" stroke-width="3"/>
-      <rect x="4" y="4" width="92" height="142" rx="5" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-      <rect width="100" height="50" rx="8" fill="url(#shine)"/>
-      <circle cx="50" cy="75" r="35" fill="#ff3b4e"/>
-      <line x1="28" y1="53" x2="72" y2="97" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
-      <line x1="72" y1="53" x2="28" y2="97" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
-      <text x="10" y="24" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="900" fill="#ff3b4e">S</text>
-      <g transform="rotate(180 90 140)">
-        <text x="90" y="140" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="900" fill="#ff3b4e" text-anchor="end">S</text>
-      </g>
+    <!-- 2) كرت Skip -->
+    <g transform="translate(145 175) rotate(-11 50 75)" filter="url(#shadow)">
+      <rect width="100" height="150" rx="10" fill="url(#skip)" stroke="#4a69bd" stroke-width="3"/>
+      <rect x="5" y="5" width="90" height="140" rx="7" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="1.2"/>
+      <rect width="100" height="45" rx="10" fill="url(#shine)"/>
+      <circle cx="50" cy="75" r="34" fill="#ff3b4e"/>
+      <line x1="29" y1="54" x2="71" y2="96" stroke="#ffffff" stroke-width="7" stroke-linecap="round"/>
+      <line x1="71" y1="54" x2="29" y2="96" stroke="#ffffff" stroke-width="7" stroke-linecap="round"/>
+      <text x="12" y="22" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="900" fill="#ff5b5b">S</text>
+      <text x="88" y="136" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="900" fill="#ff5b5b" text-anchor="end">S</text>
     </g>
 
-    <!-- البطاقة 3: Wild -->
-    <g transform="translate(206, 155) rotate(0 50 75)">
-      <rect width="100" height="150" rx="8" fill="#000" opacity="0.5" filter="url(#shadow)"/>
-      <rect width="100" height="150" rx="8" fill="url(#wildGrad)" stroke="#f4b942" stroke-width="3"/>
-      <rect x="4" y="4" width="92" height="142" rx="5" fill="none" stroke="rgba(244,185,66,0.3)" stroke-width="1"/>
-      <rect width="100" height="50" rx="8" fill="url(#shine)"/>
-      <circle cx="50" cy="75" r="35" fill="url(#goldGrad)"/>
-      <text x="50" y="92" font-family="Arial,Helvetica,sans-serif" font-size="50" font-weight="900" font-style="italic" fill="#000" text-anchor="middle">W</text>
-      <text x="10" y="24" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="900" fill="#f4b942">W</text>
-      <g transform="rotate(180 90 140)">
-        <text x="90" y="140" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="900" fill="#f4b942" text-anchor="end">W</text>
-      </g>
+    <!-- 3) الكرت الأسود Wild -->
+    <g transform="translate(206 155) rotate(0 50 75)" filter="url(#shadow)">
+      <rect width="100" height="150" rx="10" fill="url(#wild)" stroke="#f4b942" stroke-width="3"/>
+      <rect x="5" y="5" width="90" height="140" rx="7" fill="none" stroke="rgba(244,185,66,0.32)" stroke-width="1.2"/>
+      <rect width="100" height="45" rx="10" fill="url(#shine)"/>
+      <circle cx="50" cy="75" r="35" fill="url(#gold)"/>
+      <text x="50" y="92" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="900" font-style="italic" fill="#050505" text-anchor="middle">W</text>
+      <text x="12" y="22" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="900" fill="#f4b942">W</text>
+      <text x="88" y="136" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="900" fill="#f4b942" text-anchor="end">W</text>
     </g>
 
-    <!-- البطاقة 4: زرقاء 11 -->
-    <g transform="translate(265, 175) rotate(11 50 75)">
-      <rect width="100" height="150" rx="8" fill="#000" opacity="0.5" filter="url(#shadow)"/>
-      <rect width="100" height="150" rx="8" fill="url(#blueGrad)" stroke="#fff" stroke-width="3"/>
-      <rect x="4" y="4" width="92" height="142" rx="5" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
-      <rect width="100" height="50" rx="8" fill="url(#shine)"/>
-      <ellipse cx="50" cy="75" rx="32" ry="42" fill="#fff"/>
-      <text x="50" y="88" font-family="Arial,Helvetica,sans-serif" font-size="45" font-weight="900" font-style="italic" fill="#0a52cc" text-anchor="middle">11</text>
-      <text x="10" y="24" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="900" fill="#fff">11</text>
-      <g transform="rotate(180 90 140)">
-        <text x="90" y="140" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="900" fill="#fff" text-anchor="end">11</text>
-      </g>
+    <!-- 4) الكرت الأزرق 11 -->
+    <g transform="translate(265 175) rotate(11 50 75)" filter="url(#shadow)">
+      <rect width="100" height="150" rx="10" fill="url(#blue)" stroke="#ffffff" stroke-width="3"/>
+      <rect x="5" y="5" width="90" height="140" rx="7" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1.2"/>
+      <rect width="100" height="45" rx="10" fill="url(#shine)"/>
+      <ellipse cx="50" cy="75" rx="31" ry="42" fill="#ffffff"/>
+      <text x="50" y="88" font-family="Arial, Helvetica, sans-serif" font-size="43" font-weight="900" font-style="italic" fill="#0a52cc" text-anchor="middle">11</text>
+      <text x="12" y="22" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="900" fill="#ffffff">11</text>
+      <text x="88" y="136" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="end">11</text>
     </g>
 
-    <!-- البطاقة 5: خضراء 7 -->
-    <g transform="translate(320, 200) rotate(22 50 75)">
-      <rect width="100" height="150" rx="8" fill="#000" opacity="0.5" filter="url(#shadow)"/>
-      <rect width="100" height="150" rx="8" fill="url(#greenGrad)" stroke="#fff" stroke-width="3"/>
-      <rect x="4" y="4" width="92" height="142" rx="5" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
-      <rect width="100" height="50" rx="8" fill="url(#shine)"/>
-      <ellipse cx="50" cy="75" rx="32" ry="42" fill="#fff"/>
-      <text x="50" y="92" font-family="Arial,Helvetica,sans-serif" font-size="55" font-weight="900" font-style="italic" fill="#069c56" text-anchor="middle">7</text>
-      <text x="10" y="24" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="900" fill="#fff">7</text>
-      <g transform="rotate(180 90 140)">
-        <text x="90" y="140" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="900" fill="#fff" text-anchor="end">7</text>
-      </g>
+    <!-- 5) الكرت الأخضر 7 -->
+    <g transform="translate(320 200) rotate(22 50 75)" filter="url(#shadow)">
+      <rect width="100" height="150" rx="10" fill="url(#green)" stroke="#ffffff" stroke-width="3"/>
+      <rect x="5" y="5" width="90" height="140" rx="7" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1.2"/>
+      <rect width="100" height="45" rx="10" fill="url(#shine)"/>
+      <ellipse cx="50" cy="75" rx="31" ry="42" fill="#ffffff"/>
+      <text x="50" y="93" font-family="Arial, Helvetica, sans-serif" font-size="55" font-weight="900" font-style="italic" fill="#069c56" text-anchor="middle">7</text>
+      <text x="12" y="22" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="900" fill="#ffffff">7</text>
+      <text x="88" y="136" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="900" fill="#ffffff" text-anchor="end">7</text>
     </g>
-    
+
   </g>
-
-  <!-- إطار التطبيق الزجاجي -->
-  <rect width="512" height="512" rx="115" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
 </svg>
