@@ -1,119 +1,66 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="TYEYYIY Phase 10 App Icon">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="TYEYYIY Phase 10">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="45%" r="75%">
-      <stop offset="0%" stop-color="#183526"/>
-      <stop offset="62%" stop-color="#0a1811"/>
-      <stop offset="100%" stop-color="#040a07"/>
+    <radialGradient id="bg" cx="50%" cy="38%" r="78%">
+      <stop offset="0%" stop-color="#214532"/>
+      <stop offset="48%" stop-color="#0d1f16"/>
+      <stop offset="100%" stop-color="#020604"/>
     </radialGradient>
 
-    <linearGradient id="red" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#ff3b4e"/>
-      <stop offset="1" stop-color="#c21430"/>
+    <linearGradient id="cardRed" x1="0" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#ff5c6e"/>
+      <stop offset="35%" stop-color="#ef3a4d"/>
+      <stop offset="80%" stop-color="#c01528"/>
+      <stop offset="100%" stop-color="#7a0413"/>
     </linearGradient>
 
-    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#2e8bff"/>
-      <stop offset="1" stop-color="#0a52cc"/>
+    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.65"/>
+      <stop offset="55%" stop-color="#ffffff" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
     </linearGradient>
 
-    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#12d17a"/>
-      <stop offset="1" stop-color="#069c56"/>
-    </linearGradient>
-
-    <linearGradient id="skip" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#1a2a5a"/>
-      <stop offset="1" stop-color="#0a123a"/>
-    </linearGradient>
-
-    <linearGradient id="wild" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#2a2a2a"/>
-      <stop offset="1" stop-color="#050505"/>
-    </linearGradient>
-
-    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#ffd75e"/>
-      <stop offset="1" stop-color="#c98a05"/>
-    </linearGradient>
-
-    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffffff" stop-opacity="0.48"/>
-      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
-    </linearGradient>
-
-    <filter id="shadow" x="-35%" y="-35%" width="170%" height="170%">
-      <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#000000" flood-opacity="0.60"/>
+    <filter id="cardShadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="18" result="blur"/>
+      <feOffset in="blur" dy="14" result="offsetBlur"/>
+      <feFlood flood-color="#000000" flood-opacity="0.8"/>
+      <feComposite in2="offsetBlur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
     </filter>
 
-    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="28"/>
+    <filter id="ambientGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="48"/>
     </filter>
   </defs>
 
-  <!-- خلفية كاملة: مناسبة لأيقونة التطبيق و maskable -->
+  <!-- خلفية -->
   <rect width="512" height="512" fill="url(#bg)"/>
 
-  <!-- توهج خلفي خفيف -->
-  <ellipse cx="256" cy="300" rx="185" ry="125" fill="#f4b942" opacity="0.11" filter="url(#glow)"/>
+  <!-- توهج ذهبي خلفي -->
+  <ellipse cx="256" cy="290" rx="190" ry="200" fill="#f4b942" opacity="0.16" filter="url(#ambientGlow)"/>
 
-  <!-- مجموعة الكروت: مصغّرة وممركزة بهامش أمان -->
-  <g transform="translate(256 256) scale(0.90) translate(-256 -256)">
+  <!-- الكرت الرئيسي -->
+  <g transform="translate(256 256) rotate(-9)" filter="url(#cardShadow)">
+    <!-- جسم الكرت -->
+    <rect x="-150" y="-210" width="300" height="420" rx="24" fill="url(#cardRed)" stroke="#ffffff" stroke-width="6"/>
 
-    <!-- 1) الكرت الأحمر 3 -->
-    <g transform="translate(90 200) rotate(-22 50 75)" filter="url(#shadow)">
-      <rect width="100" height="150" rx="10" fill="url(#red)" stroke="#ffffff" stroke-width="3"/>
-      <rect x="5" y="5" width="90" height="140" rx="7" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1.2"/>
-      <rect width="100" height="45" rx="10" fill="url(#shine)"/>
-      <ellipse cx="50" cy="75" rx="31" ry="42" fill="#ffffff"/>
-      <text x="50" y="93" font-family="Arial, Helvetica, sans-serif" font-size="55" font-weight="900" font-style="italic" fill="#c21430" text-anchor="middle">3</text>
-      <text x="12" y="22" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="900" fill="#ffffff">3</text>
-      <text x="88" y="136" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="900" fill="#ffffff" text-anchor="end">3</text>
-    </g>
+    <!-- إطار داخلي -->
+    <rect x="-138" y="-198" width="276" height="396" rx="16" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2.5"/>
 
-    <!-- 2) كرت Skip -->
-    <g transform="translate(145 175) rotate(-11 50 75)" filter="url(#shadow)">
-      <rect width="100" height="150" rx="10" fill="url(#skip)" stroke="#4a69bd" stroke-width="3"/>
-      <rect x="5" y="5" width="90" height="140" rx="7" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="1.2"/>
-      <rect width="100" height="45" rx="10" fill="url(#shine)"/>
-      <circle cx="50" cy="75" r="34" fill="#ff3b4e"/>
-      <line x1="29" y1="54" x2="71" y2="96" stroke="#ffffff" stroke-width="7" stroke-linecap="round"/>
-      <line x1="71" y1="54" x2="29" y2="96" stroke="#ffffff" stroke-width="7" stroke-linecap="round"/>
-      <text x="12" y="22" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="900" fill="#ff5b5b">S</text>
-      <text x="88" y="136" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="900" fill="#ff5b5b" text-anchor="end">S</text>
-    </g>
+    <!-- انعكاس ضوئي -->
+    <rect x="-150" y="-210" width="300" height="140" rx="24" fill="url(#gloss)"/>
 
-    <!-- 3) الكرت الأسود Wild -->
-    <g transform="translate(206 155) rotate(0 50 75)" filter="url(#shadow)">
-      <rect width="100" height="150" rx="10" fill="url(#wild)" stroke="#f4b942" stroke-width="3"/>
-      <rect x="5" y="5" width="90" height="140" rx="7" fill="none" stroke="rgba(244,185,66,0.32)" stroke-width="1.2"/>
-      <rect width="100" height="45" rx="10" fill="url(#shine)"/>
-      <circle cx="50" cy="75" r="35" fill="url(#gold)"/>
-      <text x="50" y="92" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="900" font-style="italic" fill="#050505" text-anchor="middle">W</text>
-      <text x="12" y="22" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="900" fill="#f4b942">W</text>
-      <text x="88" y="136" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="900" fill="#f4b942" text-anchor="end">W</text>
-    </g>
+    <!-- البيضة البيضاء -->
+    <ellipse cx="0" cy="-5" rx="108" ry="145" fill="#ffffff"/>
+    <ellipse cx="0" cy="-5" rx="108" ry="145" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="3"/>
 
-    <!-- 4) الكرت الأزرق 11 -->
-    <g transform="translate(265 175) rotate(11 50 75)" filter="url(#shadow)">
-      <rect width="100" height="150" rx="10" fill="url(#blue)" stroke="#ffffff" stroke-width="3"/>
-      <rect x="5" y="5" width="90" height="140" rx="7" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1.2"/>
-      <rect width="100" height="45" rx="10" fill="url(#shine)"/>
-      <ellipse cx="50" cy="75" rx="31" ry="42" fill="#ffffff"/>
-      <text x="50" y="88" font-family="Arial, Helvetica, sans-serif" font-size="43" font-weight="900" font-style="italic" fill="#0a52cc" text-anchor="middle">11</text>
-      <text x="12" y="22" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="900" fill="#ffffff">11</text>
-      <text x="88" y="136" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="900" fill="#ffffff" text-anchor="end">11</text>
-    </g>
+    <!-- الرقم 10 الكبير -->
+    <text x="0" y="52" font-family="'Arial Black', Arial, Helvetica, sans-serif" font-size="170" font-weight="900" font-style="italic" fill="#8e0c1c" text-anchor="middle" letter-spacing="-10">10</text>
 
-    <!-- 5) الكرت الأخضر 7 -->
-    <g transform="translate(320 200) rotate(22 50 75)" filter="url(#shadow)">
-      <rect width="100" height="150" rx="10" fill="url(#green)" stroke="#ffffff" stroke-width="3"/>
-      <rect x="5" y="5" width="90" height="140" rx="7" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1.2"/>
-      <rect width="100" height="45" rx="10" fill="url(#shine)"/>
-      <ellipse cx="50" cy="75" rx="31" ry="42" fill="#ffffff"/>
-      <text x="50" y="93" font-family="Arial, Helvetica, sans-serif" font-size="55" font-weight="900" font-style="italic" fill="#069c56" text-anchor="middle">7</text>
-      <text x="12" y="22" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="900" fill="#ffffff">7</text>
-      <text x="88" y="136" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="900" fill="#ffffff" text-anchor="end">7</text>
-    </g>
-
+    <!-- 10 صغيرة في الزوايا -->
+    <text x="-108" y="-158" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="-2">10</text>
+    <text x="108" y="180" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="-2">10</text>
   </g>
 </svg>
