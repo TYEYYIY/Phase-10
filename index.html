@@ -2606,7 +2606,7 @@ html.theme-epic .p10-card[class*="face-"] {
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '22.2.3';
+var APP_VERSION = '22.4.3';
 var APP_BUILD_DATE = '1-9-2026';
 var APP_LAST_UPDATE = '30-10-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
@@ -2728,7 +2728,8 @@ var PHASE_PACKS = [
 var SPECIAL_MODES = [
   { key: 'classic', name: 'الكلاسيكي', desc: 'القواعد الرسمية', startHand: 10, drawCount: 1 },
   { key: 'race', name: 'سباق سريع', desc: 'مرحلة واحدة فقط', startHand: 10, phasesLimit: 1, drawCount: 1 },
-  { key: 'marathon', name: 'ماراثون', desc: 'لا يمكن الضرب على الآخرين', startHand: 10, drawCount: 1, noOpponentHit: true },
+  { key: 'marathon', name: 'ماراثون', desc: 'بلا ضرب نهائياً (لا على مجموعاتك ولا الخصوم)', startHand: 10, drawCount: 1, noHit: true },
+
   { key: 'blitz', name: 'برق', desc: 'اسحب 2 وتخلص من 2', startHand: 10, drawCount: 2, discardCount: 2 },
   { key: 'chaos', name: 'فوضى', desc: 'الأيدي مكشوفة للجميع', startHand: 10, drawCount: 1, openHands: true },
   { key: 'sniper', name: 'قناص', desc: 'بدون Wild أو Skip', startHand: 10, drawCount: 1, noWild: true, noSkip: true },
@@ -2737,7 +2738,8 @@ var SPECIAL_MODES = [
   { key: 'timerush', name: '⏱ اندفاع', desc: 'كل دور 15 ثانية فقط', startHand: 10, drawCount: 1, turnTimer: 15 },
   { key: 'tiny',     name: '🎴 قبضة',   desc: 'تبدأ بـ 5 بطاقات فقط',   startHand: 5,  drawCount: 1 },
   { key: 'massive',  name: '🎒 حِمل',   desc: 'تبدأ بـ 15 بطاقة',        startHand: 15, drawCount: 1 },
-  { key: 'nomercy',  name: '⚔️ بلا رحمة', desc: 'بلا Wild/Skip + 15 ثانية', startHand: 10, drawCount: 1, noWild: true, noSkip: true, turnTimer: 15 }
+
+{ key: 'nomercy',  name: '⚔️ بلا رحمة', desc: 'بلا بطاقات Wild أو Skip + مؤقت 15 ثانية للدور', startHand: 10, drawCount: 1, noWild: true, noSkip: true, turnTimer: 15 }
 ];
 
 var FACE_STYLES = [
@@ -4771,6 +4773,7 @@ return null;
 function findAllMeldsForCard(state, pId, card) {
   if (!state || !state.players || !card) return [];
   var cfg = state.specialCfg || {};
+  if (cfg.noHit) return []; // ✅ منع الضرب نهائياً في وضع الماراثون
   var ownResults = [];
   var otherResults = [];
   for (var i = 0; i < state.players.length; i++) {
@@ -7653,6 +7656,7 @@ function actionLayPhase() {
 }
 function actionHit() {
   var state = app.state; if (!state || state.gameOver) return;
+  if (state.specialCfg && state.specialCfg.noHit) return; // ✅ حماية إضافية
   var pId = app.viewerId;
   if (state.turnIndex !== pId) return;
   if (!state.hasDrawn) return;
@@ -7788,6 +7792,14 @@ function handleMeldClick(pid, midx) {
   if (state.turnIndex !== vId) return;
   if (!state.hasDrawn) return;
   if (app.busy) return;
+  
+  // ✅ منع النقر على المجموعات في وضع الماراثون
+  if (state.specialCfg && state.specialCfg.noHit) {
+    setStatus('وضع الماراثون يمنع الضرب نهائياً', 'var(--red)');
+    SoundFX.play('error');
+    return;
+  }
+
   var tp = state.players[pid]; if (!tp) return;
   var tm = tp.melds[midx]; if (!tm) return;
   var player = state.players[vId];
