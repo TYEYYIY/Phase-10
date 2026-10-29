@@ -1,77 +1,115 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="TYEYYIY Phase 10">
   <defs>
-    <!-- خلفية اللعبة -->
-    <radialGradient id="bg" cx="50%" cy="40%" r="80%">
-      <stop offset="0%" stop-color="#183526"/>
-      <stop offset="60%" stop-color="#0a1811"/>
-      <stop offset="100%" stop-color="#020604"/>
+    <!-- خلفية فخمة داكنة مع توهج -->
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#f4b942" stop-opacity="0.15"/>
+      <stop offset="50%" stop-color="#183526" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#040a07"/>
     </radialGradient>
 
-    <!-- تدرج الكرت الأحمر -->
-    <linearGradient id="cardRed" x1="0" y1="0" x2="0.5" y2="1">
-      <stop offset="0%" stop-color="#ff5c6e"/>
-      <stop offset="35%" stop-color="#ef3a4d"/>
-      <stop offset="80%" stop-color="#c01528"/>
-      <stop offset="100%" stop-color="#7a0413"/>
+    <!-- تدرجات الألوان الأربعة للكرت الأوسط -->
+    <linearGradient id="quadRed" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ff4d5e"/>
+      <stop offset="100%" stop-color="#a30012"/>
+    </linearGradient>
+    <linearGradient id="quadBlue" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3b9cff"/>
+      <stop offset="100%" stop-color="#003d99"/>
+    </linearGradient>
+    <linearGradient id="quadGreen" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#12d17a"/>
+      <stop offset="100%" stop-color="#006633"/>
+    </linearGradient>
+    <linearGradient id="quadYellow" x1="1" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#ffd75e"/>
+      <stop offset="100%" stop-color="#b37700"/>
     </linearGradient>
 
-    <!-- تدرج الكرت الأسود (Wild) -->
-    <linearGradient id="cardWild" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#333333"/>
+    <!-- تدرجات الكروت الجانبية -->
+    <linearGradient id="skipBlue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2a4a8a"/>
+      <stop offset="100%" stop-color="#0a123a"/>
+    </linearGradient>
+    <linearGradient id="wildBlack" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2a2a2a"/>
       <stop offset="100%" stop-color="#050505"/>
     </linearGradient>
-
-    <!-- تدرج الذهبي لكرت Wild -->
-    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#ffeb80"/>
       <stop offset="100%" stop-color="#c98a05"/>
     </linearGradient>
 
-    <!-- انعكاس ضوئي -->
+    <!-- لمعة زجاجية -->
     <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.5"/>
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.4"/>
+      <stop offset="20%" stop-color="#ffffff" stop-opacity="0.05"/>
       <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
     </linearGradient>
 
-    <!-- ظل الكروت -->
-    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
-      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000000" flood-opacity="0.8"/>
+    <!-- ظلال عميقة للكروت -->
+    <filter id="shadowDeep" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="15" stdDeviation="15" flood-color="#000000" flood-opacity="0.8"/>
+    </filter>
+    <filter id="shadowSide" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#000000" flood-opacity="0.6"/>
     </filter>
   </defs>
 
   <!-- خلفية الأيقونة -->
-  <rect width="512" height="512" fill="url(#bg)"/>
+  <rect width="512" height="512" fill="url(#bgGlow)"/>
 
-  <!-- مجموعة الكروت (مصغرة وممركزة لضمان عدم القص) -->
-  <g transform="translate(256, 256) scale(0.88) translate(-256, -256)">
+  <!-- ========================================== -->
+  <!-- 1. الكرت الأيسر (Skip) -->
+  <!-- ========================================== -->
+  <g transform="translate(120, 256)" filter="url(#shadowSide)">
+    <rect x="-70" y="-110" width="140" height="220" rx="14" fill="url(#skipBlue)" stroke="#ffffff" stroke-width="4"/>
+    <rect x="-62" y="-102" width="124" height="204" rx="10" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+    <!-- رمز Skip -->
+    <circle cx="0" cy="0" r="40" fill="#ff3b4e"/>
+    <path d="M -15 -15 L 15 15 M 15 -15 L -15 15" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+    <text x="-45" y="-70" font-family="Arial, sans-serif" font-size="28" font-weight="900" fill="#ff3b4e">S</text>
+    <rect x="-70" y="-110" width="140" height="70" rx="14" fill="url(#gloss)"/>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- 2. الكرت الأيمن (Wild) -->
+  <!-- ========================================== -->
+  <g transform="translate(392, 256)" filter="url(#shadowSide)">
+    <rect x="-70" y="-110" width="140" height="220" rx="14" fill="url(#wildBlack)" stroke="#f4b942" stroke-width="4"/>
+    <rect x="-62" y="-102" width="124" height="204" rx="10" fill="none" stroke="rgba(244,185,66,0.3)" stroke-width="2"/>
+    <!-- رمز Wild -->
+    <circle cx="0" cy="0" r="40" fill="url(#goldGrad)"/>
+    <text x="0" y="16" font-family="'Arial Black', Arial, sans-serif" font-size="52" font-weight="900" font-style="italic" fill="#050505" text-anchor="middle">W</text>
+    <text x="-45" y="-70" font-family="Arial, sans-serif" font-size="28" font-weight="900" fill="#f4b942">W</text>
+    <rect x="-70" y="-110" width="140" height="70" rx="14" fill="url(#gloss)"/>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- 3. الكرت الأوسط (10 بأربع ألوان) -->
+  <!-- ========================================== -->
+  <g transform="translate(256, 256)" filter="url(#shadowDeep)">
+    <!-- جسم الكرت والألوان الأربعة -->
+    <rect x="-100" y="-140" width="200" height="280" rx="18" fill="#ffffff"/>
+    <!-- الأرباع الملونة -->
+    <path d="M -94 -134 L 0 -134 L 0 0 L -94 0 Z" fill="url(#quadRed)"/>
+    <path d="M 0 -134 L 94 -134 L 94 0 L 0 0 Z" fill="url(#quadBlue)"/>
+    <path d="M -94 0 L 0 0 L 0 134 L -94 134 Z" fill="url(#quadGreen)"/>
+    <path d="M 0 0 L 94 0 L 94 134 L 0 134 Z" fill="url(#quadYellow)"/>
     
-    <!-- 1. كرت Wild (في الخلف) -->
-    <!-- تم رفعه لليمين أكثر وإبراز الإطار الذهبي -->
-    <g transform="translate(340, 170) rotate(20)" filter="url(#shadow)">
-      <rect x="-85" y="-120" width="170" height="240" rx="14" fill="url(#cardWild)" stroke="#f4b942" stroke-width="5"/>
-      <rect x="-77" y="-112" width="154" height="224" rx="9" fill="none" stroke="rgba(244,185,66,0.4)" stroke-width="2"/>
-      <circle cx="0" cy="0" r="50" fill="url(#gold)"/>
-      <text x="0" y="20" font-family="'Arial Black', Arial, sans-serif" font-size="65" font-weight="900" font-style="italic" fill="#050505" text-anchor="middle">W</text>
-      <rect x="-85" y="-120" width="170" height="75" rx="14" fill="url(#gloss)"/>
-    </g>
-
-    <!-- 2. كرت 10 (في المقدمة) -->
-    <!-- تم توسيطه وتصغيره قليلاً لإبعاده عن الحواف -->
-    <g transform="translate(240, 260) rotate(-6)" filter="url(#shadow)">
-      <rect x="-140" y="-195" width="280" height="390" rx="20" fill="url(#cardRed)" stroke="#ffffff" stroke-width="5"/>
-      <rect x="-128" y="-183" width="256" height="366" rx="14" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2.5"/>
-      
-      <ellipse cx="0" cy="-5" rx="98" ry="130" fill="#ffffff"/>
-      
-      <!-- الرقم 10 الكبير -->
-      <text x="0" y="50" font-family="'Arial Black', Arial, sans-serif" font-size="155" font-weight="900" font-style="italic" fill="#8e0c1c" text-anchor="middle" letter-spacing="-8">10</text>
-      
-      <!-- 10 صغيرة في الزوايا -->
-      <text x="-100" y="-145" font-family="Arial, sans-serif" font-size="34" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="-1">10</text>
-      <text x="100" y="165" font-family="Arial, sans-serif" font-size="34" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="-1">10</text>
-      
-      <rect x="-140" y="-195" width="280" height="120" rx="20" fill="url(#gloss)"/>
-    </g>
-
+    <!-- إطار داخلي ذهبي رفيع جداً للفخامة -->
+    <rect x="-88" y="-128" width="176" height="256" rx="12" fill="none" stroke="rgba(244,185,66,0.6)" stroke-width="2"/>
+    
+    <!-- البيضة البيضاء -->
+    <ellipse cx="0" cy="-2" rx="72" ry="100" fill="#ffffff" filter="drop-shadow(0px 5px 10px rgba(0,0,0,0.3))"/>
+    
+    <!-- الرقم 10 الضخم -->
+    <text x="0" y="32" font-family="'Arial Black', Arial, sans-serif" font-size="110" font-weight="900" font-style="italic" fill="#1a1a1a" text-anchor="middle" letter-spacing="-6">10</text>
+    
+    <!-- أرقام 10 صغيرة في الزوايا -->
+    <text x="-80" y="-105" font-family="Arial, sans-serif" font-size="26" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="-1">10</text>
+    <text x="80" y="120" font-family="Arial, sans-serif" font-size="26" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="-1">10</text>
+    
+    <!-- لمعة زجاجية علوية -->
+    <rect x="-100" y="-140" width="200" height="120" rx="18" fill="url(#gloss)"/>
   </g>
 </svg>
