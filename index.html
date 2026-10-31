@@ -288,7 +288,7 @@
       <div class="about-row"><span class="albl">تاريخ البناء</span><span class="aval" id="aboutBuildDate">—</span></div>
       <div class="about-row"><span class="albl">آخر تحديث</span><span class="aval" id="aboutLastUpdate">—</span></div>
       <div class="about-row"><span class="albl">المطوّر</span><span class="aval ar" id="aboutDev">TYEYYIY</span></div>
-      <div class="about-row"><span class="albl">الترخيص</span><span class="aval ar">مجاني للاستخدام الشخصي</span></div>
+      <div class="about-row"><span class="albl">الترخيص</span><span class="aval ar">مجاني</span></div>
     </div>
     <div class="about-card">
       <div style="font-size:12px;font-weight:900;color:var(--gold);text-align:right;margin-bottom:4px">📞 تواصل معي</div>
@@ -974,7 +974,7 @@ input, textarea { font-family: inherit; }
 .phase-box .phase-progress .fill { height: 100%; background: linear-gradient(90deg,#ffd75e,#c98a05); transition: width 0.5s; }
 
 .middle-section { flex: 1 1 auto; min-height: 60px; display: flex; flex-direction: column; width: 100%; gap: 6px; overflow: hidden; }
-.melds-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 14px 10px 12px 10px; width: 100%; background: linear-gradient(160deg, rgba(0,0,0,0.35), rgba(0,0,0,0.1)); border-radius: 11px; border: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; gap: 10px; }
+.melds-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: auto; padding: 14px 10px 12px 10px; width: 100%; background: linear-gradient(160deg, rgba(0,0,0,0.35), rgba(0,0,0,0.1)); border-radius: 11px; border: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; gap: 10px; -webkit-overflow-scrolling: touch; }
 .melds-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; min-height: 60px; opacity: 0.55; font-size: 13px; color: var(--text-muted); gap: 8px; text-align: center; padding: 12px; }
 .melds-empty::before { content: '🃏'; font-size: 40px; opacity: 0.4; filter: grayscale(0.5); }
 .melds-section { display: flex; flex-direction: column; gap: 7px; width: 100%; flex-shrink: 0; padding: 2px; }
@@ -982,8 +982,8 @@ input, textarea { font-family: inherit; }
 .melds-label::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
 .melds-label.you { color: var(--green); border-color: var(--green-alpha-30); }
 .melds-label.you::before { background: var(--green); }
-.melds-row { display: flex; gap: 14px 12px; flex-wrap: wrap; padding: 6px 0 14px 0; width: 100%; align-items: flex-start; }
-.meld { display: flex; gap: 2px; padding: 8px 9px 10px 9px; border-radius: 10px; background: linear-gradient(160deg, rgba(0,0,0,0.6), rgba(0,0,0,0.3)); position: relative; border: 2px solid transparent; margin-top: 14px; }
+.melds-row { display: flex; gap: 14px 12px; flex-wrap: nowrap; padding: 6px 0 14px 0; width: 100%; align-items: flex-start; }
+.meld { display: flex; gap: 2px; padding: 8px 9px 10px 9px; border-radius: 10px; background: linear-gradient(160deg, rgba(0,0,0,0.6), rgba(0,0,0,0.3)); position: relative; border: 2px solid transparent; margin-top: 14px; flex-shrink: 0; }
 .meld.can-hit { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 .meld.set { border-color: rgba(230,57,70,0.7); }
 .meld.run { border-color: var(--green-alpha-50); }
@@ -2606,9 +2606,9 @@ html.theme-epic .p10-card[class*="face-"] {
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '22.5.3';
+var APP_VERSION = '22.6.1';
 var APP_BUILD_DATE = '1-9-2026';
-var APP_LAST_UPDATE = '30-10-2026';
+var APP_LAST_UPDATE = '31-10-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
 var UPDATE_CHECK_INTERVAL_MS = 30 * 60 * 1000; /* 30 دقيقة */
 
@@ -4010,8 +4010,17 @@ function newGame(configs, spCfg, packKey) {
     }
   }
   var phases = pack.phases.slice();
-  var startHand = spCfg.startHand || GAME_CONST.START_HAND;
-  var players = [];
+var startHand = spCfg.startHand || GAME_CONST.START_HAND;
+var players = [];
+
+/* ✅ حماية: لا يمكن منح كل لاعب أكثر مما تسمح به الرزمة */
+var maxStartHand = Math.floor((108 - 1 - 5) / configs.length);
+if (startHand > maxStartHand) {
+  startHand = Math.max(GAME_CONST.START_HAND, maxStartHand);
+  if (spCfg.key === 'massive') {
+    console.warn('[massive] تخفيض بداية اليد من 15 إلى ' + startHand + ' بسبب عدد اللاعبين');
+  }
+}
   for (var j = 0; j < configs.length; j++) {
     var c = configs[j];
     var dn = c.isCPU ? 'CPU ' + (j + 1) : 'لاعب ' + (j + 1);
@@ -4055,13 +4064,14 @@ function startNewRound(state, winnerId) {
   state.roundLog.push({ round: state.round, winner: winnerId });
   state.round++;
 
-  /* ✅ تحدي السرعة: فشل إذا تجاوزنا الجولة الثانية */
-  if (app.dailyChallengeActive && state.dailyChallenge && state.dailyChallenge.type === 'speed') {
-    if (state.round > state.dailyChallenge.startedRound + 1) {
-      failDailyChallenge('تجاوزت الجولة الثانية بدون إكمال المرحلة');
-    }
+/* ✅ تحدي السرعة: فشل فقط إذا لم تُكمل المرحلة بحلول الجولة الثالثة */
+if (app.dailyChallengeActive && state.dailyChallenge && state.dailyChallenge.type === 'speed') {
+  var meSpeed = state.players[app.myPlayerId];
+  var speedPhaseDone = meSpeed && meSpeed.phase >= state.phasesLimit;
+  if (!speedPhaseDone && state.round > state.dailyChallenge.startedRound + 1) {
+    failDailyChallenge('تجاوزت الجولة الثانية بدون إكمال المرحلة');
   }
-
+}
   if (app.mode === 'lan' && isHost()) broadcastToGuests({ type: 'roundScore', summary: summary });
   var modal = $('roundScoreModal');
 if (!modal) {
@@ -4774,14 +4784,20 @@ function findAllMeldsForCard(state, pId, card) {
   if (!state || !state.players || !card) return [];
   var cfg = state.specialCfg || {};
   if (cfg.noHit) return []; // ✅ منع الضرب نهائياً في وضع الماراثون
+
+  /* ✅ قيد المحاصرة (تحدي يومي) — يُطبَّق على اللاعب والكمبيوتر معاً */
+  var siegeRestricted = !!(cfg.onlyOwnHit) ||
+                        !!(state.dailyChallenge && state.dailyChallenge.type === 'siege');
+
   var ownResults = [];
   var otherResults = [];
   for (var i = 0; i < state.players.length; i++) {
     var p = state.players[i]; if (!p.melds) continue;
+    if (siegeRestricted && p.id !== pId) continue;
     if (cfg.noOpponentHit && p.id !== pId) continue;
-if (cfg.onlyOwnHit && p.id !== pId) continue;
-if (p.id !== pId && p.shieldRounds > 0) continue;
-for (var j = 0; j < p.melds.length; j++) {
+    if (cfg.onlyOwnHit && p.id !== pId) continue;
+    if (p.id !== pId && p.shieldRounds > 0) continue;
+    for (var j = 0; j < p.melds.length; j++) {
       var h = canHitMeld(card, p.melds[j]);
       if (h) {
         if (p.id === pId) ownResults.push(h);
@@ -5336,12 +5352,15 @@ function renderAllMelds(state, vId) {
   var sel = [];
   for (var i = 0; i < state.selected.length; i++) for (var j = 0; j < vp.hand.length; j++) if (vp.hand[j].id === state.selected[i]) { sel.push(vp.hand[j]); break; }
   var hittableMap = {};
-  if (state.hasDrawn && state.turnIndex === vId && sel.length > 0) {
-    for (var k = 0; k < sel.length; k++) for (var pi = 0; pi < state.players.length; pi++) {
-      var p = state.players[pi];
-      for (var mi = 0; mi < p.melds.length; mi++) if (canHitMeld(sel[k], p.melds[mi])) hittableMap[pi + '_' + mi] = true;
-    }
+if (state.hasDrawn && state.turnIndex === vId && sel.length > 0) {
+  var siegeRestrictedForView = !!(state.specialCfg && state.specialCfg.onlyOwnHit) ||
+                               !!(state.dailyChallenge && state.dailyChallenge.type === 'siege');
+  for (var k = 0; k < sel.length; k++) for (var pi = 0; pi < state.players.length; pi++) {
+    if (siegeRestrictedForView && pi !== vId) continue;
+    var p = state.players[pi];
+    for (var mi = 0; mi < p.melds.length; mi++) if (canHitMeld(sel[k], p.melds[mi])) hittableMap[pi + '_' + mi] = true;
   }
+}
   var newRendered = {};
   for (var pi2 = 0; pi2 < state.players.length; pi2++) {
     var player = state.players[pi2]; if (player.melds.length === 0) continue;
@@ -7664,6 +7683,16 @@ function actionHit() {
   var player = state.players[pId];
   var sel = [];
   for (var i = 0; i < state.selected.length; i++) for (var j = 0; j < player.hand.length; j++) if (player.hand[j].id === state.selected[i]) { sel.push(player.hand[j]); break; }
+
+  /* ✅ تحدي النقاء: منع استخدام Wild في زر اضرب */
+  if (state.dailyChallenge && state.dailyChallenge.type === 'purity') {
+    for (var wck = 0; wck < sel.length; wck++) {
+      if (sel[wck].type === 'wild') {
+        if (checkDailyViolation('useWild', 'استخدمت Wild في تحدي النقاء')) return;
+      }
+    }
+  }
+
   if (sel.length === 0) {
     setStatus('اختر بطاقاتك أولاً', 'var(--red)');
     SoundFX.play('error');
@@ -7796,6 +7825,13 @@ function handleMeldClick(pid, midx) {
   // ✅ منع النقر على المجموعات في وضع الماراثون
   if (state.specialCfg && state.specialCfg.noHit) {
     setStatus('وضع الماراثون يمنع الضرب نهائياً', 'var(--red)');
+    SoundFX.play('error');
+    return;
+  }
+
+  // ✅ وضع الحصاد: منع الضرب على مجموعات الخصوم
+  if (state.specialCfg && state.specialCfg.onlyOwnHit && pid !== vId) {
+    setStatus('وضع الحصاد يمنع الضرب على مجموعات الخصوم', 'var(--red)');
     SoundFX.play('error');
     return;
   }
@@ -7966,7 +8002,8 @@ recordCpuMemoryDiscard(state, pId, discarded);
     saveStatsToStorage();
     if (app.stats.skipsUsed >= 5) unlockAchievement('useSkip5');
   }
-  var adv = 1 + skipCount;
+/* ✅ في لعبة الـ2 لاعبين: أي skipCount يعني تخطّي الخصم مرة واحدة (بما أنه لا يوجد سوى خصم واحد) */
+var adv = (state.playerCount === 2) ? 2 : (1 + skipCount);
 pushActionLog(state, pId, 'skip', '⏭️ تخطّى ' + skipCount + ' لاعب');
 if (state.extraTurnFor === pId) {
   state.extraTurnFor = null;
@@ -8536,7 +8573,11 @@ scored.push({ card: c, idx: i, score: finalScore });
   var cDiscHTML = '';
   for (var cdi = 0; cdi < discarded.length; cdi++) cDiscHTML += logCardHTML(discarded[cdi]);
   pushActionLog(state, pId, 'discard', 'تخلص من ' + cDiscHTML);
-  if (skipCount > 0) { advanceTurn(state, 1 + skipCount); setStatus(p.name + ' تخلص من Skip ×' + skipCount + '!'); }
+  if (skipCount > 0) {
+  var cpuAdv = (state.playerCount === 2) ? 2 : (1 + skipCount);
+  advanceTurn(state, cpuAdv);
+  setStatus(p.name + ' تخلص من Skip ×' + skipCount + '!');
+}
   else { advanceTurn(state, 1); setStatus(p.name + ' تخلص' + (discarded.length > 1 ? ' من ' + discarded.length + ' بطاقات' : '')); }
   resetRenderCache(); scheduleRender(); syncStateToPeers();
   if (p.hand.length === 0) { checkWinOrNewRound(state, pId); cpuContext.active = false; return; }
@@ -10049,10 +10090,12 @@ function applyShopEffect(state, pId, key, fromGuest) {
   if (!me) return { ok: false, reason: 'لاعب غير موجود' };
 
   if (key === 'wild') {
-    me.hand.push({ type: 'wild', id: nextUniqueId() });
-    return { ok: true, message: 'أُضيف Wild إلى يدك' };
+  if (state.specialCfg && state.specialCfg.noWild) {
+    return { ok: false, reason: 'وضع "' + state.specialCfg.name + '" لا يسمح بـ Wild' };
   }
-
+  me.hand.push({ type: 'wild', id: nextUniqueId() });
+  return { ok: true, message: 'أُضيف Wild إلى يدك' };
+}
   if (key === 'swap') {
     if (me.hand.length === 0) return { ok: false, reason: 'يدك فارغة' };
     if (state.deck.length === 0) return { ok: false, reason: 'الرزمة فارغة' };
@@ -11426,15 +11469,36 @@ function attachModalClosers() {
     if ($('offlinePackGrid')) buildPacksGrid('offlinePackGrid');
   };
   var pa = $('playAgainBtn');
-  if (pa) pa.onclick = function() {
-    $('overModal').classList.add('hidden');
-    var lm = app.mode; var lp = app.phasePack;
-    leaveCurrentGame();
-    setTimeout(function() {
-      if (lm === 'cpu') { app.phasePack = lp; startCpuGame(); }
-      else if (lm === 'pass') { app.phasePack = lp; startPassAndPlayGame(); }
-    }, 300);
-  };
+if (pa) pa.onclick = function() {
+  $('overModal').classList.add('hidden');
+  var lm = app.mode;
+  var lp = app.phasePack;
+
+  /* ✅ اكتشف إن كانت المباراة السابقة تحدياً يومياً BEFORE التصفير */
+  var wasDaily = (lp === 'daily') ||
+                 !!app.dailyChallengeDateKey ||
+                 !!app.dailyChallengeActive;
+
+  /* احفظ إعدادات التحدي اليومي قبل أن تصفّرها leaveCurrentGame */
+  var savedReward = app.dailyChallengeReward || app.pendingDailyReward || 0;
+  var savedOpponents = app.pendingDailyOpponents || 3;
+  var savedDiff = app.pendingDailyDiff || 'normal';
+
+  leaveCurrentGame();
+
+  setTimeout(function() {
+    /* ✅ إعادة التحدي اليومي بنفس الإعدادات */
+    if (wasDaily) {
+      app.pendingDailyReward = savedReward;
+      app.pendingDailyOpponents = savedOpponents;
+      app.pendingDailyDiff = savedDiff;
+      beginDailyChallengeAfterConfirm();
+      return;
+    }
+    if (lm === 'cpu') { app.phasePack = lp; startCpuGame(); }
+    else if (lm === 'pass') { app.phasePack = lp; startPassAndPlayGame(); }
+  }, 300);
+};
   var bt = $('backToMenuBtn');
   if (bt) bt.onclick = function() { $('overModal').classList.add('hidden'); leaveCurrentGame(); };
   var tn = $('tutorialNext');
@@ -11457,7 +11521,7 @@ var APP_DEV_INFO = {
   whatsapp: '+20 1281071349',
   whatsappLink: 'https://wa.me/201281071349',
   github: 'https://github.com/tyeyyiy',
-  website: ''
+  website: 'https://tyeyyiy.github.io/Phase-10/'
 };
 
 /* ============================================================
