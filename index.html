@@ -1178,6 +1178,8 @@ input, textarea { font-family: inherit; }
 .p10-card.col-blue   { --cc: #2e8bff; --cc-l: #7dbcff; --cc-d: #0a52cc; --cc-s: rgba(46,139,255,0.28); }
 .p10-card.col-green  { --cc: #12d17a; --cc-l: #6cf0b5; --cc-d: #069c56; --cc-s: rgba(18,209,122,0.28); }
 .p10-card.col-yellow { --cc: #ffcb1f; --cc-l: #ffe985; --cc-d: #d19000; --cc-s: rgba(255,203,31,0.32); }
+.p10-card.col-orange { --cc: #FB8C00; --cc-l: #FFB74D; --cc-d: #E65100; --cc-s: rgba(251,140,0,0.28); }
+.p10-card.col-purple { --cc: #8E24AA; --cc-l: #CE93D8; --cc-d: #4A148C; --cc-s: rgba(142,36,170,0.28); }
 
 /* 17 FACE DESIGNS */
 /* 4 أرباع بلون واحد فقط مع تباين لطيف (بدون خطوط قطرية) */
@@ -2606,9 +2608,9 @@ html.theme-epic .p10-card[class*="face-"] {
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '22.6.1';
+var APP_VERSION = '23.0.1';
 var APP_BUILD_DATE = '1-9-2026';
-var APP_LAST_UPDATE = '31-10-2026';
+var APP_LAST_UPDATE = '1-11-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
 var UPDATE_CHECK_INTERVAL_MS = 30 * 60 * 1000; /* 30 دقيقة */
 
@@ -2623,7 +2625,9 @@ var COLORS = [
   { key: 'col-red', name: 'أحمر' },
   { key: 'col-blue', name: 'أزرق' },
   { key: 'col-green', name: 'أخضر' },
-  { key: 'col-yellow', name: 'أصفر' }
+  { key: 'col-yellow', name: 'أصفر' },
+  { key: 'col-orange', name: 'برتقالي' },
+  { key: 'col-purple', name: 'بنفسجي' }
 ];
 
 var PHASE_PACKS = [
@@ -2739,7 +2743,8 @@ var SPECIAL_MODES = [
   { key: 'tiny',     name: '🎴 قبضة',   desc: 'تبدأ بـ 5 بطاقات فقط',   startHand: 5,  drawCount: 1 },
   { key: 'massive',  name: '🎒 حِمل',   desc: 'تبدأ بـ 15 بطاقة',        startHand: 15, drawCount: 1 },
 
-{ key: 'nomercy',  name: '⚔️ بلا رحمة', desc: 'بلا بطاقات Wild أو Skip + مؤقت 15 ثانية للدور', startHand: 10, drawCount: 1, noWild: true, noSkip: true, turnTimer: 15 }
+{ key: 'nomercy',  name: '⚔️ بلا رحمة', desc: 'بلا بطاقات Wild أو Skip + مؤقت 15 ثانية للدور', startHand: 10, drawCount: 1, noWild: true, noSkip: true, turnTimer: 15 },
+{ key: 'prism',    name: ' المنشور (PRISM)', desc: '6 ألوان + دمج البطاقات + رزمة ضخمة', startHand: 10, drawCount: 1, prismMode: true }
 ];
 
 var FACE_STYLES = [
@@ -3892,12 +3897,18 @@ function sanitizeState(state) {
 function createDeck(cfg) {
   cfg = cfg || {};
   var d = [];
-  for (var col = 0; col < 4; col++) for (var v = 1; v <= 12; v++) {
+  // ✅ دعم 6 ألوان في وضع PRISM
+  var maxColors = (cfg && cfg.prismMode) ? 6 : 4; 
+  for (var col = 0; col < maxColors; col++) for (var v = 1; v <= 12; v++) {
     d.push({ type: 'num', value: v, col: col, id: nextUniqueId() });
     d.push({ type: 'num', value: v, col: col, id: nextUniqueId() });
   }
-  if (!cfg.noWild) for (var i = 0; i < 8; i++) d.push({ type: 'wild', id: nextUniqueId() });
-  if (!cfg.noSkip) for (var j = 0; j < 4; j++) d.push({ type: 'skip', id: nextUniqueId() });
+  // ✅ زيادة Wild و Skip في وضع PRISM
+  var wildCount = (cfg && cfg.prismMode) ? 12 : 8;
+  var skipCount = (cfg && cfg.prismMode) ? 6 : 4;
+  
+  if (!cfg.noWild) for (var i = 0; i < wildCount; i++) d.push({ type: 'wild', id: nextUniqueId() });
+  if (!cfg.noSkip) for (var j = 0; j < skipCount; j++) d.push({ type: 'skip', id: nextUniqueId() });
   return shuffleArray(d);
 }
 function getCardValue(card) {
@@ -4216,27 +4227,50 @@ function endRoundByDeckExhaustion() {
   var completedPlayers = state.players.filter(function(p) { return p.phase >= state.phasesLimit; });
   var winner = null;
 
-  if (completedPlayers.length > 0) {
-    // 🏆 الحالة 1: يوجد من أكمل المرحلة -> الفائز هو الأقل نقاطاً
-    winner = completedPlayers[0];
-    for (var c = 1; c < completedPlayers.length; c++) {
-      if (completedPlayers[c].score < winner.score) winner = completedPlayers[c];
+if (completedPlayers.length > 0) {
+  // 🏆 البحث عن أقل عدد من النقاط
+  var minScore = completedPlayers[0].score;
+  for (var c = 1; c < completedPlayers.length; c++) {
+    if (completedPlayers[c].score < minScore) {
+      minScore = completedPlayers[c].score;
     }
-    
-    state.gameOver = true;
-    setStatus(winner.name + ' فاز (أكمل المرحلة والأقل نقاطاً)!', 'var(--green)');
-    try { recordWeeklyLeaderboard(); } catch (e) {}
-    SoundFX.play('win'); showConfetti();
-    if (winner.id === app.myPlayerId) handleWinAchievements();
-    else handleLossAchievements();
-    if (app.mode === 'lan' && isHost()) syncStateToPeers();
-    if (winner.id === app.myPlayerId) showWinOverlay();
-    else showLoseOverlay();
-    clearSavedGame();
-    setTimeout(function() { showGameOver(); }, 1400);
+  }
+  
+  // 🔍 جمع كل من لديهم نفس أقل عدد من النقاط
+  var winners = completedPlayers.filter(function(p) { return p.score === minScore; });
+  
+  if (winners.length > 1) {
+  if (!state.isTieBreaker) {
+    state.tie = true;
+    var wIds = winners.map(function(w) { return w.id; });
+    triggerPrismTieBreaker(state, wIds);
     return;
-    
   } else {
+    winner = winners[0]; // في حال التعادل داخل كسر التعادل نفسه
+  }
+} else {
+  winner = winners[0];
+  state.tie = false;
+  setStatus(winner.name + ' فاز (أكمل المرحلة والأقل نقاطاً)!', 'var(--green)');
+  
+  if (winner.id === app.myPlayerId) {
+    handleWinAchievements();
+    showWinOverlay();
+  } else {
+    handleLossAchievements();
+    showLoseOverlay();
+  }
+}
+
+state.gameOver = true;
+try { recordWeeklyLeaderboard(); } catch (e) {}
+SoundFX.play('win'); showConfetti();
+if (app.mode === 'lan' && isHost()) syncStateToPeers();
+clearSavedGame();
+setTimeout(function() { showGameOver(); }, 1400);
+return;
+
+} else {
     // 🔄 الحالة 2: لم يكمل أحد المرحلة -> إعادة التحدي من البداية
     if (app.mode === 'lan' && isHost()) broadcastToGuests({ type: 'roundScore', summary: summary });
     
@@ -4311,7 +4345,7 @@ function _checkRunParity(lo, hi, parity) {
   return true;
 }
 function tryExtractRun(available, size, constraint) {
-  var byCol = [[], [], [], []];
+  var byCol = [[], [], [], [], [], []];
   var wilds = [];
   for (var i = 0; i < available.length; i++) {
     var c = available[i];
@@ -4411,7 +4445,7 @@ function extractLargestSet(available, minSize, constraint) {
   return null;
 }
 function extractLongestRun(available, minSize, constraint) {
-  var byCol = [[], [], [], []];
+  var byCol = [[], [], [], [], [], []];
   var wilds = [];
   for (var i = 0; i < available.length; i++) {
     var c = available[i];
@@ -5423,6 +5457,7 @@ function updateActionsButtons() {
   var isMyTurn = (state.turnIndex === vId);
   var sel = [];
   for (var i = 0; i < state.selected.length; i++) for (var j = 0; j < player.hand.length; j++) if (player.hand[j].id === state.selected[i]) { sel.push(player.hand[j]); break; }
+  
   var hasLaid = player.laidThisTurn === true;
   var canDraw = isMyTurn && !state.hasDrawn && state.deck.length > 0;
   var cp = state.phasesList ? state.phasesList[player.phase] : null;
@@ -5434,42 +5469,65 @@ function updateActionsButtons() {
   if (maxD === 1) { canDiscard = isMyTurn && state.hasDrawn && sel.length === 1; }
   else { canDiscard = isMyTurn && state.hasDrawn && sel.length >= 1 && sel.length <= maxD; }
   var canClear = sel.length > 0;
+  
+  var isPrism = state.specialCfg && state.specialCfg.prismMode;
+  var canBlend = false;
+  if (isPrism && isMyTurn && state.hasDrawn && sel.length === 2) {
+    var c1 = sel[0], c2 = sel[1];
+    if (c1.type === 'num' && c2.type === 'num') {
+      var key = Math.min(c1.col, c2.col) + ',' + Math.max(c1.col, c2.col);
+      if (key === '0,3' || key === '0,1' || key === '1,3') canBlend = true;
+    }
+  }
+
   var el = $('actions');
   if (!el.dataset.built) {
     el.dataset.built = '1';
     el.innerHTML =
-  '<button class="btn-draw" id="btnDraw" type="button">اسحب</button>' +
-  '<button class="btn-lay" id="btnLay" type="button">ضع المرحلة</button>' +
-  '<button class="btn-clear" id="btnClear" type="button" title="إلغاء التحديد" aria-label="إلغاء التحديد">✕</button>' +
-  '<button class="btn-inventory" id="inventoryBtn" type="button" title="المخزون" aria-label="المخزون">🎒</button>' +
-  '<button class="btn-hit" id="btnHit" type="button">اضرب</button>' +
-  '<button class="btn-discard" id="btnDiscard" type="button">تخلص</button>';
-$('btnDraw').onclick = function() { actionDraw('deck'); };
-$('btnLay').onclick = function() { actionLayPhase(); };
-$('btnClear').onclick = function() { actionClearSelection(); };
-$('inventoryBtn').onclick = function() { openInventory(); };
-$('btnHit').onclick = function() { actionHit(); };
-$('btnDiscard').onclick = function() { actionDiscard(); };
+      '<button class="btn-draw" id="btnDraw" type="button">اسحب</button>' +
+      '<button class="btn-lay" id="btnLay" type="button">ضع المرحلة</button>' +
+      '<button class="btn-clear" id="btnClear" type="button" title="إلغاء التحديد">✕</button>' +
+      '<button class="btn-inventory" id="inventoryBtn" type="button" title="المخزون">🎒</button>' +
+      '<button class="btn-hit" id="btnHit" type="button">اضرب</button>' +
+      '<button class="btn-discard" id="btnDiscard" type="button">تخلص</button>' +
+      '<button class="btn-blend hidden" id="btnBlend" type="button" style="background:linear-gradient(160deg, #ff8a00, #e52e71); color:#fff; font-weight:900">دمج</button>';
+    
+    $('btnDraw').onclick = function() { actionDraw('deck'); };
+    $('btnLay').onclick = function() { actionLayPhase(); };
+    $('btnClear').onclick = function() { actionClearSelection(); };
+    $('inventoryBtn').onclick = function() { openInventory(); };
+    $('btnHit').onclick = function() { actionHit(); };
+    $('btnDiscard').onclick = function() { actionDiscard(); };
+    $('btnBlend').onclick = function() { actionBlend(); };
   }
-var bDraw = $('btnDraw');
-if (bDraw) {
-  bDraw.disabled = !canDraw;
-  /* ⛑️ إعادة ربط الـ handler في حال فُقد */
-  if (!bDraw.__bound) {
-    bDraw.__bound = true;
-    bDraw.onclick = function() { actionDraw('deck'); };
+
+  // إعدادات الشبكة (7 أعمدة لوضع PRISM، 6 أعمدة للعادي)
+  el.style.gridTemplateColumns = isPrism ? 'repeat(7, minmax(0, 1fr))' : 'repeat(6, minmax(0, 1fr))';
+  var bb = $('btnBlend');
+  if (bb) {
+    if (isPrism) { bb.classList.remove('hidden'); bb.disabled = !canBlend; }
+    else { bb.classList.add('hidden'); }
   }
-}
-$('btnLay').disabled = !canLay;
-$('btnLay').style.opacity = canLay ? '1' : '0.35';
-$('btnLay').style.cursor = canLay ? 'pointer' : 'not-allowed';
-$('btnClear').disabled = !canClear;
-$('btnHit').disabled = !canHit;
-$('btnDiscard').disabled = !canDiscard;
+
+  var bDraw = $('btnDraw');
+  if (bDraw) {
+    bDraw.disabled = !canDraw;
+    if (!bDraw.__bound) {
+      bDraw.__bound = true;
+      bDraw.onclick = function() { actionDraw('deck'); };
+    }
+  }
+  $('btnLay').disabled = !canLay;
+  $('btnLay').style.opacity = canLay ? '1' : '0.35';
+  $('btnClear').disabled = !canClear;
+  $('btnHit').disabled = !canHit;
+  $('btnDiscard').disabled = !canDiscard;
+  
   var db = $('btnDiscard');
   var dLabel = 'تخلص';
   if (maxD > 1) { dLabel = sel.length >= 1 ? ('تخلص ' + sel.length + '/' + maxD) : ('تخلص 1-' + maxD); }
   if (db.textContent !== dLabel) db.textContent = dLabel;
+  
   var hl = 'اضرب';
   if (hitCount > 1) hl = 'اضرب (' + hitCount + ')';
   else if (hitCount === 1) hl = 'اضرب (1)';
@@ -6033,6 +6091,24 @@ pushActionLog(state, pId, 'hit', 'ضرب ' + hAdded.length + ' بطاقة');
         }
       }
     }
+    else if (msg.action === 'blend') {
+  var p1 = (msg.payload || {}).id1;
+  var p2 = (msg.payload || {}).id2;
+  var h = state.players[pId].hand;
+  var cc1 = h.find(c => c.id === p1);
+  var cc2 = h.find(c => c.id === p2);
+  if (cc1 && cc2 && cc1.type === 'num' && cc2.type === 'num') {
+    var k = Math.min(cc1.col, cc2.col) + ',' + Math.max(cc1.col, cc2.col);
+    if (k === '0,3' || k === '0,1' || k === '1,3') {
+      var mixMap = { '0,3': 4, '0,1': 5, '1,3': 2 };
+      var nc = mixMap[k];
+      var nv = Math.min(12, cc1.value + cc2.value);
+      state.players[pId].hand = h.filter(c => c.id !== p1 && c.id !== p2);
+      state.players[pId].hand.push({ type: 'num', value: nv, col: nc, id: nextUniqueId() });
+      state.selected = [];
+    }
+  }
+}
     else if (msg.action === 'hit') {
       var hIds2 = (msg.payload || {}).cardIds;
       if (!validateGuestCardIds(state, pId, hIds2, 10)) return;
@@ -7796,6 +7872,56 @@ if (pId === app.myPlayerId) {
   if (player.hand.length === 0) checkWinOrNewRound(state, pId);
   autoSaveGame();
 }
+
+function actionBlend() {
+  var state = app.state; if (!state || state.gameOver) return;
+  var pId = app.viewerId;
+  if (state.turnIndex !== pId) return;
+  if (!state.hasDrawn) return;
+  if (app.busy) return;
+  
+  var player = state.players[pId];
+  var sel = [];
+  for (var i = 0; i < state.selected.length; i++) {
+    for (var j = 0; j < player.hand.length; j++) {
+      if (player.hand[j].id === state.selected[i]) { sel.push(player.hand[j]); break; }
+    }
+  }
+  
+  if (sel.length !== 2 || sel[0].type !== 'num' || sel[1].type !== 'num') {
+    setStatus('اختر بطاقتين رقميتين للدمج', 'var(--red)');
+    SoundFX.play('error');
+    return;
+  }
+  
+  var c1 = sel[0], c2 = sel[1];
+  var key = Math.min(c1.col, c2.col) + ',' + Math.max(c1.col, c2.col);
+  if (key !== '0,3' && key !== '0,1' && key !== '1,3') {
+    setStatus('هذان اللونان لا يمكن دمجهما!', 'var(--red)');
+    SoundFX.play('error');
+    return;
+  }
+  
+  if (isGuest()) {
+    setBusy(true);
+    sendToHost({ type: 'action', action: 'blend', payload: { id1: c1.id, id2: c2.id } });
+    return;
+  }
+  
+  var mixMap = { '0,3': 4, '0,1': 5, '1,3': 2 };
+  var newColor = mixMap[key];
+  var newValue = Math.min(12, c1.value + c2.value);
+  
+  pushUndoSnapshot();
+  player.hand = player.hand.filter(function(c) { return c.id !== c1.id && c.id !== c2.id; });
+  player.hand.push({ type: 'num', value: newValue, col: newColor, id: nextUniqueId() });
+  
+  state.selected = [];
+  setStatus('🎨 تم دمج البطاقات بنجاح!', 'var(--purple)');
+  SoundFX.play('reward');
+  resetRenderCache(); scheduleRender(); syncStateToPeers();
+}
+
 function askSideChoice(cardDesc, onChoose) {
   var modal = $('sideChoiceModal');
   if (!modal) { onChoose('right'); return; }
@@ -8069,6 +8195,66 @@ function actionClearSelection() {
 /* ============================================================
    WIN / LOSE
    ============================================================ */
+function triggerPrismTieBreaker(state, tiedPlayerIds) {
+  state.isTieBreaker = true;
+  state.tie = false;
+  state.gameOver = false;
+  
+  // ✅ 5 شروط ثابتة يتم الاختيار بينها عشوائياً
+  var tieConditions = [
+    { sets: [4], runs: [], color: 0, desc: 'مجموعة من 4 (4 متطابقة)' },
+    { sets: [3], runs: [4], color: 0, desc: 'مجموعة 3 + متتالية 4' },
+    { sets: [], runs: [5], color: 0, desc: 'متتالية من 5' },
+    { sets: [3, 3], runs: [], color: 0, desc: 'مجموعتان × 3' },
+    { sets: [], runs: [], color: 5, desc: '5 بطاقات من نفس اللون' }
+  ];
+  
+  var randomCondition = tieConditions[Math.floor(Math.random() * tieConditions.length)];
+  
+  // تحويل الوضع إلى PRISM
+  state.specialCfg = { key: 'prism', name: 'PRISM (كسر التعادل)', startHand: 10, drawCount: 1, prismMode: true };
+  state.phasesLimit = 1;
+  state.phasesList = [randomCondition];
+  
+  // إعادة توزيع 10 بطاقات لكل لاعب من الرزمة الجديدة
+  var deck = createDeck(state.specialCfg);
+  state.deck = deck;
+  for (var k = 0; k < state.players.length; k++) {
+    state.players[k].hand = deck.splice(0, 10);
+    state.players[k].melds = [];
+    state.players[k].phase = 0;
+    state.players[k].score = 0;
+    state.players[k].laidThisTurn = false;
+  }
+  var fd = pickInitialDiscard(deck);
+  state.discard = fd ? [fd] : [];
+  
+  // بدء الدور من أول لاعب متعادل
+  state.turnIndex = tiedPlayerIds[0];
+  state.round = 1;
+  state.hasDrawn = false;
+  
+  app.dailyChallengeActive = false;
+  
+  setStatus('⚔️ تعادل! كسر التعادل (PRISM): ' + randomCondition.desc, 'var(--gold)');
+  
+  if (app.mode !== 'lan') {
+    showRoundOverlay('تعادل!', function() {
+      resetRenderCache(); previouslyRenderedMelds = {};
+      scheduleRender();
+      startTurnIfNeeded();
+    });
+  } else {
+    resetRenderCache(); previouslyRenderedMelds = {};
+    scheduleRender();
+    if (isHost()) {
+      broadcastToGuests({ type: 'roundOverlay', round: 'تعادل!' });
+      syncStateToPeers();
+      startTurnIfNeeded();
+    }
+  }
+}
+
 function checkWinOrNewRound(state, pId) {
   var player = state.players[pId]; if (!player) return;
   if (player.hand.length !== 0) return;
@@ -8095,16 +8281,27 @@ function checkWinOrNewRound(state, pId) {
     }
     saveStatsToStorage();
 
-    /* الفائز = الأقل نقاطاً بين من أكملوا كل المراحل (بعد احتساب عقوبات الجولة) */
-    var completed = [];
-    for (var ci = 0; ci < state.players.length; ci++) {
-      if (state.players[ci].phase >= lim) completed.push(state.players[ci]);
-    }
-    var winner = completed[0];
-    for (var j = 1; j < completed.length; j++) {
-      if (completed[j].score < winner.score) winner = completed[j];
-    }
-    state.gameOver = true;
+/* الفائز = الأقل نقاطاً بين من أكملوا كل المراحل (بعد احتساب عقوبات الجولة) */
+var completed = [];
+for (var ci = 0; ci < state.players.length; ci++) {
+  if (state.players[ci].phase >= lim) completed.push(state.players[ci]);
+}
+
+// ✅ اكتشاف التعادل
+var minScore = completed[0].score;
+for (var j = 1; j < completed.length; j++) {
+  if (completed[j].score < minScore) minScore = completed[j].score;
+}
+var winners = completed.filter(function(p) { return p.score === minScore; });
+
+if (winners.length > 1 && !state.isTieBreaker) {
+  var wIds = winners.map(function(w) { return w.id; });
+  triggerPrismTieBreaker(state, wIds);
+  return;
+}
+
+var winner = winners[0];
+state.gameOver = true;
     setStatus(winner.name + ' فاز باللعبة!', 'var(--green)');
     try { recordWeeklyLeaderboard(); } catch (e) {}
     SoundFX.play('win'); showConfetti();
@@ -8395,6 +8592,36 @@ var wouldTake = tm && tm.length > 0;
 function cpuLayStep(pId) {
   var state = app.state; if (!state || state.gameOver) return;
   var p = state.players[pId]; if (!p || !p.isCPU) { cpuContext.active = false; return; }
+  
+  // ✅ ذكاء الكمبيوتر في وضع PRISM (الدمج)
+  if (state.specialCfg && state.specialCfg.prismMode) {
+    var cpPhase = state.phasesList ? state.phasesList[p.phase] : null;
+    var mixMap = { '0,3': 4, '0,1': 5, '1,3': 2 };
+    for (var i = 0; i < p.hand.length; i++) {
+      for (var j = i + 1; j < p.hand.length; j++) {
+        var c1 = p.hand[i], c2 = p.hand[j];
+        if (c1.type !== 'num' || c2.type !== 'num') continue;
+        var key = Math.min(c1.col, c2.col) + ',' + Math.max(c1.col, c2.col);
+        if (mixMap[key] !== undefined) {
+          var newColor = mixMap[key];
+          var newValue = Math.min(12, c1.value + c2.value);
+          // تجربة الدمج لمعرفة إن كان سيساعد
+          var testHand = p.hand.filter(function(c) { return c.id !== c1.id && c.id !== c2.id; });
+          testHand.push({ type: 'num', value: newValue, col: newColor, id: 'test' });
+          
+          if (findBestMeldsForPhase(testHand, cpPhase)) {
+            // الدمج يساعد! قم بتنفيذه
+            p.hand = testHand.map(function(c) { return c.id === 'test' ? { type: 'num', value: newValue, col: newColor, id: nextUniqueId() } : c; });
+            p.light = Math.min(10, p.light + 2);
+            pushActionLog(state, pId, 'lay', '🎨 قام الكمبيوتر بدمج البطاقات!');
+            resetRenderCache(); scheduleRender(); syncStateToPeers();
+            break;
+          }
+        }
+      }
+    }
+  }
+
   var skill = getCpuSkill();
   if (p.phase >= state.phasesLimit) { cpuHitStep(pId); return; }
   var cp = state.phasesList ? state.phasesList[p.phase] : null;
@@ -10640,7 +10867,7 @@ var runC0 = (phase.constraints && phase.constraints.runConstraints && phase.cons
 var runParity = (runC0 && runC0.parity) || 'any';
 var runStep = (runParity === 'odd' || runParity === 'even') ? 2 : 1;
 if (reqRuns.length > 0) {
-  var byCol = [[], [], [], []];
+  var byCol = [[], [], [], [], [], []];
   for (var c = 0; c < selected.length; c++) if (selected[c].type === 'num') {
     /* ✅ لاحظ القيد الفردي/الزوجي عند بناء المتتالية */
     if (runParity === 'odd' && selected[c].value % 2 === 0) continue;
@@ -11835,8 +12062,8 @@ setInterval(function() {
   var st = app.state;
   var cp = st.players[st.turnIndex];
   if (!cp) return;
-  /* تجاهل دور الـ CPU (لديه مؤقت داخلي) */
-  if (cp.isCPU && app.mode === 'cpu') return;
+  /* ⛑️ تجاهل دور اللاعب البشري — راقب الكمبيوتر فقط */
+if (!cp.isCPU) return;
   var key = st.turnNumber + '_' + st.turnIndex + '_' + st.round;
   if (key !== _lastTurnWatchdogKey) {
     _lastTurnWatchdogKey = key;
