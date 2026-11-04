@@ -239,7 +239,7 @@
       <div id="playersStrip" style="display:none"></div>
 <div id="revealedHands" class="revealed-hands hidden"></div>
       <div id="dailyChallengeBar" class="daily-challenge-bar hidden" role="status" aria-live="polite"></div>
-      <div class="phase-box" id="phaseBox"></div>
+      <div class="phase-box" id="phaseBox" role="button" tabindex="0" aria-label="عرض قائمة المراحل — انقر للتفاصيل" title="انقر لعرض جميع المراحل"></div>
       <div class="middle-section">
         <div class="melds-scroll" id="meldsScroll">
           <div class="melds-empty" id="meldsEmpty">لم توضع مجموعات بعد</div>
@@ -357,6 +357,23 @@
   </div>
 </div>
 
+<div id="phasesListModal" class="modal hidden" role="dialog" aria-modal="true">
+  <div class="modal-content" style="max-width:520px">
+    <h2>📋 قائمة المراحل</h2>
+    <p style="text-align:center;font-size:11px;color:#8fa5a0;margin-bottom:12px">انقر على أي مرحلة لعرض تفاصيلها الكاملة</p>
+    <div id="phasesListBody" style="max-height:60vh;overflow-y:auto;padding:2px"></div>
+    <button class="primary" id="closePhasesList" type="button">إغلاق</button>
+  </div>
+</div>
+
+<div id="phaseDetailModal" class="modal hidden" role="dialog" aria-modal="true">
+  <div class="modal-content" style="max-width:520px">
+    <h2 id="phaseDetailTitle">تفاصيل المرحلة</h2>
+    <div id="phaseDetailBody" style="max-height:65vh;overflow-y:auto"></div>
+    <button class="primary" id="closePhaseDetail" type="button">رجوع للقائمة</button>
+  </div>
+</div>
+
 <div id="whyModal" class="modal hidden" role="dialog" aria-modal="true">
   <div class="modal-content" style="max-width:500px">
     <h2 id="whyTitle">لماذا؟</h2>
@@ -400,22 +417,22 @@
     </ol>
     <h3>🧩 أنواع المجموعات</h3>
     <p><strong>1️⃣ المجموعة (Set)</strong>
-    <br>• <strong>الحد الأدنى: 3 بطاقات بنفس الرقم</strong>
-    <br>• مثال: 7♦ 7♣ 7♥
-    <br>• مثال مع Wild: 7♦ 7♣ Wild
-    <br>• <strong>⚠ لا يمكن أن تُكوّن مجموعة من Wild فقط</strong> — يجب وجود بطاقة رقمية حقيقية على الأقل.</p>
-    <p><strong>2️⃣ المتتالية (Run)</strong>
-    <br>• <strong>الحد الأدنى: 4 بطاقات بأرقام متتالية وبنفس اللون</strong>
-    <br>• مثال صحيح: 5♠ 6♠ 7♠ 8♠
-    <br>• مثال خاطئ: 5♠ 6♦ 7♠ 8♠ ← لأن الألوان مختلفة
-    <br>• <strong>⚠ Wild يُسمح به في البداية أو النهاية فقط، وليس في المنتصف</strong>
-    <br>&nbsp;&nbsp;✔ مسموح: Wild 6 7 8  →  تبقى 6-7-8 أو 7-8-9
-    <br>&nbsp;&nbsp;✔ مسموح: 5 6 7 Wild  →  تبقى 5-6-7-8
-    <br>&nbsp;&nbsp;✘ ممنوع: 5 Wild 7 8 ← Wild في المنتصف</p>
-    <p><strong>3️⃣ اللون (Color)</strong>
-    <br>• <strong>الحد الأدنى: 5 بطاقات من نفس اللون (بدون شرط التسلسل)</strong>
-    <br>• مثال: 3♥ 7♥ 9♥ 11♥ 12♥ — كلها بنفس اللون
-    <br>• Wild يُحسب ضمن السلسلة.</p>
+<br>• <strong>الحد الأدنى: 3 بطاقات بنفس الرقم</strong>
+<br>• مثال صحيح: 7🔴 7🔵 7🟢 (كلها رقم 7 — بألوان مختلفة، وهذا مسموح)
+<br>• مثال مع Wild: 7🔴 7🔵 Wild (2 رقم + 1 Wild)
+<br>• <strong>⚠ لا يمكن أن تُكوّن مجموعة من Wild فقط</strong> — يجب وجود بطاقة رقمية حقيقية على الأقل.</p>
+<p><strong>2️⃣ المتتالية (Run)</strong>
+<br>• <strong>الحد الأدنى: 4 بطاقات بأرقام متتالية وبنفس اللون</strong>
+<br>• مثال صحيح: 5🔵 6🔵 7🔵 8🔵 (كلها أزرق)
+<br>• مثال خاطئ: 5🔵 6🔴 7🔵 8🔵 ← لأن اللون 🔴 يقطع المتتالية
+<br>• <strong>⚠ Wild يُسمح به في البداية أو النهاية فقط، وليس في المنتصف</strong>
+<br>&nbsp;&nbsp;✔ مسموح: Wild 6🔵 7🔵 8🔵 (Wild في البداية)
+<br>&nbsp;&nbsp;✔ مسموح: 5🔵 6🔵 7🔵 Wild (Wild في النهاية)
+<br>&nbsp;&nbsp;✘ ممنوع: 5🔵 Wild 7🔵 8🔵 ← Wild في المنتصف</p>
+<p><strong>3️⃣ اللون (Color)</strong>
+<br>• <strong>الحد الأدنى: 5 بطاقات من نفس اللون (بدون شرط التسلسل)</strong>
+<br>• مثال: 3🔴 7🔴 9🔴 11🔴 12🔴 — كلها أحمر، أرقام مختلفة
+<br>• Wild يُحسب ضمن السلسلة.</p>
     <h3>💎 قواعد Wild بالتفصيل</h3>
     <ul>
       <li>Wild ينوب عن أي رقم (1-12) وأي لون.</li>
@@ -453,9 +470,23 @@
       <li><strong>فوضى:</strong> بطاقات الجميع مكشوفة.</li>
       <li><strong>قناص:</strong> بدون Wild أو Skip.</li>
       <li><strong>ثلاثي:</strong> اسحب 3 وتخلّص من 3.</li>
-      <li><strong>حصاد:</strong> الضرب على أوراقك أنت فقط.</li>
-    </ul>
-    <h3>💡 نصائح استراتيجية</h3>
+        <li><strong>حصاد:</strong> الضرب على أوراقك أنت فقط.</li>
+</ul>
+<h3>🌈 وضع المنشور (PRISM)</h3>
+<p>وضع خاص يضيف عمقاً استراتيجياً عبر <strong>الدمج اللوني</strong> والتنوع اللوني الكامل:</p>
+<ul>
+  <li><strong>6 ألوان كاملة</strong>: أحمر، أزرق، أخضر، أصفر، برتقالي، بنفسجي.</li>
+  <li><strong>رزمة ضخمة</strong>: 162 بطاقة (144 رقمي + 12 Wild + 6 Skip) لجولات أطول.</li>
+  <li><strong>الدمج اللوني</strong>: حدد بطاقتين رقميتين متوافقتين ثم اضغط "دمج" (يلوّن تلقائياً بلون الناتج):
+    <br>&nbsp;&nbsp;🔴 أحمر + 🟡 أصفر = 🟠 <strong>برتقالي</strong>
+    <br>&nbsp;&nbsp;🔴 أحمر + 🔵 أزرق = 🟣 <strong>بنفسجي</strong>
+    <br>&nbsp;&nbsp;🔵 أزرق + 🟡 أصفر = 🟢 <strong>أخضر</strong>
+  </li>
+  <li><strong>قيمة البطاقة الناتجة</strong> = مجموع البطاقتين (بحد أقصى 12).</li>
+  <li><strong>الغرض</strong>: تقليل البطاقات، أو تكوين مجموعات كان يستحيل تكوينها بلونك الأصلي.</li>
+  <li><strong>التوقيت</strong>: يمكنك الدمج في أي وقت من دورك بعد السحب.</li>
+</ul>
+<h3>💡 نصائح استراتيجية</h3>
     <ul>
       <li>راقب مجموعات الخصوم لتعرف أي بطاقة يمكنك ضربها.</li>
       <li>احتفظ ببطاقات مرحلتك القادمة قبل بدء الجولة.</li>
@@ -714,6 +745,8 @@
   </div>
 </div>
 
+<div id="waitTurnToast" class="wait-turn-toast" role="status" aria-live="polite">⏳ انتظر دورك</div>
+
 <div id="achToast" class="achievement-toast" role="status" aria-live="polite">
   <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="30" height="30"><path d="M6 3h12v5a6 6 0 0 1-12 0z"/><path d="M6 5H3v2a4 4 0 0 0 4 4M18 5h3v2a4 4 0 0 1-4 4"/><path d="M10 14v4M14 14v4M8 20h8"/></svg></div>
   <div class="text">
@@ -864,7 +897,7 @@ input, textarea { font-family: inherit; }
 .lan-box label { font-size: 11.5px; font-weight: 700; color: var(--text-secondary); }
 .lan-box input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-1); background: rgba(0,0,0,0.35); color: var(--text-primary); font-size: 13px; font-weight: 700; text-align: right; outline: none; }
 .lan-box input.code { font-family: 'Courier New', monospace; font-size: 18px; text-align: center; letter-spacing: 5px; font-weight: 900; text-transform: uppercase; }
-.lan-box textarea { width: 100%; min-height: 90px; padding: 9px; border-radius: 8px; border: 1px solid var(--border-1); background: rgba(0,0,0,0.35); color: var(--text-primary); font-family: 'Courier New', monospace; font-size: 9.5px; direction: ltr; resize: vertical; word-break: break-all; outline: none; }
+.lan-box textarea { width: 100%; min-height: 90px; padding: 9px; border-radius: 8px; border: 1px solid var(--border-1); background: rgba(0,0,0,0.35); color: var(--text-primary); font-family: 'Courier New', monospace; font-size: 9.5px; direction: ltr; resize: vertical; word-break: break-all; outline: none; user-select: text !important; -webkit-user-select: text !important; }
 
 #roomCode { font-size: 24px; letter-spacing: 7px; font-weight: 900; color: var(--gold); padding: 11px; background: rgba(0,0,0,0.4); border-radius: 9px; text-align: center; font-family: 'Courier New', monospace; direction: ltr; user-select: all; border: 2px dashed var(--gold-alpha-50); }
 #roomStatus { font-size: 11.5px; color: var(--gold); font-weight: 600; text-align: center; padding: 7px 10px; background: var(--surface-2); border-radius: 8px; min-height: 22px; width: 100%; max-width: 440px; border: 1px solid transparent; }
@@ -966,7 +999,9 @@ input, textarea { font-family: inherit; }
 .rp-card.skip { background: linear-gradient(180deg,#4a69bd,#0f1d4a); color: #ff4444; }
 .rp-card.hidden { background: #3a2a5a; color: transparent; }
 
-.phase-box { background: linear-gradient(90deg, var(--gold-alpha-20), var(--gold-alpha-10)); border-radius: 9px; padding: 3px 8px 4px 8px; width: 100%; flex-shrink: 0; border: 1.5px solid var(--gold-alpha-50); display: grid; grid-template-columns: auto 1fr auto; grid-template-rows: auto auto; align-items: center; gap: 2px 6px; min-height: 30px; max-height: 42px; }
+.phase-box { background: linear-gradient(90deg, var(--gold-alpha-20), var(--gold-alpha-10)); border-radius: 9px; padding: 3px 8px 4px 8px; width: 100%; flex-shrink: 0; border: 1.5px solid var(--gold-alpha-50); display: grid; grid-template-columns: auto 1fr auto; grid-template-rows: auto auto; align-items: center; gap: 2px 6px; min-height: 30px; max-height: 42px; cursor: pointer; transition: box-shadow 0.15s; position: relative; }
+.phase-box:hover { box-shadow: 0 0 0 2px var(--gold-alpha-40), 0 0 12px var(--gold-alpha-30); }
+.phase-box:active { transform: scale(0.99); }
 .phase-box .phase-num { grid-row: 1 / span 2; background: linear-gradient(160deg, var(--gold-light), var(--gold-dark)); color: #241a00; font-weight: 900; padding: 5px 9px; border-radius: 7px; font-size: 11px; white-space: nowrap; line-height: 1; min-width: 72px; text-align: center; }
 .phase-box .desc { grid-row: 1; grid-column: 2; font-size: 10.5px; font-weight: 700; color: var(--text-primary); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .phase-box .done-badge { grid-row: 1; grid-column: 3; color: #04240f; font-weight: 900; font-size: 9px; background: linear-gradient(160deg,#5be08f,#22a862); padding: 3px 7px; border-radius: 6px; }
@@ -1039,11 +1074,33 @@ input, textarea { font-family: inherit; }
 .hand::-webkit-scrollbar { width: 4px; }
 .hand::-webkit-scrollbar-thumb { background: rgba(244,185,66,0.4); border-radius: 2px; }
 .hand::-webkit-scrollbar-track { background: transparent; }
-.hand.disabled .card-slot { pointer-events: none; opacity: 0.55; }
-.hand .card-slot { cursor: grab; position: relative; touch-action: none; transition: transform 0.2s; }
+/* ✅ البطاقات معتمة عند عدم دورك — opacity فقط (filter يُعطّل pointer-events على iOS) */
+.hand.disabled .card-slot {
+  opacity: 0.7;
+  pointer-events: auto;
+  touch-action: pan-y;
+}
+.hand.disabled .card-slot:has(.p10-card.selected) {
+  opacity: 1;
+}
+
+.hand .card-slot { cursor: grab; position: relative; touch-action: pan-y; transition: transform 0.2s; }
+.hand .card-slot.dragging,
+.hand .card-slot.rearrange-mode { touch-action: none; }
 .hand .card-slot .p10-card { box-shadow: 0 3px 10px rgba(0,0,0,0.45); }
-.hand .card-slot.dragging { z-index: 9999; pointer-events: none; opacity: 0.95; }
-.hand .card-slot.dragging .p10-card { transform: scale(1.14) rotate(4deg) !important; box-shadow: 0 22px 42px rgba(0,0,0,0.75), 0 0 30px rgba(244,185,66,0.75) !important; outline: 3px solid var(--gold) !important; }
+.hand .card-slot.dragging {
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 1;
+  cursor: grabbing;
+}
+.hand .card-slot.dragging .p10-card {
+  transform: scale(1.18) rotate(5deg) !important;
+  box-shadow: 0 28px 55px rgba(0,0,0,0.85), 0 0 38px rgba(244,185,66,0.95) !important;
+  outline: 3px solid var(--gold) !important;
+  filter: brightness(1.12) !important;
+  transition: none !important;
+}
 
 /* ACTIONS — شبكة 6 أعمدة متساوية، حجم ثابت لا يتمدد */
 .actions {
@@ -1668,7 +1725,17 @@ body.no-glow .pile .clickable::after { display: none !important; }
 .coin-preview-box { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 14px; background: linear-gradient(160deg, rgba(244,185,66,0.12), rgba(244,185,66,0.03)); border: 1px solid var(--gold-alpha-30); border-radius: 12px; margin: 8px 0; }
 
 /* DRAG GHOST */
-.hand .ghost-gap { border-radius: 9px; background: repeating-linear-gradient(45deg, rgba(244,185,66,0.18) 0 4px, rgba(244,185,66,0.05) 4px 8px); border: 2px dashed var(--gold); box-shadow: inset 0 0 14px rgba(244,185,66,0.35); animation: gapPulse 1s ease-in-out infinite; pointer-events: none; flex-shrink: 0; align-self: flex-end; }
+.hand .ghost-gap {
+  border-radius: 9px;
+  background: repeating-linear-gradient(45deg, rgba(244,185,66,0.22) 0 4px, rgba(244,185,66,0.08) 4px 8px);
+  border: 2px dashed var(--gold);
+  box-shadow: inset 0 0 18px rgba(244,185,66,0.45), 0 0 12px rgba(244,185,66,0.3);
+  animation: gapPulse 0.9s ease-in-out infinite;
+  pointer-events: none;
+  flex-shrink: 0;
+  align-self: flex-end;
+  transition: width 0.1s ease, height 0.1s ease;
+}
 @keyframes gapPulse { 0%,100% { opacity: 0.7; } 50% { opacity: 1; box-shadow: inset 0 0 22px rgba(244,185,66,0.55); } }
 
 /* LIVE STREAM — لوحة ثابتة بأسفل الشاشة لا تختفي ولا تتمدد */
@@ -1713,6 +1780,54 @@ body.no-glow .pile .clickable::after { display: none !important; }
 .ls-entry.mine .ls-name { color: var(--green); }
 .live-stream .ls-empty { opacity: .5; text-align: center; padding: 8px 0; font-weight: 600; }
 @keyframes lsFadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* WAIT TURN TOAST */
+.wait-turn-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  background: linear-gradient(160deg, #f4b942, #c98a05);
+  color: #241a00;
+  padding: 14px 28px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 900;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s var(--ease-spring);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 0 2px rgba(255,255,255,0.25);
+  white-space: nowrap;
+}
+.wait-turn-toast.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* WAIT TURN TOAST */
+.wait-turn-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  background: linear-gradient(160deg, #f4b942, #c98a05);
+  color: #241a00;
+  padding: 14px 28px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 900;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s var(--ease-spring);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 0 2px rgba(255,255,255,0.25);
+  white-space: nowrap;
+}
+.wait-turn-toast.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
 
 /* NEAR WIN ALERT */
 .near-win-alert {
@@ -2352,20 +2467,24 @@ html.theme-wood body {
   border: 1px dashed rgba(244,185,66,0.5);
   box-shadow: inset 0 0 18px rgba(244,185,66,0.15);
 }
-/* ===== 3D Card Tilt ===== */
-.hand .card-slot .p10-card {
-  transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.3, 1), box-shadow 0.15s;
-  transform-style: preserve-3d;
-  will-change: transform;
+/* ===== 3D Card Tilt — للأجهزة المكتبية فقط ===== */
+@media (hover: hover) and (pointer: fine) {
+  .hand .card-slot .p10-card.tilting {
+    transform-style: preserve-3d;
+    box-shadow: 0 22px 50px rgba(0,0,0,0.6), 0 0 30px rgba(244,185,66,0.5) !important;
+  }
+  .p10-card.tilting .center-dot,
+  .p10-card.tilting .tl-corner,
+  .p10-card.tilting .br-corner {
+    transform: translateZ(8px);
+  }
+  .p10-card.tilting .tl-num,
+  .p10-card.tilting .br-num { transform: translateZ(14px); }
+  .p10-card.tilting .center-num {
+    transform: translateZ(18px);
+    text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  }
 }
-.p10-card.tilting {
-  box-shadow: 0 22px 50px rgba(0,0,0,0.6), 0 0 30px rgba(244,185,66,0.5) !important;
-}
-.p10-card .center-dot, .p10-card .tl-corner, .p10-card .br-corner {
-  transform: translateZ(8px);
-}
-.p10-card .tl-num, .p10-card .br-num { transform: translateZ(14px); }
-.p10-card .center-num { transform: translateZ(18px); text-shadow: 0 2px 6px rgba(0,0,0,0.4); }
 
 /* ===== Exclusive Faces ===== */
 .p10-card.face-exclusive-gold {
@@ -2608,7 +2727,7 @@ html.theme-epic .p10-card[class*="face-"] {
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '23.0.1';
+var APP_VERSION = '23.1.3';
 var APP_BUILD_DATE = '1-9-2026';
 var APP_LAST_UPDATE = '1-11-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
@@ -2804,8 +2923,8 @@ function getWildSymbol() {
   return 'W';
 }
 
-var FACE_TO_SYMBOL = {};
-function getSymbolForFace(faceStyle) { return FACE_TO_SYMBOL[faceStyle] || null; }
+/* ✅ أُزيل الكود الميت — FACE_TO_SYMBOL كان فارغاً دائماً، ودالة getSymbolForFace لا تُستخدم فعلياً */
+function getSymbolForFace() { return null; }
 
 var ACHIEVEMENTS_LIST = [
   { key: 'firstWin',       name: 'أول انتصار',        desc: 'افز بأول مباراة لك',                emoji: '🏆', coins: 25 },
@@ -2927,8 +3046,15 @@ function copyToClipboard(text) {
   return new Promise(function(resolve, reject) {
     try {
       var ta = document.createElement('textarea');
-      ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px';
-      document.body.appendChild(ta); ta.select();
+ta.value = text;
+ta.style.position = 'fixed'; ta.style.left = '-9999px'; ta.style.top = '0';
+ta.style.opacity = '0'; ta.style.pointerEvents = 'none';
+ta.style.userSelect = 'text'; ta.style.webkitUserSelect = 'text';
+ta.setAttribute('readonly', '');
+document.body.appendChild(ta);
+ta.focus();
+ta.select();
+ta.setSelectionRange(0, text.length);
       var ok = document.execCommand('copy');
       document.body.removeChild(ta);
       if (ok) resolve(); else reject(new Error('Copy failed'));
@@ -3694,7 +3820,10 @@ pendingStalemate: false,
   dailyChallengeActive: false,
   dailyChallengePhase: null,
   dailyChallengeDateKey: null,
-  dailyChallengeReward: 0
+  dailyChallengeReward: 0,
+  /* ✅ حقول الكومبو — كانت غير مهيّأة (تعمل بـ ||= لكن أنظف صراحةً) */
+  _comboCount: 0,
+  _lastHitTime: 0
 };
 var previouslyRenderedMelds = {};
 var lastShownTurnSummary = -1;
@@ -4178,11 +4307,13 @@ function advanceTurn(state, skipCount) {
   for (var si = 0; si < state.players.length; si++) {
     if (state.players[si].shieldRounds > 0) state.players[si].shieldRounds--;
   }
-  state.hasDrawn = false; state.selected = []; state.hintCards = [];
-  for (var i = 0; i < state.players.length; i++) {
-    state.players[i].hitsThisTurn = 0;
-    state.players[i].laidThisTurn = false;
-  }
+  state.hasDrawn = false; state.hintCards = [];
+/* ✅ احتفظ بتحديد اللاعب البشري عبر تغيّر الدور */
+if (app.mode === 'pass') state.selected = [];
+for (var i = 0; i < state.players.length; i++) {
+state.players[i].hitsThisTurn = 0;
+  /* ✅ laidThisTurn يُصفَّر فقط في resetRoundForState (مرة واحدة لكل جولة) */
+}
   state.turnNumber = (state.turnNumber || 1) + 1;
   app.undoStack = [];
   var np = state.players[state.turnIndex];
@@ -4274,10 +4405,14 @@ return;
     // 🔄 الحالة 2: لم يكمل أحد المرحلة -> إعادة التحدي من البداية
     if (app.mode === 'lan' && isHost()) broadcastToGuests({ type: 'roundScore', summary: summary });
     
-    // إعادة تعيين النقاط المكتسبة في هذه الجولة الفاشلة (حتى لا يتضخم مجموع النقاط)
-    for (var ri = 0; ri < state.players.length; ri++) {
-      state.players[ri].score -= summary.players[ri].points;
-    }
+   // إعادة تعيين النقاط المكتسبة في هذه الجولة الفاشلة (حتى لا يتضخم مجموع النقاط)
+var penaltyToReverse = 0;
+for (var ri = 0; ri < state.players.length; ri++) {
+  state.players[ri].score -= summary.players[ri].points;
+  penaltyToReverse += summary.players[ri].points || 0;
+}
+app.stats.totalPenalty = Math.max(0, (app.stats.totalPenalty || 0) - penaltyToReverse);
+saveStatsToStorage();
     
     var modal = $('roundScoreModal');
     if (modal) {
@@ -5022,10 +5157,7 @@ function _buildCardHTMLInternal(card, options) {
   if (card.type === 'wild') { cr = getWildSymbol(); cn = getWildSymbol(); }
   else if (card.type === 'skip') { cr = 'S'; cn = 'S'; }
   else { cr = String(card.value); cn = String(card.value); }
-  var symId = getSymbolForFace(app.settings.faceStyle);
-  var artHTML = symId ? ('<svg class="card-art" viewBox="0 0 100 140" preserveAspectRatio="xMidYMid meet"><use href="#' + symId + '"/></svg>') : '';
   return '<div class="p10-card ' + cls + '" data-num="' + cn + '">' +
-    artHTML +
     '<div class="tl-corner"><div class="tl-num">' + cr + '</div><div class="tl-dot"></div></div>' +
     '<div class="center-layer"><div class="center-dot"><div class="center-num">' + cn + '</div></div></div>' +
     '<div class="br-corner"><div class="br-num">' + cr + '</div><div class="br-dot"></div></div>' +
@@ -5046,10 +5178,7 @@ function buildCardBackHTML(extraClass) {
 function buildPreviewCardHTML(faceStyle, backStyle, colorKey, value) {
   colorKey = colorKey || 'col-red'; value = value || '5';
   if (backStyle) return '<div class="p10-card back ' + backStyle + '" style="width:42px;height:62px"></div>';
-  var symId = getSymbolForFace(faceStyle);
-  var artHTML = symId ? ('<svg class="card-art" viewBox="0 0 100 140" preserveAspectRatio="xMidYMid meet"><use href="#' + symId + '"/></svg>') : '';
   return '<div class="p10-card ' + faceStyle + ' ' + colorKey + '" style="width:42px;height:62px" data-num="' + value + '">' +
-    artHTML +
     '<div class="tl-corner"><div class="tl-num">' + value + '</div><div class="tl-dot"></div></div>' +
     '<div class="center-layer"><div class="center-dot"><div class="center-num">' + value + '</div></div></div>' +
     '<div class="br-corner"><div class="br-num">' + value + '</div><div class="br-dot"></div></div>' +
@@ -5271,8 +5400,12 @@ if ($('playersStrip')) renderPlayerChips(state, vId);
 }
   }
   var sh = sortHandCards(vp.hand, app.sortMode);
-  var hs = computeHandSignature(sh, state);
-  if (hs !== renderCache.handSig) { renderCache.handSig = hs; renderPlayerHand(sh, state); }
+var hs = computeHandSignature(sh, state);
+/* ✅ لا تُعِد رسم اليد أثناء سحب نشط (أو ضغط مطوّل) — يمنع "إفلات" البطاقة عند انتقال الأدوار */
+if (hs !== renderCache.handSig && !dragState.active && !dragState.cardId) {
+  renderCache.handSig = hs;
+  renderPlayerHand(sh, state);
+}
   var hasLaid = false;
   for (var i = 0; i < vp.melds.length; i++) if (vp.melds[i].phase === vp.phase - 1) { hasLaid = true; break; }
   var phs = vp.phase + '|' + (hasLaid ? '1' : '0') + '|' + lim;
@@ -5311,6 +5444,10 @@ function renderRevealedHands(state, vId) {
   c.innerHTML = html;
 }
 function renderPlayerHand(sh, state) {
+  /* ⛑️ إلغاء أي سحب نشط قبل استبدال DOM — يمنع تعليق اليد */
+  if (dragState.active || dragState.cardId || dragState.element || dragState.longPressTimer) {
+    resetDragState();
+  }
   var html = ''; var vId = app.viewerId;
   var showHit = state.hasDrawn && state.turnIndex === vId && state.selected.length > 0;
   var ordered = sortHandWithCustomOrder(sh, app.sortMode);
@@ -5324,7 +5461,6 @@ function renderPlayerHand(sh, state) {
     html += '<div class="card-slot" data-id="' + card.id + '" role="button" tabindex="0" aria-label="' + aria + '">' + buildCardHTML(card, { selected: isSel, hint: isHint, hitReady: isHit }) + '</div>';
   }
   $('myHand').innerHTML = html;
-  if (dragState.active) dragState.cachedRects = null;
 }
 function renderPhaseBox(player, hasLaid) {
   var state = app.state; var list = state ? state.phasesList : null;
@@ -5471,14 +5607,15 @@ function updateActionsButtons() {
   var canClear = sel.length > 0;
   
   var isPrism = state.specialCfg && state.specialCfg.prismMode;
-  var canBlend = false;
-  if (isPrism && isMyTurn && state.hasDrawn && sel.length === 2) {
-    var c1 = sel[0], c2 = sel[1];
-    if (c1.type === 'num' && c2.type === 'num') {
-      var key = Math.min(c1.col, c2.col) + ',' + Math.max(c1.col, c2.col);
-      if (key === '0,3' || key === '0,1' || key === '1,3') canBlend = true;
-    }
+var canBlend = false;
+var blendKey = null;
+if (isPrism && isMyTurn && state.hasDrawn && sel.length === 2) {
+  var c1 = sel[0], c2 = sel[1];
+  if (c1.type === 'num' && c2.type === 'num') {
+    var key = Math.min(c1.col, c2.col) + ',' + Math.max(c1.col, c2.col);
+    if (key === '0,3' || key === '0,1' || key === '1,3') { canBlend = true; blendKey = key; }
   }
+}
 
   var el = $('actions');
   if (!el.dataset.built) {
@@ -5501,13 +5638,30 @@ function updateActionsButtons() {
     $('btnBlend').onclick = function() { actionBlend(); };
   }
 
-  // إعدادات الشبكة (7 أعمدة لوضع PRISM، 6 أعمدة للعادي)
-  el.style.gridTemplateColumns = isPrism ? 'repeat(7, minmax(0, 1fr))' : 'repeat(6, minmax(0, 1fr))';
-  var bb = $('btnBlend');
-  if (bb) {
-    if (isPrism) { bb.classList.remove('hidden'); bb.disabled = !canBlend; }
-    else { bb.classList.add('hidden'); }
+// 7 أعمدة فقط عند ظهور الدمج، وإلا 6
+el.style.gridTemplateColumns = (isPrism && canBlend) ? 'repeat(7, minmax(0, 1fr))' : 'repeat(6, minmax(0, 1fr))';
+var bb = $('btnBlend');
+if (bb) {
+  if (isPrism && canBlend) {
+    bb.classList.remove('hidden');
+    bb.disabled = false;
+    var blendColors = { '0,1': ['#CE93D8', '#8E24AA'], '0,3': ['#FFB74D', '#FB8C00'], '1,3': ['#6cf0b5', '#069c56'] };
+    var bcol = blendColors[blendKey] || ['#ff8a00', '#e52e71'];
+    bb.style.background = 'linear-gradient(160deg, ' + bcol[0] + ', ' + bcol[1] + ')';
+    bb.style.color = '#fff';
+    bb.style.fontWeight = '900';
+    bb.style.textShadow = '0 1px 2px rgba(0,0,0,0.6)';
+    bb.style.boxShadow = '0 0 14px ' + bcol[1] + ', inset 0 0 4px rgba(255,255,255,0.3)';
+    bb.style.border = '1.5px solid ' + bcol[0];
+    bb.textContent = '🎨 دمج';
+  } else {
+    bb.classList.add('hidden');
+    bb.disabled = true;
+    bb.style.background = '';
+    bb.style.boxShadow = '';
+    bb.style.border = '';
   }
+}
 
   var bDraw = $('btnDraw');
   if (bDraw) {
@@ -5604,6 +5758,8 @@ function attemptFullReconnect() {
 }
 document.addEventListener('visibilitychange', function() {
   if (document.visibilityState === 'hidden') {
+    /* ⛑️ نظّف أي سحب عالق عند تبديل التبويب */
+    try { resetDragState(); } catch (e) {}
     reconnectState.wasHidden = true;
     reconnectState.hiddenAt = Date.now();
     reconnectState.graceUntil = 0;
@@ -7185,6 +7341,7 @@ function openDailyRulesModal() {
   html += '</div>';
 
   html += '<p style="font-size:10.5px;color:#8fa5a0;text-align:center;margin-top:10px;line-height:1.6">⚠️ الفشل في أي شرط يُلغي التحدي. زيادة الخصوم والصعوبة تزيد المكافأة!</p>';
+html += '<p style="font-size:10px;color:#8fa5a0;text-align:center;margin-top:6px;line-height:1.5">📜 تنطبق القيود على <b style="color:#4ade80">جميع اللاعبين</b> — بما فيهم الكمبيوتر — لضمان العدالة.</p>';
 
   $('dailyRulesBody').innerHTML = html;
   
@@ -7508,14 +7665,14 @@ function actionDraw(fromWhere) {
   if (isGuest()) { setBusy(true); setStatus('جاري السحب...'); sendToHost({ type: 'action', action: 'draw', payload: { from: fromWhere } }); return; }
   if (isDeckExhausted(state)) { handleDeckExhaustion(state); return; }
   var srcEl = (fromWhere === 'discard') ? document.querySelector('#discardSlot .p10-card') : $('drawDeckBtn');
-  var srcRect = getRect(srcEl);
-  var drawn = [];
-  pushUndoSnapshot();
-  var player = state.players[pId];
-  state.hintCards = [];
-  var dc = (state.specialCfg && state.specialCfg.drawCount) ? state.specialCfg.drawCount : 1;
- if (fromWhere === 'discard' && checkDailyViolation('drawDiscard', 'سحبت من المهملات في تحدي البخل')) return;
- if (fromWhere === 'discard' && state.discard.length > 0) {
+   var srcRect = getRect(srcEl);
+ var drawn = [];
+ var player = state.players[pId];
+ state.hintCards = [];
+ var dc = (state.specialCfg && state.specialCfg.drawCount) ? state.specialCfg.drawCount : 1;
+if (fromWhere === 'discard' && checkDailyViolation('drawDiscard', 'سحبت من المهملات في تحدي البخل')) return;
+ pushUndoSnapshot();
+if (fromWhere === 'discard' && state.discard.length > 0) {
     var top = state.discard.pop();
     if (top.type === 'skip') {
       state.discard.push(top);
@@ -7544,9 +7701,9 @@ function actionDraw(fromWhere) {
   } else if (drawn.length > 0) {
     pushActionLog(state, pId, 'draw', 'سحب ' + drawn.length + ' بطاقة من الرزمة');
   }
-  state.selected = [];
-  resetRenderCache(); scheduleRender(); syncStateToPeers();
-  if (shouldRunAnimations() && srcRect) {
+  /* ✅ احتفظ بالتحديد الذي وضعته قبل السحب */
+resetRenderCache(); scheduleRender(); syncStateToPeers();
+if (shouldRunAnimations() && srcRect) {
     afterPaint(function() {
       for (var z = 0; z < drawn.length; z++) {
         (function(dd, idx) {
@@ -7643,10 +7800,10 @@ function actionLayPhase() {
   if (app.busy) return;
   var player = state.players[pId];
   if (player.laidThisTurn) {
-    setStatus('وضعت مرحلتك بالفعل هذا الدور', 'var(--red)');
-    SoundFX.play('error');
-    return;
-  }
+  setStatus('وضعت مرحلتك بالفعل في هذه الجولة', 'var(--red)');
+  SoundFX.play('error');
+  return;
+}
   var sel = [];
   for (var i = 0; i < state.selected.length; i++) for (var j = 0; j < player.hand.length; j++) if (player.hand[j].id === state.selected[i]) { sel.push(player.hand[j]); break; }
   if (sel.length === 0) {
@@ -7966,10 +8123,12 @@ function handleMeldClick(pid, midx) {
   var tm = tp.melds[midx]; if (!tm) return;
   var player = state.players[vId];
 
-  /* ✅ تحدي المحاصرة: منع الضرب على الخصوم */
-  if (app.state.dailyChallenge && app.state.dailyChallenge.type === 'siege' && pid !== vId) {
-    if (checkDailyViolation('hitOpponent', 'حاولت الضرب على مجموعة خصم في تحدي المحاصرة')) return;
-  }
+  /* ✅ تحدي المحاصرة: منع الضرب على الخصوم (بدون إفشال التحدي) */
+if (app.state.dailyChallenge && app.state.dailyChallenge.type === 'siege' && pid !== vId) {
+  setStatus('في تحدي المحاصرة يمكنك الضرب على مجموعاتك فقط', 'var(--red)');
+  SoundFX.play('error');
+  return;
+}
   var sel = [];
   for (var i = 0; i < state.selected.length; i++) for (var j = 0; j < player.hand.length; j++) if (player.hand[j].id === state.selected[i]) { sel.push(player.hand[j]); break; }
  /* ✅ تحدي النقاء: منع Wild */
@@ -8066,11 +8225,21 @@ function actionDiscard() {
   }
 }
 var maxD = getMaxDiscard();
-  if (state.selected.length < 1 || state.selected.length > maxD) {
-    setStatus('اختر من 1 إلى ' + maxD + ' بطاقة', 'var(--red)');
-    SoundFX.play('error');
-    return;
+if (state.selected.length < 1 || state.selected.length > maxD) {
+  setStatus('اختر من 1 إلى ' + maxD + ' بطاقة', 'var(--red)');
+  SoundFX.play('error');
+  return;
+}
+/* ⛔ لا يمكن التخلص من Wild (قاعدة رسمية) */
+for (var wci = 0; wci < state.selected.length; wci++) {
+  for (var wcj = 0; wcj < player.hand.length; wcj++) {
+    if (player.hand[wcj].id === state.selected[wci] && player.hand[wcj].type === 'wild') {
+      setStatus('⛔ لا يمكن التخلص من Wild', 'var(--red)');
+      SoundFX.play('error');
+      return;
+    }
   }
+}
   if (isGuest()) {
     setBusy(true);
     sendToHost({ type: 'action', action: 'discard', payload: { cardIds: state.selected.slice() } });
@@ -8561,7 +8730,8 @@ function cpuDrawStep(pId) {
   if (isDeckExhausted(state)) { cpuContext.active = false; handleDeckExhaustion(state); return; }
   var top = state.discard[state.discard.length - 1];
   var took = false;
-  if (top && top.type !== 'skip') {
+  var cpuFrugal = !!(state.dailyChallenge && state.dailyChallenge.type === 'frugal');
+  if (top && top.type !== 'skip' && !cpuFrugal) {
     var cp = state.phasesList ? state.phasesList[p.phase] : null;
     var th = p.hand.concat([top]);
 var tm = cp ? findBestMeldsForPhase(th, cp) : null;
@@ -8625,7 +8795,11 @@ function cpuLayStep(pId) {
   var skill = getCpuSkill();
   if (p.phase >= state.phasesLimit) { cpuHitStep(pId); return; }
   var cp = state.phasesList ? state.phasesList[p.phase] : null;
-var melds = cp ? findBestMeldsForPhase(p.hand, cp) : null;
+  var handForCPULay = p.hand;
+  if (state.dailyChallenge && state.dailyChallenge.type === 'purity') {
+    handForCPULay = p.hand.filter(function(c) { return c.type !== 'wild'; });
+  }
+var melds = cp ? findBestMeldsForPhase(handForCPULay, cp) : null;
 var hasLaid = false;
   for (var h = 0; h < p.melds.length; h++) if (p.melds[h].phase === p.phase - 1) { hasLaid = true; break; }
   var pers = p.personality ? getPersonalityByKey(p.personality) : null;
@@ -8649,8 +8823,9 @@ var shouldLay = melds && melds.length > 0 && !hasLaid && ((skill >= 5 || dangerL
     p.phase++;
     if (!state.aiFirstLayTurn) state.aiFirstLayTurn = {};
     if (state.aiFirstLayTurn[pId] === undefined) state.aiFirstLayTurn[pId] = state.turnNumber || 1;
-    state.selected = []; state.hintCards = [];
-    SoundFX.play('phase');
+/* ✅ لا تمس تحديد اللاعب البشري — CPU لا يستخدم state.selected */
+state.hintCards = [];
+SoundFX.play('phase');
     resetRenderCache(); scheduleRender(); syncStateToPeers();
     pushActionLog(state, pId, 'lay', 'وضع المرحلة ' + p.phase);
     setStatus(p.name + ' وضع المرحلة ' + p.phase);
@@ -8784,8 +8959,22 @@ scored.push({ card: c, idx: i, score: finalScore });
       }
     }
   }
-  scored.sort(function(a, b) { return a.score - b.score; });
-  var picked = scored.slice(0, toDiscardCount);
+/* ⛔ حماية Wild: لا يُرمى أبداً إلا لو اليد كلها Wild */
+var _hasNonWild = false;
+for (var _hnw = 0; _hnw < p.hand.length; _hnw++) if (p.hand[_hnw].type !== 'wild') { _hasNonWild = true; break; }
+if (_hasNonWild) {
+  for (var _cw = 0; _cw < scored.length; _cw++) {
+    if (scored[_cw].card.type === 'wild') scored[_cw].score += 5000;
+  }
+}
+/* ⛔ تحدي الصمت: لا تخلص من Skip */
+if (state.dailyChallenge && state.dailyChallenge.type === 'silent') {
+  for (var _sw = 0; _sw < scored.length; _sw++) {
+    if (scored[_sw].card.type === 'skip') scored[_sw].score += 5000;
+  }
+}
+scored.sort(function(a, b) { return a.score - b.score; });
+var picked = scored.slice(0, toDiscardCount);
   picked.sort(function(a, b) { return b.idx - a.idx; });
   var discarded = [];
   var skipCount = 0;
@@ -8795,8 +8984,8 @@ scored.push({ card: c, idx: i, score: finalScore });
     discarded.push(dc);
     if (dc.type === 'skip') skipCount++;
   }
-  state.hasDrawn = false; state.selected = [];
-  SoundFX.play(skipCount > 0 ? 'skip' : 'discard');
+  state.hasDrawn = false;
+SoundFX.play(skipCount > 0 ? 'skip' : 'discard');
   var cDiscHTML = '';
   for (var cdi = 0; cdi < discarded.length; cdi++) cDiscHTML += logCardHTML(discarded[cdi]);
   pushActionLog(state, pId, 'discard', 'تخلص من ' + cDiscHTML);
@@ -9144,7 +9333,8 @@ function serializeGameState(s) {
   actionLog: (s.actionLog || []).slice(-40),
   gameOver: !!s.gameOver, tie: !!s.tie,
   turnTimerEnabled: s.turnTimerEnabled === true,
-  turnTimerSeconds: s.turnTimerSeconds || 30
+  turnTimerSeconds: s.turnTimerSeconds || 30,
+  dailyChallenge: s.dailyChallenge || null
 };
 }
 function deserializeGameState(o) {
@@ -9178,7 +9368,8 @@ function deserializeGameState(o) {
   actionLog: o.actionLog || [],
   gameOver: !!o.gameOver, tie: !!o.tie,
   turnTimerEnabled: o.turnTimerEnabled === true,
-  turnTimerSeconds: o.turnTimerSeconds || 30
+  turnTimerSeconds: o.turnTimerSeconds || 30,
+  dailyChallenge: o.dailyChallenge || null
 };
 }
 function computeChecksum(payload) {
@@ -9250,12 +9441,21 @@ function buildSavePayload() {
     },
     order: { handOrder: (app.handOrder || []).slice() },
     history: { undoStack: (app.undoStack || []).slice() },
-    rewards: {
-      coinsEarned: (app.matchRewards && app.matchRewards.coinsEarned) || 0,
-      achievementsUnlocked: (app.matchRewards && app.matchRewards.achievementsUnlocked) || []
-    },
-    state: serializeGameState(app.state)
-  };
+      rewards: {
+    coinsEarned: (app.matchRewards && app.matchRewards.coinsEarned) || 0,
+    achievementsUnlocked: (app.matchRewards && app.matchRewards.achievementsUnlocked) || []
+  },
+  dailyChallenge: {
+    active: !!app.dailyChallengeActive,
+    phase: app.dailyChallengePhase || null,
+    dateKey: app.dailyChallengeDateKey || null,
+    reward: app.dailyChallengeReward || 0,
+    pendingReward: app.pendingDailyReward || null,
+    pendingOpponents: app.pendingDailyOpponents || null,
+    pendingDiff: app.pendingDailyDiff || null
+  },
+  state: serializeGameState(app.state)
+};
 }
 function saveGameState() {
   if (!app.settings.autoSave) return;
@@ -9286,8 +9486,9 @@ function loadSavedGame() {
       version: migrated.meta.version, savedAt: migrated.meta.savedAt,
       context: migrated.context, runtime: migrated.runtime,
       order: migrated.order, history: migrated.history,
-      rewards: migrated.rewards, state: state
-    };
+        rewards: migrated.rewards, dailyChallenge: migrated.dailyChallenge,
+  state: state
+};
   } catch (e) { return null; }
 }
 function clearSavedGame() {
@@ -9309,10 +9510,19 @@ function resumeSavedGame() {
   app.handOrder = data.order.handOrder || [];
   app.undoStack = data.history.undoStack || [];
   app.matchRewards = data.rewards || { coinsEarned: 0, achievementsUnlocked: [] };
-  app.dealing = !!data.runtime.dealing;
-  app.pendingRoundScore = !!data.runtime.pendingRoundScore;
-  app.pendingStalemate = !!data.runtime.pendingStalemate;
-  app.stats.hintsUsedThisMatch = data.runtime.hintsUsedThisMatch || 0;
+app.dealing = !!data.runtime.dealing;
+app.pendingRoundScore = !!data.runtime.pendingRoundScore;
+app.pendingStalemate = !!data.runtime.pendingStalemate;
+app.stats.hintsUsedThisMatch = data.runtime.hintsUsedThisMatch || 0;
+/* ✅ استئناف التحدي اليومي */
+var dcSave = data.dailyChallenge || {};
+app.dailyChallengeActive = !!dcSave.active;
+app.dailyChallengePhase = dcSave.phase || null;
+app.dailyChallengeDateKey = dcSave.dateKey || null;
+app.dailyChallengeReward = dcSave.reward || 0;
+app.pendingDailyReward = dcSave.pendingReward || null;
+app.pendingDailyOpponents = dcSave.pendingOpponents || null;
+app.pendingDailyDiff = dcSave.pendingDiff || null;
   var sortBtns = document.querySelectorAll('.sort-btn');
   for (var i = 0; i < sortBtns.length; i++) {
     sortBtns[i].classList.toggle('active', sortBtns[i].getAttribute('data-sort') === app.sortMode);
@@ -9345,8 +9555,22 @@ var dragState = {
   active: false, cardId: null, pointerId: null, element: null,
   startX: 0, startY: 0, offsetX: 0, offsetY: 0,
   longPressTimer: null, longPressTriggered: false, dragStarted: false,
-  dropIndex: -1, lastDropIndex: -1, isRTL: false, cachedRects: null
+  dropIndex: -1, lastDropIndex: -1, isRTL: false, cachedRects: null,
+  dragReady: true, isMyTurn: true, captured: false
 };
+
+
+var _waitTurnTimer = null;
+function showWaitTurnToast() {
+  var el = $('waitTurnToast');
+  if (!el) return;
+  el.classList.add('show');
+  clearTimeout(_waitTurnTimer);
+  _waitTurnTimer = setTimeout(function() { el.classList.remove('show'); }, 1400);
+  if (navigator.vibrate) try { navigator.vibrate([40, 30, 40]); } catch (e) {}
+  SoundFX.play('error');
+}
+
 function attachHandDragHandlers() {
   var handEl = $('myHand'); if (!handEl) return;
   handEl.addEventListener('pointerdown', onHandPointerDown);
@@ -9363,9 +9587,10 @@ function attachHandDragHandlers() {
     if (!m) return;
     handleMeldClick(parseInt(m.getAttribute('data-pid'), 10), parseInt(m.getAttribute('data-midx'), 10));
   });
-  // 3D Card Tilt
-  handEl.addEventListener('mousemove', function(e) {
-  if (app.dealing || app.busy) return;
+// 3D Card Tilt — أجهزة اللمس معطّلة (تُثقل الأداء)
+var isTouchDevice = window.matchMedia('(hover: none)').matches;
+if (!isTouchDevice) handEl.addEventListener('mousemove', function(e) {
+if (app.dealing || app.busy) return;
   var slot = e.target.closest('.card-slot');
   var card = slot ? slot.querySelector('.p10-card') : null;
   // ⚠️ امسح أي بطاقة أخرى مُمالة (سابقاً كانت تبقى مائلة)
@@ -9396,14 +9621,50 @@ function attachHandDragHandlers() {
     var cards = handEl.querySelectorAll('.p10-card.tilting');
     for (var i = 0; i < cards.length; i++) { cards[i].style.transform = ''; cards[i].classList.remove('tilting'); }
   });
+
+  // ✅ شبكة أمان: pointerup قد لا يصل للبطاقة (نافذة معاينة، إلخ)
+  if (!document.__p10_safety_net) {
+    document.__p10_safety_net = true;
+    document.addEventListener('pointerup', function() {
+  if (!dragState.cardId) return;
+  /* ⛑️ البطاقة خرجت من DOM أثناء السحب → صفّر فوراً */
+  if (dragState.element && !document.body.contains(dragState.element)) {
+    if (dragState.longPressTimer) { clearTimeout(dragState.longPressTimer); dragState.longPressTimer = null; }
+    resetDragState();
+    scheduleRender();  /* ✅ */
+    return;
+  }
+  if (!dragState.dragStarted) {
+    if (dragState.longPressTimer) { clearTimeout(dragState.longPressTimer); dragState.longPressTimer = null; }
+    resetDragState();
+    scheduleRender();  /* ✅ */
+  }
+});
+document.addEventListener('pointercancel', function() {
+  if (!dragState.cardId) return;
+  if (dragState.element && !document.body.contains(dragState.element)) {
+    if (dragState.longPressTimer) { clearTimeout(dragState.longPressTimer); dragState.longPressTimer = null; }
+    resetDragState();
+    return;
+  }
+  if (dragState.longPressTimer) { clearTimeout(dragState.longPressTimer); dragState.longPressTimer = null; }
+  resetDragState();
+});
+  }
 }
 function onHandPointerDown(ev) {
-  if (!app.state || app.dealing || app.busy) return;
+  if (!app.state || app.dealing) return;
   if (ev.button !== undefined && ev.button !== 0) return;
   var slot = ev.target.closest('.card-slot'); if (!slot) return;
-  var handEl = $('myHand'); if (handEl.classList.contains('disabled')) return;
   var cardId = slot.getAttribute('data-id'); if (!cardId) return;
-  if (dragState.active) return;
+/* ⛑️ لو dragState عالق يشير لعنصر محذوف → صفّره فوراً */
+if (dragState.active || dragState.cardId) {
+  if (dragState.active && dragState.element && document.body.contains(dragState.element)) {
+    return; /* سحب حقيقي جارٍ — اتركه يكمل */
+  }
+  resetDragState(); /* حالة عالقة — نظّفها */
+}
+
   dragState.cardId = cardId;
   dragState.element = slot;
   dragState.pointerId = ev.pointerId;
@@ -9412,30 +9673,25 @@ function onHandPointerDown(ev) {
   dragState.active = false;
   dragState.dragStarted = false;
   dragState.longPressTriggered = false;
-  try { slot.setPointerCapture(ev.pointerId); } catch (err) {}
-  slot.addEventListener('pointermove', onDragPointerMove);
-  slot.addEventListener('pointerup', onDragPointerUp);
-  slot.addEventListener('pointercancel', onDragPointerCancel);
+  dragState.captured = false;
+  dragState.dragReady = true;   // ← دائماً جاهز، لا انتظار
+  dragState.isMyTurn = true;    // للتوافق فقط
+
   var r = slot.getBoundingClientRect();
   dragState.offsetX = ev.clientX - r.left;
   dragState.offsetY = ev.clientY - r.top;
+
+  slot.addEventListener('pointermove', onDragPointerMove);
+  slot.addEventListener('pointerup', onDragPointerUp);
+  slot.addEventListener('pointercancel', onDragPointerCancel);
+
+  // الضغط المطوّل = معاينة البطاقة، دائماً وبدون استثناء
   dragState.longPressTimer = setTimeout(function() {
     if (!dragState.dragStarted && dragState.cardId === cardId) {
       dragState.longPressTriggered = true;
       showCardHint(cardId);
     }
   }, GAME_CONST.LONG_PRESS_MS);
-}
-function onDragPointerMove(ev) {
-  if (!dragState.cardId) return;
-  var dx = ev.clientX - dragState.startX;
-  var dy = ev.clientY - dragState.startY;
-  var d = Math.sqrt(dx * dx + dy * dy);
-  if (!dragState.dragStarted && d > GAME_CONST.DRAG_THRESHOLD) {
-    if (dragState.longPressTimer) { clearTimeout(dragState.longPressTimer); dragState.longPressTimer = null; }
-    activateDrag(ev);
-  }
-  if (dragState.active) { ev.preventDefault(); updateDragPosition(ev); updateDropIndicator(ev); }
 }
 function activateDrag(ev) {
   dragState.active = true;
@@ -9458,6 +9714,36 @@ function updateDragPosition(ev) {
   var s = dragState.element; if (!s) return;
   s.style.left = (ev.clientX - dragState.offsetX) + 'px';
   s.style.top = (ev.clientY - dragState.offsetY) + 'px';
+}
+function onDragPointerMove(ev) {
+  if (!dragState.cardId || !dragState.element) return;
+
+  var dx = ev.clientX - dragState.startX;
+  var dy = ev.clientY - dragState.startY;
+  var dist = Math.sqrt(dx * dx + dy * dy);
+
+  /* 🔓 تجاوز عتبة السحب → ابدأ السحب الفعلي */
+  if (!dragState.dragStarted && dist > GAME_CONST.DRAG_THRESHOLD) {
+    if (dragState.longPressTimer) {
+      clearTimeout(dragState.longPressTimer);
+      dragState.longPressTimer = null;
+    }
+    /* Pointer Capture: يضمن وصول كل أحداث pointerup/move حتى خارج البطاقة */
+    if (!dragState.captured && dragState.pointerId !== null) {
+      try {
+        dragState.element.setPointerCapture(dragState.pointerId);
+        dragState.captured = true;
+      } catch (err) { /* بعض المتصفحات لا تدعمه على العناصر */ }
+    }
+    activateDrag(ev);
+  }
+
+  /* 🎯 أثناء السحب الفعلي: تابع الموقع والفتحة الذهبية */
+  if (dragState.active) {
+    ev.preventDefault();
+    updateDragPosition(ev);
+    updateDropIndicator(ev);
+  }
 }
 function updateDropIndicator(ev) {
   var handEl = $('myHand'); if (!handEl) return;
@@ -9538,42 +9824,73 @@ function updateDropIndicator(ev) {
   dragState.dropIndex = bestIdx;
 }
 function onDragPointerUp(ev) {
-  if (dragState.longPressTimer) { clearTimeout(dragState.longPressTimer); dragState.longPressTimer = null; }
-  if (!dragState.active) {
-    if (!dragState.longPressTriggered && dragState.cardId) toggleCardSelection(dragState.cardId);
-    resetDragState();
-    return;
+  if (dragState.longPressTimer) {
+    clearTimeout(dragState.longPressTimer);
+    dragState.longPressTimer = null;
   }
+  if (!dragState.active) {
+  // لم يكن سحباً → اضغط عادي = تحديد (في أي وقت، في أي دور)
+  if (!dragState.longPressTriggered && dragState.cardId) {
+    toggleCardSelection(dragState.cardId);
+  }
+  resetDragState();
+  scheduleRender();  /* ✅ في حال كان هناك render مؤجل أثناء الضغط المطول */
+  return;
+}
   finalizeDragDrop(ev);
 }
 function onDragPointerCancel() {
   if (dragState.longPressTimer) { clearTimeout(dragState.longPressTimer); dragState.longPressTimer = null; }
   resetDragState();
+  scheduleRender();  /* ✅ ألغيت السحب — نفّذ أي render مؤجل */
 }
 function finalizeDragDrop(ev) {
   if (!dragState.element || !document.body.contains(dragState.element)) {
     dragState.dropIndex = -1; dragState.lastDropIndex = -1; dragState.cachedRects = null;
     resetDragState();
+    scheduleRender();  /* ✅ اكتمل السحب — امسح أي render كان مؤجلاً */
     return;
   }
   var idx = dragState.dropIndex;
   if (typeof idx === 'number' && idx >= 0) reorderHandCard(dragState.cardId, idx);
   dragState.dropIndex = -1; dragState.lastDropIndex = -1; dragState.cachedRects = null;
   resetDragState();
+  scheduleRender();  /* ✅ اكتمل السحب — نفّذ أي render كان مؤجلاً أثناء السحب */
 }
 function resetDragState() {
   var slot = dragState.element;
   if (slot) {
-    try { if (dragState.pointerId !== null) slot.releasePointerCapture(dragState.pointerId); } catch (err) {}
+    try { if (dragState.captured && dragState.pointerId !== null) slot.releasePointerCapture(dragState.pointerId); } catch (err) {}
     slot.removeEventListener('pointermove', onDragPointerMove);
     slot.removeEventListener('pointerup', onDragPointerUp);
     slot.removeEventListener('pointercancel', onDragPointerCancel);
     slot.classList.remove('dragging');
+    slot.classList.remove('rearrange-mode');
     slot.style.position = ''; slot.style.left = ''; slot.style.top = '';
     slot.style.width = ''; slot.style.height = ''; slot.style.zIndex = '';
   }
+  /* ⛑️ تنظيف دفاعي لأي عناصر عالقة */
+  var orphans = document.querySelectorAll('.card-slot.dragging, .card-slot.rearrange-mode');
+  for (var i = 0; i < orphans.length; i++) {
+    orphans[i].classList.remove('dragging');
+    orphans[i].classList.remove('rearrange-mode');
+    orphans[i].style.position = '';
+    orphans[i].style.left = '';
+    orphans[i].style.top = '';
+    orphans[i].style.width = '';
+    orphans[i].style.height = '';
+    orphans[i].style.zIndex = '';
+  }
   var h = $('myHand');
-  if (h) { var ind = h.querySelectorAll('.drop-indicator'); for (var i = 0; i < ind.length; i++) ind[i].classList.remove('drop-indicator'); }
+if (h) {
+  /* ⛑️ احذف أي ghost-gap عالق */
+  var gaps = h.querySelectorAll('.ghost-gap');
+  for (var g = 0; g < gaps.length; g++) {
+    if (gaps[g].parentNode) gaps[g].parentNode.removeChild(gaps[g]);
+  }
+  var ind = h.querySelectorAll('.drop-indicator');
+  for (var k = 0; k < ind.length; k++) ind[k].classList.remove('drop-indicator');
+}
   dragState.active = false;
   dragState.dragStarted = false;
   dragState.cardId = null;
@@ -9582,6 +9899,9 @@ function resetDragState() {
   dragState.longPressTriggered = false;
   dragState.isRTL = false;
   dragState.cachedRects = null;
+  dragState.dragReady = true;
+  dragState.isMyTurn = true;
+  dragState.captured = false;
 }
 function reorderHandCard(cardId, targetIdx) {
   var state = app.state; if (!state) return;
@@ -9617,8 +9937,6 @@ function showCardHint(cardId) {
 }
 function toggleCardSelection(cardId) {
   var state = app.state; if (!state) return;
-  if (state.turnIndex !== app.viewerId) return;
-  if (!state.hasDrawn) return;
   var idx = state.selected.indexOf(cardId);
   if (idx >= 0) { state.selected.splice(idx, 1); SoundFX.play('deselect'); }
   else { state.selected.push(cardId); SoundFX.play('select'); }
@@ -10858,9 +11176,9 @@ function explainWhyCannotLay(selected, phase, player) {
     var maxGroup = 0;
     for (var val in byValue) if (byValue[val] > maxGroup) maxGroup = byValue[val];
     if (maxGroup + wildCount < reqSets[0]) {
-      reasons.push('تحتاج مجموعة من <strong>' + reqSets[0] + ' بطاقات بنفس الرقم</strong>. أطول مجموعة لديك ' + maxGroup + ' بطاقة');
-      suggestions.push('جرّب جمع بطاقات بنفس الرقم: مثل 5♦ 5♣ 5♥');
-    }
+  reasons.push('تحتاج مجموعة من <strong>' + reqSets[0] + ' بطاقات بنفس الرقم</strong>. أطول مجموعة لديك ' + maxGroup + ' بطاقة');
+  suggestions.push('جرّب جمع بطاقات بنفس الرقم: مثل 5🔴 5🔵 5🟢 (نفس الرقم، ألوان مختلفة)');
+}
   }
   var reqRuns = (phase.runs || []).slice().sort(function(a, b) { return b - a; });
 var runC0 = (phase.constraints && phase.constraints.runConstraints && phase.constraints.runConstraints[0]) || null;
@@ -10891,9 +11209,9 @@ if (reqRuns.length > 0) {
     if (runParity === 'odd') parityNote = ' <strong>فردية (1، 3، 5، 7...)</strong>';
     else if (runParity === 'even') parityNote = ' <strong>زوجية (2، 4، 6، 8...)</strong>';
     reasons.push('تحتاج متتالية من <strong>' + reqRuns[0] + ' بطاقات' + parityNote + ' بنفس اللون</strong>. أطول متتالية لديك ' + maxRun + ' بطاقة' + (colName ? ' بلون ' + colName : ''));
-    if (runParity === 'odd') suggestions.push('مثال لمتتالية فردية صحيحة: 1♠ 3♠ 5♠ 7♠');
-    else if (runParity === 'even') suggestions.push('مثال لمتتالية زوجية صحيحة: 2♠ 4♠ 6♠ 8♠');
-    else suggestions.push('بطاقات المتتالية يجب أن تكون <strong>بنفس اللون</strong>: مثل 5♠ 6♠ 7♠ 8♠');
+    if (runParity === 'odd') suggestions.push('مثال لمتتالية فردية صحيحة: 1🔵 3🔵 5🔵 7🔵 (كلها أزرق، أرقام فردية)');
+else if (runParity === 'even') suggestions.push('مثال لمتتالية زوجية صحيحة: 2🔵 4🔵 6🔵 8🔵 (كلها أزرق، أرقام زوجية)');
+else suggestions.push('بطاقات المتتالية يجب أن تكون <strong>بنفس اللون</strong>: مثل 5🔵 6🔵 7🔵 8🔵');
     suggestions.push('Wild يُسمح به في <strong>البداية أو النهاية فقط</strong> — ليس في المنتصف');
   }
 }
@@ -11447,7 +11765,60 @@ function attachLobbyHandlers() {
     hostStartNetworkGame();
   };
 }
+function attachTextSelectionLongPress() {
+  if (window._tslpBound) return;
+  window._tslpBound = true;
+  var pressTimer = null, startX = 0, startY = 0;
+  document.addEventListener('pointerdown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+    if (e.target.closest('button, a, .p10-card, .card-slot')) return;
+    var target = e.target.closest('.cur-chip, .phase-num-badge, .plist-name, .lb-name, .pname, .log-entry, #status, .ls-entry, .score-row, .adv-summary, .about-row .aval, .dc-count, .plist-ph, .plist-cards, .plist-score, .live-stream, .action-log, .turn-name, .player-chip, .meld .type-badge, .meld .tag, .revealed-player .rp-name, .phase-box .desc, .phase-box .phase-num');
+    if (!target) return;
+    startX = e.clientX; startY = e.clientY;
+    if (pressTimer) clearTimeout(pressTimer);
+    pressTimer = setTimeout(function() {
+      document.body.classList.add('text-select-mode');
+      try {
+        var range = document.createRange();
+        range.selectNodeContents(target);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      } catch (err) {}
+      if (navigator.vibrate) try { navigator.vibrate(20); } catch (err) {}
+      if (window.SoundFX && SoundFX.play) SoundFX.play('tap');
+    }, 550);
+  }, { passive: true });
+  document.addEventListener('pointerup', function() { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; } }, { passive: true });
+  document.addEventListener('pointercancel', function() { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; } }, { passive: true });
+  document.addEventListener('pointermove', function(e) {
+    if (!pressTimer) return;
+    var dx = e.clientX - startX, dy = e.clientY - startY;
+    if (dx * dx + dy * dy > 100) { clearTimeout(pressTimer); pressTimer = null; }
+  }, { passive: true });
+  document.addEventListener('click', function(e) {
+    if (!document.body.classList.contains('text-select-mode')) return;
+    if (e.target.closest('.cur-chip, .phase-num-badge, .plist-name, .lb-name, .pname, .log-entry, #status, .ls-entry, .score-row, .adv-summary, .about-row, .dc-count, .plist-ph, .plist-cards, .plist-score, .live-stream, .action-log, .turn-name, .player-chip, .meld, .revealed-player, .phase-box')) return;
+    setTimeout(function() {
+      document.body.classList.remove('text-select-mode');
+      try { window.getSelection().removeAllRanges(); } catch (err) {}
+    }, 50);
+  }, true);
+}
+
 function attachGameHandlers() {
+  var pb = $('phaseBox');
+  if (pb) {
+    pb.addEventListener('click', function() {
+      try { openPhasesList(); } catch (err) { console.error('[PhaseList] click error:', err); }
+    });
+    pb.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        try { openPhasesList(); } catch (err) { console.error('[PhaseList] key error:', err); }
+      }
+    });
+  }
   var ddb = $('drawDeckBtn');
   if (ddb) {
     ddb.onclick = function() { if (!app.busy || app.mode !== 'lan') actionDraw('deck'); };
@@ -11491,6 +11862,8 @@ function attachGameHandlers() {
     showKickModal(pid);
   });
   attachHandDragHandlers();
+  /* ✅ أُزيل تفعيل الضغط المطول للنسخ — كان يزعج اللاعبين أثناء اللعب */
+  // try { attachTextSelectionLongPress(); } catch (err) {}
 }
 function showKickModal(pId) {
   var state = app.state; if (!state) return;
@@ -11524,20 +11897,250 @@ function performKick(pId) {
   resetRenderCache(); previouslyRenderedMelds = {}; scheduleRender(); syncStateToPeers();
   setStatus('تم طرد ' + name, 'var(--red)');
 }
-function openHistoryModal() {
-  var state = app.state; if (!state) return;
-  var b = $('historyBody'); var html = '';
-  if (state.roundLog.length === 0) html = '<p style="text-align:center;opacity:.6;padding:20px">لا توجد جولات بعد</p>';
-  else for (var i = 0; i < state.roundLog.length; i++) {
-    var e = state.roundLog[i];
-    var w = state.players[e.winner];
-    html += '<div class="score-row"><span class="win">جولة ' + e.round + '</span>';
-    if (e.exhausted) html += '<span class="mid">انتهت الرزمة — لا فائز</span>';
-    else html += '<span class="mid">الفائز: ' + escapeHTML(w ? w.name : 'لاعب') + '</span>';
+function openPhasesList() {
+  if (!app.state) return;
+  var list = app.state.phasesList || [];
+  var lim = app.state.phasesLimit || list.length;
+  var me = app.state.players[app.viewerId];
+  var myPhase = me ? me.phase : 0;
+  var body = $('phasesListBody');
+  if (!body) return;
+  var html = '';
+  for (var i = 0; i < lim && i < list.length; i++) {
+    var ph = list[i];
+    var isCurrent = (i === myPhase);
+    var isDone = (i < myPhase);
+    var bg = isCurrent ? 'linear-gradient(160deg,rgba(244,185,66,0.25),rgba(244,185,66,0.08))' :
+             isDone   ? 'linear-gradient(160deg,rgba(74,222,128,0.15),rgba(74,222,128,0.03))' :
+                        'rgba(0,0,0,0.3)';
+    var border = isCurrent ? 'rgba(244,185,66,0.6)' :
+                 isDone   ? 'rgba(74,222,128,0.4)' :
+                            'var(--border-1)';
+    var badge = isDone ? '✓' : (isCurrent ? '⭐' : (i + 1));
+    html += '<button class="phase-list-item" data-phase-idx="' + i + '" type="button" style="display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;margin-bottom:6px;background:' + bg + ';border:1.5px solid ' + border + ';border-radius:10px;color:var(--text-primary);text-align:right;cursor:pointer">';
+    html += '<span style="width:30px;height:30px;border-radius:50%;background:' + (isCurrent ? 'linear-gradient(160deg,#ffd75e,#c98a05)' : (isDone ? 'linear-gradient(160deg,#5be08f,#22a862)' : 'rgba(0,0,0,0.5)')) + ';color:' + (isDone || isCurrent ? '#04240f' : 'var(--gold)') + ';font-weight:900;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">' + badge + '</span>';
+    html += '<span style="flex:1;font-size:12px;font-weight:800">' + escapeHTML(ph.desc || ('مرحلة ' + (i + 1))) + '</span>';
+    html += '<span style="font-size:10px;opacity:.6">‹</span>';
+    html += '</button>';
+  }
+  body.innerHTML = html;
+  body.onclick = function(ev) {
+    var b = ev.target.closest('[data-phase-idx]');
+    if (!b) return;
+    var idx = parseInt(b.getAttribute('data-phase-idx'), 10);
+    $('phasesListModal').classList.add('hidden');
+    openPhaseDetail(idx);
+  };
+  $('phasesListModal').classList.remove('hidden');
+}
+
+function openPhaseDetail(idx) {
+  var list = (app.state && app.state.phasesList) || [];
+  var ph = list[idx];
+  if (!ph) return;
+  $('phaseDetailTitle').textContent = '📋 المرحلة ' + (idx + 1);
+
+  /* بطاقة مصغّرة */
+  function chip(num, colorEmoji, isWild) {
+    if (isWild) {
+      return '<span style="display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:42px;padding:0 6px;background:linear-gradient(160deg,#1c1c1c,#050505);border:1.5px solid #f4b942;border-radius:6px;color:#f4b942;font-weight:900;font-size:12px;margin:2px;box-shadow:0 2px 4px rgba(0,0,0,0.4)">W</span>';
+    }
+    var bg = colorEmoji === '🔴' ? 'linear-gradient(160deg,#ff8b95,#e63946)' :
+             colorEmoji === '🔵' ? 'linear-gradient(160deg,#7fb0e8,#4a7fc1)' :
+             colorEmoji === '🟢' ? 'linear-gradient(160deg,#6cf0b5,#069c56)' :
+             colorEmoji === '🟣' ? 'linear-gradient(160deg,#CE93D8,#8E24AA)' :
+                                   'linear-gradient(160deg,#ffe985,#d19000)';
+    return '<span style="display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:42px;padding:0 6px;background:' + bg + ';border:1.5px solid #fff;border-radius:6px;color:#fff;font-weight:900;font-size:15px;margin:2px;text-shadow:0 1px 2px rgba(0,0,0,0.6);box-shadow:0 2px 4px rgba(0,0,0,0.4)">' + num + '</span>';
+  }
+
+  var sets = (ph.sets || []).slice();
+  var runs = (ph.runs || []).slice();
+  var colorSize = ph.color || 0;
+  var setConstraints = (ph.constraints && ph.constraints.setConstraints) || [];
+  var runConstraints = (ph.constraints && ph.constraints.runConstraints) || [];
+  var totalCards = 0;
+  for (var i = 0; i < sets.length; i++) totalCards += sets[i];
+  for (var j = 0; j < runs.length; j++) totalCards += runs[j];
+  totalCards += colorSize;
+
+  /* ✅ تجميع المجموعات/المتتاليات المتطابقة — يمنع تكرار الشرح */
+  function groupBySize(arr, constraints) {
+    var groups = [];
+    for (var k = 0; k < arr.length; k++) {
+      var sz = arr[k];
+      var par = (constraints[k] && constraints[k].parity)
+             || (constraints[0] && constraints[0].parity)
+             || 'any';
+      var key = sz + '_' + par;
+      var found = null;
+      for (var g = 0; g < groups.length; g++) {
+        if (groups[g].key === key) { found = groups[g]; break; }
+      }
+      if (found) found.count++;
+      else groups.push({ key: key, size: sz, parity: par, count: 1 });
+    }
+    return groups;
+  }
+  function setWord(n) {
+    if (n === 1) return 'مجموعة واحدة';
+    if (n === 2) return 'مجموعتان';
+    if (n <= 10) return n + ' مجموعات';
+    return n + ' مجموعة';
+  }
+  function runWord(n) {
+    if (n === 1) return 'متتالية واحدة';
+    if (n === 2) return 'متتاليتان';
+    if (n <= 10) return n + ' متتاليات';
+    return n + ' متتالية';
+  }
+
+  var setGroups = groupBySize(sets, setConstraints);
+  var runGroups = groupBySize(runs, runConstraints);
+  var colors = ['🔴','🔵','🟢','🟡'];
+
+  var html = '';
+
+  /* ═══ الرأس ═══ */
+  html += '<div style="background:linear-gradient(160deg,rgba(244,185,66,0.15),rgba(244,185,66,0.03));border:1.5px solid rgba(244,185,66,0.4);border-radius:12px;padding:14px;margin-bottom:14px;text-align:center">';
+  html += '<div style="font-size:14px;font-weight:900;color:var(--gold);margin-bottom:6px">' + escapeHTML(ph.desc || '') + '</div>';
+  html += '<div style="font-size:11px;opacity:.85">📦 إجمالي البطاقات: <b style="color:var(--gold);font-size:15px">' + totalCards + '</b></div>';
+  html += '</div>';
+
+  /* ═══ المجموعات (Sets) ═══ */
+  if (setGroups.length > 0) {
+    html += '<div style="font-size:13px;font-weight:900;color:#ff8b95;margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid rgba(255,139,149,0.3)">🎯 المجموعات</div>';
+    for (var sg = 0; sg < setGroups.length; sg++) {
+      var g = setGroups[sg];
+      var parityText = g.parity === 'odd' ? ' — أرقام فردية' : (g.parity === 'even' ? ' — أرقام زوجية' : '');
+      var exNum = g.parity === 'odd' ? 7 : (g.parity === 'even' ? 8 : 7);
+
+      html += '<div style="background:rgba(0,0,0,0.4);border-radius:10px;padding:12px;margin-bottom:10px;border:1px solid rgba(255,139,149,0.4)">';
+      html += '<div style="font-size:13px;font-weight:900;color:#ff8b95;margin-bottom:6px">' + setWord(g.count) + ' من ' + g.size + ' بطاقات' + parityText + '</div>';
+      html += '<div style="font-size:11px;line-height:1.7;margin-bottom:8px;opacity:.9">كل بطاقة بنفس الرقم (الألوان يمكن أن تختلف)</div>';
+
+      /* مثال */
+      html += '<div style="background:rgba(74,222,128,0.12);border-right:3px solid #4ade80;padding:8px 10px;border-radius:6px;margin-bottom:6px">';
+      html += '<div style="font-size:10.5px;color:#4ade80;font-weight:900;margin-bottom:4px">✓ مثال:</div>';
+      html += '<div style="text-align:center;margin:4px 0">';
+      for (var ci = 0; ci < g.size; ci++) html += chip(exNum, colors[ci % colors.length]);
+      html += '</div>';
+      html += '<div style="font-size:10px;opacity:.75;text-align:center">' + g.size + ' بطاقات كلها رقم ' + exNum + '</div>';
+      html += '</div>';
+
+      /* مع Wild */
+      if (g.size > 1) {
+        html += '<div style="background:rgba(244,185,66,0.12);border-right:3px solid var(--gold);padding:8px 10px;border-radius:6px">';
+        html += '<div style="font-size:10.5px;color:var(--gold);font-weight:900;margin-bottom:4px">✓ مع Wild:</div>';
+        html += '<div style="text-align:center;margin:4px 0">';
+        for (var wi = 0; wi < g.size - 1; wi++) html += chip(exNum, colors[wi % colors.length]);
+        html += chip('', '', true);
+        html += '</div></div>';
+      }
+
+      if (g.count > 1) {
+        html += '<div style="font-size:10.5px;color:var(--gold);background:rgba(244,185,66,0.1);padding:6px 8px;border-radius:6px;margin-top:6px;text-align:center;font-weight:700">↻ كرر هذا النمط <b>' + g.count + '</b> ' + (g.count <= 10 ? 'مرات' : 'مرة') + '</div>';
+      }
+      html += '</div>';
+    }
+  }
+
+  /* ═══ المتتاليات (Runs) ═══ */
+  if (runGroups.length > 0) {
+    html += '<div style="font-size:13px;font-weight:900;color:#5be08f;margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid rgba(91,224,143,0.3)">🪜 المتتاليات</div>';
+    for (var rg = 0; rg < runGroups.length; rg++) {
+      var g = runGroups[rg];
+      var parityText = g.parity === 'odd' ? ' — أرقام فردية' : (g.parity === 'even' ? ' — أرقام زوجية' : '');
+var startNum = g.parity === 'odd' ? 1 : (g.parity === 'even' ? 2 : Math.max(1, Math.min(5, 13 - g.size)));
+var step = (g.parity === 'odd' || g.parity === 'even') ? 2 : 1;
+
+      html += '<div style="background:rgba(0,0,0,0.4);border-radius:10px;padding:12px;margin-bottom:10px;border:1px solid rgba(91,224,143,0.4)">';
+      html += '<div style="font-size:13px;font-weight:900;color:#5be08f;margin-bottom:6px">' + runWord(g.count) + ' من ' + g.size + ' بطاقات' + parityText + '</div>';
+      html += '<div style="font-size:11px;line-height:1.7;margin-bottom:8px;opacity:.9">أرقام متسلسلة وكلها <b>بنفس اللون</b></div>';
+
+      /* مثال */
+      html += '<div style="background:rgba(74,222,128,0.12);border-right:3px solid #4ade80;padding:8px 10px;border-radius:6px;margin-bottom:6px">';
+      html += '<div style="font-size:10.5px;color:#4ade80;font-weight:900;margin-bottom:4px">✓ مثال:</div>';
+      html += '<div style="text-align:center;margin:4px 0">';
+      for (var ri = 0; ri < g.size; ri++) html += chip(startNum + ri * step, '🔵');
+      html += '</div>';
+      html += '<div style="font-size:10px;opacity:.75;text-align:center">كلها أزرق 🔵 وأرقام متسلسلة</div>';
+      html += '</div>';
+
+      /* Wild مسموح */
+      html += '<div style="background:rgba(244,185,66,0.12);border-right:3px solid var(--gold);padding:8px 10px;border-radius:6px;margin-bottom:6px">';
+      html += '<div style="font-size:10.5px;color:var(--gold);font-weight:900;margin-bottom:4px">✓ Wild في البداية أو النهاية فقط:</div>';
+      html += '<div style="text-align:center;margin:4px 0">' + chip('', '', true);
+      for (var wi2 = 0; wi2 < g.size - 1; wi2++) html += chip(startNum + wi2 * step, '🔵');
+      html += '</div>';
+      html += '<div style="text-align:center;margin:4px 0">';
+      for (var wi3 = 0; wi3 < g.size - 1; wi3++) html += chip(startNum + wi3 * step, '🔵');
+      html += chip('', '', true);
+      html += '</div></div>';
+
+      /* ممنوع */
+      html += '<div style="background:rgba(239,68,68,0.12);border-right:3px solid #ef4444;padding:8px 10px;border-radius:6px">';
+      html += '<div style="font-size:10.5px;color:#ef4444;font-weight:900;margin-bottom:4px">✗ Wild في المنتصف — ممنوع:</div>';
+      html += '<div style="text-align:center;margin:4px 0">' + chip(startNum, '🔵') + chip('', '', true) + chip(startNum + 2 * step, '🔵');
+      html += '</div></div>';
+
+      if (g.count > 1) {
+        html += '<div style="font-size:10.5px;color:var(--gold);background:rgba(244,185,66,0.1);padding:6px 8px;border-radius:6px;margin-top:6px;text-align:center;font-weight:700">↻ كرر هذا النمط <b>' + g.count + '</b> ' + (g.count <= 10 ? 'مرات' : 'مرة') + '</div>';
+      }
+      html += '</div>';
+    }
+  }
+
+  /* ═══ اللون (Color) ═══ */
+  if (colorSize > 0) {
+    html += '<div style="font-size:13px;font-weight:900;color:#c4b5fd;margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid rgba(196,181,253,0.3)">🌈 اللون</div>';
+    html += '<div style="background:rgba(0,0,0,0.4);border-radius:10px;padding:12px;margin-bottom:10px;border:1px solid rgba(196,181,253,0.4)">';
+    html += '<div style="font-size:13px;font-weight:900;color:#c4b5fd;margin-bottom:6px">' + colorSize + ' بطاقات من نفس اللون</div>';
+    html += '<div style="font-size:11px;line-height:1.7;margin-bottom:8px;opacity:.9">بدون شرط التسلسل أو التكرار — فقط نفس اللون</div>';
+    var nums = [3, 7, 9, 11, 12];
+    html += '<div style="background:rgba(74,222,128,0.12);border-right:3px solid #4ade80;padding:8px 10px;border-radius:6px">';
+    html += '<div style="font-size:10.5px;color:#4ade80;font-weight:900;margin-bottom:4px">✓ مثال:</div>';
+    html += '<div style="text-align:center;margin:4px 0">';
+    for (var cci = 0; cci < colorSize; cci++) html += chip(nums[cci] || (cci + 1), '🔴');
+    html += '</div>';
+    html += '<div style="font-size:10px;opacity:.75;text-align:center">أرقام مختلفة، لكن كلها أحمر 🔴</div>';
+    html += '</div></div>';
+  }
+
+  /* ═══ مثال شامل للمرحلة كاملة ═══ */
+  html += '<div style="font-size:13px;font-weight:900;color:var(--gold);margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid rgba(244,185,66,0.3)">✅ مثال شامل</div>';
+  html += '<div style="background:linear-gradient(160deg,rgba(244,185,66,0.15),rgba(244,185,66,0.03));border:1px solid rgba(244,185,66,0.4);border-radius:10px;padding:12px">';
+
+  for (var sg2 = 0; sg2 < sets.length; sg2++) {
+    var s = sets[sg2];
+    var sc2 = (setConstraints[sg2] && setConstraints[sg2].parity) || 'any';
+    var baseNum = 5 + (sg2 * 2);
+    if (baseNum > 12) baseNum = 5 + ((sg2 * 2) % 8);
+    if (sc2 === 'odd' && baseNum % 2 === 0) baseNum++;
+    if (sc2 === 'even' && baseNum % 2 !== 0) baseNum++;
+    html += '<div style="display:flex;justify-content:center;flex-wrap:wrap;gap:4px;margin-bottom:6px;padding:6px;background:rgba(0,0,0,0.25);border-radius:6px">';
+    for (var ci2 = 0; ci2 < s; ci2++) html += chip(baseNum, colors[ci2 % colors.length]);
     html += '</div>';
   }
-  b.innerHTML = html;
-  $('historyModal').classList.remove('hidden');
+  for (var rg2 = 0; rg2 < runs.length; rg2++) {
+    var r = runs[rg2];
+    var rc2 = (runConstraints[rg2] && runConstraints[rg2].parity) || 'any';
+    var startN = rc2 === 'odd' ? 1 : (rc2 === 'even' ? 2 : Math.max(1, Math.min(5, 13 - r)));
+var step2 = (rc2 === 'odd' || rc2 === 'even') ? 2 : 1;
+    var runColor = ['🔵','🔴','🟢','🟡'][rg2 % 4];
+    html += '<div style="display:flex;justify-content:center;flex-wrap:wrap;gap:4px;margin-bottom:6px;padding:6px;background:rgba(0,0,0,0.25);border-radius:6px">';
+    for (var ri2 = 0; ri2 < r; ri2++) html += chip(startN + ri2 * step2, runColor);
+    html += '</div>';
+  }
+  if (colorSize > 0) {
+    var nums2 = [3, 7, 9, 11, 12, 4, 6];
+    html += '<div style="display:flex;justify-content:center;flex-wrap:wrap;gap:4px;margin-bottom:6px;padding:6px;background:rgba(0,0,0,0.25);border-radius:6px">';
+    for (var cci2 = 0; cci2 < colorSize; cci2++) html += chip(nums2[cci2] || (cci2 + 3), '🟣');
+    html += '</div>';
+  }
+  html += '</div>';
+
+  $('phaseDetailBody').innerHTML = html;
+  $('phaseDetailModal').classList.remove('hidden');
 }
 function openSettingsModal() {
   $('settingsNameInput').value = app.settings.playerName || '';
@@ -11684,6 +12287,8 @@ function attachModalClosers() {
   var cg = $('closeGallery'); if (cg) cg.onclick = function() { $('galleryModal').classList.add('hidden'); };
   var ccb = $('closeCustomBuilderBtn'); if (ccb) ccb.onclick = function() { $('customBuilderModal').classList.add('hidden'); };
   var cpeek = $('closePeek'); if (cpeek) cpeek.onclick = function() { $('peekModal').classList.add('hidden'); };
+var cpl2 = $('closePhasesList'); if (cpl2) cpl2.onclick = function() { $('phasesListModal').classList.add('hidden'); };
+var cpd = $('closePhaseDetail'); if (cpd) cpd.onclick = function() { $('phaseDetailModal').classList.add('hidden'); $('phasesListModal').classList.remove('hidden'); };
   var cpl = $('closePlayersList'); if (cpl) cpl.onclick = function() { $('playersListModal').classList.add('hidden'); };
   var sacb = $('saveAdvancedCustomBtn');
   if (sacb) sacb.onclick = function() {
@@ -12017,7 +12622,7 @@ try { updateFaceBackCounts(); } catch (e) {}
     if (!app.settings.tutorialSeen && !loadMatchHistory().length) {
       setTimeout(function() { openTutorial(0); }, 500);
     }
-    console.log('%c TYEYYIY Phase 10 v22 — القواعد الرسمية ✓ ' + FACE_STYLES.length + ' أوجه + ' + BACK_STYLES.length + ' ظهور', 'color:#f4b942;font-weight:bold;font-size:14px');
+    console.log('%c TYEYYIY Phase 10 v' + APP_VERSION + ' — القواعد الرسمية ✓ ' + FACE_STYLES.length + ' أوجه + ' + BACK_STYLES.length + ' ظهور', 'color:#f4b942;font-weight:bold;font-size:14px');
   } catch (err) {
     console.error('Init error:', err);
     /* ✅ شبكة أمان: أظهر القائمة حتى لو فشل التهيئة */
@@ -12092,6 +12697,16 @@ window.p10Debug = {
   getVersion: function() { return { version: APP_VERSION, build: APP_BUILD_DATE }; },
   checkUpdates: function() { checkForUpdates(false); },
   applyUpdate: applyUpdateNow,
+  getDragState: function() {
+  return {
+    active: dragState.active,
+    cardId: dragState.cardId,
+    dragStarted: dragState.dragStarted,
+    hasElement: !!dragState.element,
+    elementInDom: !!(dragState.element && document.body.contains(dragState.element))
+  };
+},
+forceResetDrag: function() { resetDragState(); },
   resetAll: function() {
     try {
       ['p10TYEYYIY_settings','p10TYEYYIY_achievements','p10TYEYYIY_stats','p10TYEYYIY_handOrder',
