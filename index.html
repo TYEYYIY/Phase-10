@@ -1281,18 +1281,19 @@ input, textarea { font-family: inherit; }
 .p10-card .center-num { font-size: 19px; font-weight: 900; line-height: 1; letter-spacing: -1px; }
 .p10-card .card-art { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 6; pointer-events: none; }
 
-.p10-card.col-red    { --cc: #ff3b4e; --cc-l: #ff8b95; --cc-d: #c21430; --cc-s: rgba(255,59,78,0.28); }
-.p10-card.col-blue   { --cc: #2e8bff; --cc-l: #7dbcff; --cc-d: #0a52cc; --cc-s: rgba(46,139,255,0.28); }
-.p10-card.col-green  { --cc: #12d17a; --cc-l: #6cf0b5; --cc-d: #069c56; --cc-s: rgba(18,209,122,0.28); }
-.p10-card.col-yellow { --cc: #ffcb1f; --cc-l: #ffe985; --cc-d: #d19000; --cc-s: rgba(255,203,31,0.32); }
-.p10-card.col-orange { --cc: #FB8C00; --cc-l: #FFB74D; --cc-d: #E65100; --cc-s: rgba(251,140,0,0.28); }
-.p10-card.col-purple { --cc: #8E24AA; --cc-l: #CE93D8; --cc-d: #4A148C; --cc-s: rgba(142,36,170,0.28); }
-.p10-card.col-indigo { --cc: #3f3db5; --cc-l: #8a87e0; --cc-d: #1a1a6e; --cc-s: rgba(63,61,181,0.28); }
-.p10-card.col-vermilion { --cc: #ff4500; --cc-l: #ff8c66; --cc-d: #b22200; --cc-s: rgba(255,69,0,0.32); }
-.p10-card.col-amber { --cc: #ffbf00; --cc-l: #ffe066; --cc-d: #cc8800; --cc-s: rgba(255,191,0,0.32); }
-.p10-card.col-chartreuse { --cc: #b4d61a; --cc-l: #d9ee5c; --cc-d: #7a9100; --cc-s: rgba(180,214,26,0.32); }
-.p10-card.col-teal { --cc: #00bcd4; --cc-l: #66e0ed; --cc-d: #00838f; --cc-s: rgba(0,188,212,0.32); }
-.p10-card.col-magenta { --cc: #e91e63; --cc-l: #ff6b9d; --cc-d: #ad1457; --cc-s: rgba(233,30,99,0.32); }
+/* ألوان نقية ومشرقة جداً لسهولة التمييز */
+.p10-card.col-red    { --cc: #FF1A1A; --cc-l: #FF6B6B; --cc-d: #B30000; --cc-s: rgba(255,26,26,0.45); }
+.p10-card.col-blue   { --cc: #007BFF; --cc-l: #66B2FF; --cc-d: #0056B3; --cc-s: rgba(0,123,255,0.45); }
+.p10-card.col-green  { --cc: #00D250; --cc-l: #66E896; --cc-d: #008A35; --cc-s: rgba(0,210,80,0.45); }
+.p10-card.col-yellow { --cc: #FFCC00; --cc-l: #FFE066; --cc-d: #B38F00; --cc-s: rgba(255,204,0,0.45); }
+.p10-card.col-orange { --cc: #FF7F00; --cc-l: #FFB366; --cc-d: #B35900; --cc-s: rgba(255,127,0,0.45); }
+.p10-card.col-purple { --cc: #9C27B0; --cc-l: #CE93D8; --cc-d: #6A1B9A; --cc-s: rgba(156,39,176,0.45); }
+.p10-card.col-indigo { --cc: #3F51B5; --cc-l: #7986CB; --cc-d: #283593; --cc-s: rgba(63,81,181,0.45); }
+.p10-card.col-vermilion { --cc: #FF3300; --cc-l: #FF8866; --cc-d: #992200; --cc-s: rgba(255,51,0,0.45); }
+.p10-card.col-amber { --cc: #FFAA00; --cc-l: #FFCC66; --cc-d: #B37700; --cc-s: rgba(255,170,0,0.45); }
+.p10-card.col-chartreuse { --cc: #AADD00; --cc-l: #CCFF33; --cc-d: #669900; --cc-s: rgba(170,221,0,0.45); }
+.p10-card.col-teal { --cc: #00E5FF; --cc-l: #66F0FF; --cc-d: #0099AA; --cc-s: rgba(0,229,255,0.45); }
+.p10-card.col-magenta { --cc: #FF0088; --cc-l: #FF66B2; --cc-d: #AA0055; --cc-s: rgba(255,0,136,0.45); }
 /* ✨ الألوان النادرة لها توهج مميز ليتم تمييزها فوراً */
 .p10-card.col-vermilion, .p10-card.col-amber, .p10-card.col-chartreuse,
 .p10-card.col-teal, .p10-card.col-magenta {
@@ -2797,7 +2798,7 @@ html.theme-epic .p10-card[class*="face-"] {
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '23.2.9';
+var APP_VERSION = '23.3.9';
 var APP_BUILD_DATE = '1-9-2026';
 var APP_LAST_UPDATE = '5-11-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
@@ -4640,18 +4641,22 @@ function _checkRunParity(lo, hi, parity) {
   return true;
 }
 function tryExtractRun(available, size, constraint) {
-  var byCol = [[], [], [], [], [], []];
+  var byCol = {}; // مصفوفة ديناميكية تدعم أي عدد من الألوان
   var wilds = [];
   for (var i = 0; i < available.length; i++) {
     var c = available[i];
     if (c.type === 'wild') wilds.push(c);
-    else if (c.type === 'num') byCol[c.col].push(c);
+    else if (c.type === 'num') {
+      if (!byCol[c.col]) byCol[c.col] = [];
+      byCol[c.col].push(c);
+    }
   }
   var parity = (constraint && constraint.parity && constraint.parity !== CONSTRAINTS.PARITY_ANY)
                ? constraint.parity : 'any';
   var step = (parity === 'odd' || parity === 'even') ? 2 : 1;
 
-  for (var col = 0; col < 4; col++) {
+  for (var colKey in byCol) {
+    var col = parseInt(colKey, 10);
     var nums = byCol[col];
     for (var low = 1; low <= 12; low++) {
       if (parity === 'odd'  && low % 2 === 0) continue;
@@ -4740,11 +4745,14 @@ function extractLargestSet(available, minSize, constraint) {
   return null;
 }
 function extractLongestRun(available, minSize, constraint) {
-  var byCol = [[], [], [], [], [], []];
+  var byCol = {}; // مصفوفة ديناميكية
   var wilds = [];
   for (var i = 0; i < available.length; i++) {
     var c = available[i];
-    if (c.type === 'num') byCol[c.col].push(c);
+    if (c.type === 'num') {
+      if (!byCol[c.col]) byCol[c.col] = [];
+      byCol[c.col].push(c);
+    }
     else if (c.type === 'wild') wilds.push(c);
   }
   var parity = (constraint && constraint.parity && constraint.parity !== CONSTRAINTS.PARITY_ANY)
@@ -4752,7 +4760,8 @@ function extractLongestRun(available, minSize, constraint) {
   var step = (parity === 'odd' || parity === 'even') ? 2 : 1;
   var best = null;
 
-  for (var col = 0; col < 4; col++) {
+  for (var colKey in byCol) {
+    var col = parseInt(colKey, 10);
     var nums = byCol[col].slice().sort(function(a, b) { return a.value - b.value; });
     for (var low = 1; low <= 12; low++) {
       if (parity === 'odd'  && low % 2 === 0) continue;
@@ -4760,7 +4769,6 @@ function extractLongestRun(available, minSize, constraint) {
       var minHigh = low + (minSize - 1) * step;
       if (minHigh > 12) break;
 
-      /* مد المتتالية لأقصى مدى ممكن */
       var high = minHigh;
       var ext = high + step;
       while (ext <= 12) {
@@ -8905,7 +8913,12 @@ function startTurnIfNeeded() {
     return;
   }
 
-  if (app.mode === 'cpu') { if (cp.isCPU) cpuTakeTurn(); }
+  if (app.mode === 'cpu') { 
+  if (cp.isCPU) { 
+    cancelCpuContext(); // <--- أضف هذا السطر
+    cpuTakeTurn(); 
+  } 
+}
   else if (app.mode === 'lan') { if (isHost() && cp.isCPU) cpuTakeTurn(); }
   else if (app.mode === 'pass') { if (cp.id !== app.viewerId) showPassOverlay(cp); }
   updateHandDisabledState(); updateActionsButtons();
