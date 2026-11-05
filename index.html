@@ -265,6 +265,9 @@
       <path d="M9 4v4a1 1 0 0 1-1 1H4M15 4v4a1 1 0 0 0 1 1h4M15 20v-4a1 1 0 0 1 1-1h4M9 20v-4a1 1 0 0 0-1-1H4"/>
     </svg>
   </button>
+  <!-- زر الطيف في أقصى اليمين -->
+  <button id="spectrumHelpBtn" class="inline-spectrum-btn" type="button" title="جدول دمج الطيف" aria-label="جدول دمج الطيف">🎨</button>
+  
   <button class="sort-btn active" data-sort="number" type="button">🔢 بالأرقام</button>
   <button class="sort-btn" data-sort="color" type="button">🎨 بالألوان</button>
 </div>
@@ -472,19 +475,22 @@
       <li><strong>ثلاثي:</strong> اسحب 3 وتخلّص من 3.</li>
         <li><strong>حصاد:</strong> الضرب على أوراقك أنت فقط.</li>
 </ul>
-<h3>🌈 وضع المنشور (PRISM)</h3>
-<p>وضع خاص يضيف عمقاً استراتيجياً عبر <strong>الدمج اللوني</strong> والتنوع اللوني الكامل:</p>
+<h3>  وضع الطيف (Spectrum)</h3>
+<p>وضع خاص يعتمد على دمج البطاقات. عند حدوث تعادل في اللعبة العادية، يتحول اللعب تلقائياً إلى وضع الطيف لحسم الفائز!</p>
 <ul>
-  <li><strong>6 ألوان كاملة</strong>: أحمر، أزرق، أخضر، أصفر، برتقالي، بنفسجي.</li>
-  <li><strong>رزمة ضخمة</strong>: 162 بطاقة (144 رقمي + 12 Wild + 6 Skip) لجولات أطول.</li>
-  <li><strong>الدمج اللوني</strong>: حدد بطاقتين رقميتين متوافقتين ثم اضغط "دمج" (يلوّن تلقائياً بلون الناتج):
-    <br>&nbsp;&nbsp;🔴 أحمر + 🟡 أصفر = 🟠 <strong>برتقالي</strong>
-    <br>&nbsp;&nbsp;🔴 أحمر + 🔵 أزرق = 🟣 <strong>بنفسجي</strong>
-    <br>&nbsp;&nbsp;🔵 أزرق + 🟡 أصفر = 🟢 <strong>أخضر</strong>
-  </li>
-  <li><strong>قيمة البطاقة الناتجة</strong> = مجموع البطاقتين (بحد أقصى 12).</li>
-  <li><strong>الغرض</strong>: تقليل البطاقات، أو تكوين مجموعات كان يستحيل تكوينها بلونك الأصلي.</li>
-  <li><strong>التوقيت</strong>: يمكنك الدمج في أي وقت من دورك بعد السحب.</li>
+  <li><strong>الرزمة:</strong> تتكون من 7 ألوان طبيعية فقط (أحمر، برتقالي، أصفر، أخضر، أزرق، نيلي، بنفسجي).</li>
+  <li><strong>الألوان النادرة:</strong> 5 ألوان لا توجد في الرزمة (قرمزي، عسلي، ليموني، تركوازي، أرجواني) يتم تصنيعها فقط عن طريق الدمج.</li>
+  <li><strong>حد الدمج:</strong> يمتلك كل لاعب <b>3 دمجات فقط</b> في كل جولة. (يتم إعادة تعيينها في بداية كل جولة جديدة).</li>
+  <li><strong>طريقة الدمج:</strong> حدد بطاقتين من يدك، وسيظهر لك زر "دمج" في شريط الإجراءات السفلي، لتقوم بدمجهما.</li>
+</ul>
+<p><strong>📜 قواعد الدمج بالتفصيل:</strong></p>
+<ul>
+  <li><strong>نفس اللون:</strong> مجموع القيم (بحد أقصى 12). مثال: أحمر 5 + أحمر 8 = أحمر 12.</li>
+  <li><strong>نفس الرقم + لونين مختلفين:</strong> يبقى الرقم كما هو، ويتغير اللون إلى ناتج مزج اللونين. مثال: أحمر 7 + أزرق 7 = بنفسجي 7.</li>
+  <li><strong>ألوان وأرقام مختلفة:</strong> مجموع القيم، ويتغير اللون حسب جدول الدمج. مثال: أحمر 3 + أصفر 4 = برتقالي 7.</li>
+  <li><strong>الدمج مع Wild:</strong> Wild + رقم = يزيد قيمة الرقم 3 (بحد أقصى 12) ويحتفظ بلونه. Wild + Skip = Wild. Wild + Wild = Wild.</li>
+  <li><strong>الدمج مع Skip:</strong> Skip + رقم = يتبخر الـ Skip ويبقى الرقم كما هو. Skip + Skip = Skip.</li>
+  <li><strong>⚠️ تحذير:</strong> إذا كان ناتج خلط اللونين معروفاً بأنه "بني" (مثل خلط الأخضر مع البنفسجي)، فلن يُسمح بالدمج.</li>
 </ul>
 <h3>💡 نصائح استراتيجية</h3>
     <ul>
@@ -831,7 +837,27 @@ input, textarea { font-family: inherit; }
 #menu { justify-content: flex-start; gap: 8px; padding: 10px 12px 0 12px; overflow-y: auto; padding-bottom: 4px; }
 #menu h1 { font-size: 34px; font-weight: 900; letter-spacing: 4px; background: linear-gradient(135deg, #ffd75e, #f4b942, #c98a05); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; text-align: center; margin-top: 6px; }
 #menu .subtitle { font-size: 10.5px; color: var(--text-secondary); opacity: 0.85; text-align: center; margin-top: -4px; }
-#menu .cards-preview { display: flex; gap: 6px; margin: 8px 0; transform: rotate(-3deg); }
+#menu .cards-preview { display: flex; gap: 6px; margin: 15px 0; transform: rotate(-3deg); }
+/* 🌊 أنيميشن الموجات لبطاقات القائمة الرئيسية */
+#menu .cards-preview .p10-card {
+  animation: waveFloat 2.5s ease-in-out infinite;
+  transform-origin: center center;
+  box-shadow: 0 8px 15px rgba(0,0,0,0.5); /* ظل أوضح للبطاقات */
+}
+/* تأخير الأنيميشن لكل بطاقة لتبدو كموجة */
+#menu .cards-preview .p10-card:nth-child(1) { animation-delay: 0s; }
+#menu .cards-preview .p10-card:nth-child(2) { animation-delay: 0.2s; }
+#menu .cards-preview .p10-card:nth-child(3) { animation-delay: 0.4s; }
+#menu .cards-preview .p10-card:nth-child(4) { animation-delay: 0.6s; }
+
+@keyframes waveFloat {
+  0%, 100% { 
+    transform: translateY(0) rotate(0deg); 
+  }
+  50% { 
+    transform: translateY(-15px) rotate(4deg); 
+  }
+}
 
 .mode-grid { display: flex; flex-direction: column; gap: 7px; width: 100%; max-width: 340px; }
 .mode-btn { display: flex; align-items: center; gap: 10px; padding: 11px 12px; background: linear-gradient(160deg, var(--surface-1), rgba(255,255,255,0.02)); border: 1.5px solid var(--gold-alpha-30); border-radius: 12px; color: var(--text-primary); text-align: right; transition: transform 0.18s, border-color 0.18s; }
@@ -1113,6 +1139,30 @@ input, textarea { font-family: inherit; }
   height: 44px;
   flex: 0 0 44px;                /* ارتفاع ثابت لا ينمو ولا ينكمش */
 }
+
+/* زر الطيف أسفل يمين الشاشة (مثل زر ملء الشاشة) */
+.inline-spectrum-btn {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 28px;
+  padding: 0;
+  border-radius: 8px;
+  background: linear-gradient(160deg, #ff8a00, #e52e71);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.35);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.15s;
+  z-index: 6;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  font-size: 16px;
+}
+.inline-spectrum-btn:active { transform: translateY(-50%) scale(0.88); }
 .actions button {
   width: 100%;
   height: 100%;
@@ -1237,6 +1287,26 @@ input, textarea { font-family: inherit; }
 .p10-card.col-yellow { --cc: #ffcb1f; --cc-l: #ffe985; --cc-d: #d19000; --cc-s: rgba(255,203,31,0.32); }
 .p10-card.col-orange { --cc: #FB8C00; --cc-l: #FFB74D; --cc-d: #E65100; --cc-s: rgba(251,140,0,0.28); }
 .p10-card.col-purple { --cc: #8E24AA; --cc-l: #CE93D8; --cc-d: #4A148C; --cc-s: rgba(142,36,170,0.28); }
+.p10-card.col-indigo { --cc: #3f3db5; --cc-l: #8a87e0; --cc-d: #1a1a6e; --cc-s: rgba(63,61,181,0.28); }
+.p10-card.col-vermilion { --cc: #ff4500; --cc-l: #ff8c66; --cc-d: #b22200; --cc-s: rgba(255,69,0,0.32); }
+.p10-card.col-amber { --cc: #ffbf00; --cc-l: #ffe066; --cc-d: #cc8800; --cc-s: rgba(255,191,0,0.32); }
+.p10-card.col-chartreuse { --cc: #b4d61a; --cc-l: #d9ee5c; --cc-d: #7a9100; --cc-s: rgba(180,214,26,0.32); }
+.p10-card.col-teal { --cc: #00bcd4; --cc-l: #66e0ed; --cc-d: #00838f; --cc-s: rgba(0,188,212,0.32); }
+.p10-card.col-magenta { --cc: #e91e63; --cc-l: #ff6b9d; --cc-d: #ad1457; --cc-s: rgba(233,30,99,0.32); }
+/* ✨ الألوان النادرة لها توهج مميز ليتم تمييزها فوراً */
+.p10-card.col-vermilion, .p10-card.col-amber, .p10-card.col-chartreuse,
+.p10-card.col-teal, .p10-card.col-magenta {
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.55), inset 0 0 0 2.5px rgba(0,0,0,0.14),
+              0 3px 8px rgba(0,0,0,0.42), 0 0 12px var(--cc-s) !important;
+}
+/* شارة الدمج المتبقي */
+.blend-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 18px; height: 18px; padding: 0 4px;
+  border-radius: 9px; font-size: 10px; font-weight: 900;
+  background: #fff; color: #000; margin-right: 3px;
+  border: 1px solid rgba(0,0,0,0.4);
+}
 
 /* 17 FACE DESIGNS */
 /* 4 أرباع بلون واحد فقط مع تباين لطيف (بدون خطوط قطرية) */
@@ -2727,9 +2797,9 @@ html.theme-epic .p10-card[class*="face-"] {
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '23.1.3';
+var APP_VERSION = '23.2.9';
 var APP_BUILD_DATE = '1-9-2026';
-var APP_LAST_UPDATE = '1-11-2026';
+var APP_LAST_UPDATE = '5-11-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
 var UPDATE_CHECK_INTERVAL_MS = 30 * 60 * 1000; /* 30 دقيقة */
 
@@ -2741,12 +2811,18 @@ var SAVE_KEY = 'p10TYEYYIY_savedGame';
 var SAVE_MAX_AGE_MS = 7 * 24 * 3600 * 1000;
 
 var COLORS = [
-  { key: 'col-red', name: 'أحمر' },
-  { key: 'col-blue', name: 'أزرق' },
-  { key: 'col-green', name: 'أخضر' },
-  { key: 'col-yellow', name: 'أصفر' },
-  { key: 'col-orange', name: 'برتقالي' },
-  { key: 'col-purple', name: 'بنفسجي' }
+  { key: 'col-red', name: 'أحمر' },           // 0
+  { key: 'col-blue', name: 'أزرق' },          // 1
+  { key: 'col-green', name: 'أخضر' },         // 2
+  { key: 'col-yellow', name: 'أصفر' },        // 3
+  { key: 'col-orange', name: 'برتقالي' },     // 4
+  { key: 'col-purple', name: 'بنفسجي' },      // 5
+  { key: 'col-indigo', name: 'نيلي' },        // 6 — طبيعي جديد في رزمة الطيف
+  { key: 'col-vermilion', name: 'قرمزي' },    // 7 — نادر (أحمر + برتقالي)
+  { key: 'col-amber', name: 'عسلي' },         // 8 — نادر (أصفر + برتقالي)
+  { key: 'col-chartreuse', name: 'ليموني' },  // 9 — نادر (أصفر + أخضر)
+  { key: 'col-teal', name: 'تركوازي' },       // 10 — نادر (أزرق + أخضر)
+  { key: 'col-magenta', name: 'أرجواني' }     // 11 — نادر (أحمر + بنفسجي)
 ];
 
 var PHASE_PACKS = [
@@ -2863,7 +2939,7 @@ var SPECIAL_MODES = [
   { key: 'massive',  name: '🎒 حِمل',   desc: 'تبدأ بـ 15 بطاقة',        startHand: 15, drawCount: 1 },
 
 { key: 'nomercy',  name: '⚔️ بلا رحمة', desc: 'بلا بطاقات Wild أو Skip + مؤقت 15 ثانية للدور', startHand: 10, drawCount: 1, noWild: true, noSkip: true, turnTimer: 15 },
-{ key: 'prism',    name: ' المنشور (PRISM)', desc: '6 ألوان + دمج البطاقات + رزمة ضخمة', startHand: 10, drawCount: 1, prismMode: true }
+{ key: 'spectrum', name: '☣️الطيف (SPECTRUM)', desc: '7 ألوان طبيعية + 5 نادرة بالدمج · 3 دمجات لكل جولة', startHand: 10, drawCount: 1, spectrumMode: true }
 ];
 
 var FACE_STYLES = [
@@ -3003,6 +3079,13 @@ function shuffleArray(a) {
   }
   return a;
 }
+function getLocalDateKey(date) {
+  date = date || new Date();
+  var y = date.getFullYear();
+  var m = String(date.getMonth() + 1).padStart(2, '0');
+  var d = String(date.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + d;
+}
 var escapeCache = {};
 var escapeCacheCount = 0;
 var ESCAPE_MAP = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
@@ -3014,6 +3097,26 @@ function escapeHTML(text) {
   escapeCache[text] = result;
   escapeCacheCount++;
   return result;
+}
+function showConfirmDialog(title, message, onConfirm, onCancel) {
+  var existing = document.getElementById('customConfirmDialog');
+  if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+  var modal = document.createElement('div');
+  modal.id = 'customConfirmDialog';
+  modal.className = 'overlay';
+  modal.style.zIndex = '9999';
+  modal.innerHTML =
+    '<div class="overlay-content" style="max-width:400px">' +
+      '<h2 style="color:#f4b942;margin-bottom:12px;font-size:18px;text-align:center">' + escapeHTML(title) + '</h2>' +
+      '<p style="font-size:12.5px;line-height:1.7;margin-bottom:16px;text-align:center;opacity:.9">' + message + '</p>' +
+      '<button id="confirmYesBtn" type="button" style="background:linear-gradient(160deg,#5be08f,#22a862);color:#04240f;margin-bottom:7px;width:100%;padding:12px;border-radius:10px;font-weight:800;border:0;cursor:pointer">موافق</button>' +
+      '<button id="confirmNoBtn" type="button" style="background:rgba(255,255,255,0.12);color:#fff;width:100%;padding:11px;border-radius:10px;font-weight:700;border:0;cursor:pointer">إلغاء</button>' +
+    '</div>';
+  document.body.appendChild(modal);
+  function close() { if (modal.parentNode) modal.parentNode.removeChild(modal); }
+  document.getElementById('confirmYesBtn').onclick = function() { close(); if (onConfirm) onConfirm(); };
+  document.getElementById('confirmNoBtn').onclick = function() { close(); if (onCancel) onCancel(); };
+  modal.addEventListener('click', function(e) { if (e.target === modal) { close(); if (onCancel) onCancel(); } });
 }
 function showScreen(id) {
   var screens = document.querySelectorAll('.screen');
@@ -3042,19 +3145,26 @@ function shouldRunAnimations() {
   return true;
 }
 function copyToClipboard(text) {
-  if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+  if (navigator.clipboard && window.isSecureContext) {
+    return navigator.clipboard.writeText(text);
+  }
   return new Promise(function(resolve, reject) {
     try {
       var ta = document.createElement('textarea');
-ta.value = text;
-ta.style.position = 'fixed'; ta.style.left = '-9999px'; ta.style.top = '0';
-ta.style.opacity = '0'; ta.style.pointerEvents = 'none';
-ta.style.userSelect = 'text'; ta.style.webkitUserSelect = 'text';
-ta.setAttribute('readonly', '');
-document.body.appendChild(ta);
-ta.focus();
-ta.select();
-ta.setSelectionRange(0, text.length);
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.top = '0';
+      ta.style.left = '0';
+      ta.style.opacity = '0';
+      ta.style.pointerEvents = 'none';
+      ta.setAttribute('readonly', '');
+      document.body.appendChild(ta);
+      
+      // إصلاح خاص للهواتف
+      ta.focus();
+      ta.select();
+      ta.setSelectionRange(0, text.length);
+      
       var ok = document.execCommand('copy');
       document.body.removeChild(ta);
       if (ok) resolve(); else reject(new Error('Copy failed'));
@@ -4026,16 +4136,22 @@ function sanitizeState(state) {
 function createDeck(cfg) {
   cfg = cfg || {};
   var d = [];
-  // ✅ دعم 6 ألوان في وضع PRISM
-  var maxColors = (cfg && cfg.prismMode) ? 6 : 4; 
+  var maxColors, wildCount, skipCount;
+  if (cfg && cfg.spectrumMode) {
+    //   وضع الطيف: 7 ألوان طبيعية × 12 × 2 نسخة = 168 + 8 Wild + 4 Skip = 180
+    maxColors = 7;
+    wildCount = 8;
+    skipCount = 4;
+  } else {
+    // الوضع العادي / الكلاسيكي
+    maxColors = 4;
+    wildCount = 8;
+    skipCount = 4;
+  }
   for (var col = 0; col < maxColors; col++) for (var v = 1; v <= 12; v++) {
     d.push({ type: 'num', value: v, col: col, id: nextUniqueId() });
     d.push({ type: 'num', value: v, col: col, id: nextUniqueId() });
   }
-  // ✅ زيادة Wild و Skip في وضع PRISM
-  var wildCount = (cfg && cfg.prismMode) ? 12 : 8;
-  var skipCount = (cfg && cfg.prismMode) ? 6 : 4;
-  
   if (!cfg.noWild) for (var i = 0; i < wildCount; i++) d.push({ type: 'wild', id: nextUniqueId() });
   if (!cfg.noSkip) for (var j = 0; j < skipCount; j++) d.push({ type: 'skip', id: nextUniqueId() });
   return shuffleArray(d);
@@ -4044,6 +4160,49 @@ function getCardValue(card) {
   if (card.type === 'wild') return 25;
   if (card.type === 'skip') return 15;
   return card.value >= 10 ? 10 : 5;
+}
+/* ============================================================
+     SPECTRUM MODE — جدول الدمج الكامل (نظام مغلق من 12 لوناً)
+   ============================================================ */
+var SPECTRUM_MIX = {
+  // خلطات الألوان الطبيعية (تنتج ألواناً موجودة في الرزمة)
+  '0,3': 4,   // أحمر + أصفر = برتقالي
+  '1,3': 2,   // أزرق + أصفر = أخضر
+  '0,1': 5,   // أحمر + أزرق = بنفسجي
+  '1,5': 6,   // أزرق + بنفسجي = نيلي
+  '1,6': 1,   // أزرق + نيلي = أزرق
+  '5,6': 5,   // بنفسجي + نيلي = بنفسجي
+  // ⭐ خلطات نادرة (تنتج ألواناً لا توجد في الرزمة)
+  '0,4': 7,   // أحمر + برتقالي = قرمزي ⭐
+  '3,4': 8,   // أصفر + برتقالي = عسلي ⭐
+  '2,3': 9,   // أخضر + أصفر = ليموني ⭐
+  '1,2': 10,  // أزرق + أخضر = تركوازي ⭐
+  '0,5': 11,  // أحمر + بنفسجي = أرجواني ⭐
+  // ⭐ خلطات نيلي تنتج ألواناً نادرة
+  '0,6': 11,  // أحمر + نيلي = أرجواني
+  '2,6': 10,  // أخضر + نيلي = تركوازي
+  // 🟤 غير صالحة (بني — ممنوع)
+  '0,2': -1, '1,4': -1, '2,4': -1, '2,5': -1, '3,5': -1,
+  '4,5': -1, '3,6': -1, '4,6': -1
+};
+function mixColors(c1, c2) {
+  if (c1 === c2) return c1;
+  var key = Math.min(c1, c2) + ',' + Math.max(c1, c2);
+  return SPECTRUM_MIX[key] !== undefined ? SPECTRUM_MIX[key] : -1;
+}
+function isValidSpectrumBlend(c1, c2) {
+  if (!c1 || !c2) return false;
+  // Wild / Skip cases
+  if (c1.type === 'wild' || c2.type === 'wild') return true;
+  if (c1.type === 'skip' && c2.type === 'skip') return true;
+  if (c1.type === 'skip' && c2.type === 'wild') return true;
+  // Both numeric
+  if (c1.type === 'num' && c2.type === 'num') {
+    if (c1.col === c2.col) return true;           // نفس اللون → مجموع
+    if (c1.value === c2.value) return true;        // نفس الرقم → لون جديد
+    return mixColors(c1.col, c2.col) >= 0;         // جدول الدمج
+  }
+  return false;
 }
 function getCurrentSpecialConfig() {
   var k = app.specialMode || 'classic';
@@ -4164,7 +4323,7 @@ if (startHand > maxStartHand) {
   for (var j = 0; j < configs.length; j++) {
     var c = configs[j];
     var dn = c.isCPU ? 'CPU ' + (j + 1) : 'لاعب ' + (j + 1);
-    players.push({ id: j, name: c.name || dn, isCPU: !!c.isCPU, hand: [], melds: [], phase: 0, score: 0, hitsThisTurn: 0, shieldRounds: 0, skipImmune: false, autoCompleted: false, laidThisTurn: false });
+    players.push({ id: j, name: c.name || dn, isCPU: !!c.isCPU, hand: [], melds: [], phase: 0, score: 0, hitsThisTurn: 0, shieldRounds: 0, skipImmune: false, autoCompleted: false, laidThisTurn: false, mergesLeft: 3 });
   }
   assignPersonalities(players);
   var deck = createDeck(spCfg);
@@ -4273,6 +4432,7 @@ function resetRoundForState(state, winnerId) {
     state.players[k].melds = [];
     state.players[k].hitsThisTurn = 0;
     state.players[k].laidThisTurn = false;
+    state.players[k].mergesLeft = 3; //  إعادة تعيين الدمجات في كل جولة
   }
   var fd = pickInitialDiscard(deck);
   state.discard = fd ? [fd] : [];
@@ -4291,18 +4451,18 @@ function advanceTurn(state, skipCount) {
   var currentIdx = state.turnIndex;
   var safety = 0;
   while (actualAdvance < skipCount && safety < 20) {
-    currentIdx = (currentIdx + 1) % state.playerCount;
-    var target = state.players[currentIdx];
-    if (target && target.skipImmune && skipCount > 1) {
-      target.skipImmune = false;
-      setStatus('🚫 ' + target.name + ' محصّن ضد Skip!', 'var(--purple)');
-      pushActionLog(state, -1, 'skip', '🚫 ' + target.name + ' محصّن ضد Skip');
-      safety++;
-      continue;
-    }
-    actualAdvance++;
-    safety++;
+  currentIdx = (currentIdx + 1) % state.playerCount;
+  var target = state.players[currentIdx];
+  if (target && target.skipImmune && skipCount > 1) {
+    target.skipImmune = false;
+    setStatus('🚫 ' + target.name + ' محصّن ضد Skip!', 'var(--purple)');
+    pushActionLog(state, -1, 'skip', '🚫 ' + target.name + ' محصّن ضد Skip');
+    /* الدور يتوقف عند الحصين — لا يُتخطى */
+    break;
   }
+  actualAdvance++;
+  safety++;
+}
   state.turnIndex = currentIdx;
   for (var si = 0; si < state.players.length; si++) {
     if (state.players[si].shieldRounds > 0) state.players[si].shieldRounds--;
@@ -4374,7 +4534,7 @@ if (completedPlayers.length > 0) {
   if (!state.isTieBreaker) {
     state.tie = true;
     var wIds = winners.map(function(w) { return w.id; });
-    triggerPrismTieBreaker(state, wIds);
+    triggerspectrumTieBreaker(state, wIds);
     return;
   } else {
     winner = winners[0]; // في حال التعادل داخل كسر التعادل نفسه
@@ -5415,6 +5575,8 @@ if (hs !== renderCache.handSig && !dragState.active && !dragState.cardId) {
   var ps = state.deck.length + '|' + state.discard.length + '|' + state.turnIndex + '|' + (state.hasDrawn ? '1' : '0') + '|' + vId;
   if (ps !== renderCache.pilesSig) { renderCache.pilesSig = ps; renderCardPiles(state, vId); }
   updateActionsButtons(); updateHandDisabledState(); updateInventoryBadge();
+var shb = $('spectrumHelpBtn');
+if (shb) shb.style.display = (state.specialCfg && state.specialCfg.spectrumMode) ? 'flex' : 'none';
   try { renderDailyChallengeBar(); } catch (e) {}
   var logSig = (state.actionLog || []).length + '|' + ((state.actionLog && state.actionLog.length > 0) ? state.actionLog[state.actionLog.length - 1].ts : 0);
   if (logSig !== renderCache.logSig) { renderCache.logSig = logSig; renderActionLog(state); }
@@ -5606,20 +5768,23 @@ function updateActionsButtons() {
   else { canDiscard = isMyTurn && state.hasDrawn && sel.length >= 1 && sel.length <= maxD; }
   var canClear = sel.length > 0;
   
-  var isPrism = state.specialCfg && state.specialCfg.prismMode;
-var canBlend = false;
-var blendKey = null;
-if (isPrism && isMyTurn && state.hasDrawn && sel.length === 2) {
-  var c1 = sel[0], c2 = sel[1];
-  if (c1.type === 'num' && c2.type === 'num') {
-    var key = Math.min(c1.col, c2.col) + ',' + Math.max(c1.col, c2.col);
-    if (key === '0,3' || key === '0,1' || key === '1,3') { canBlend = true; blendKey = key; }
+  var isSpectrum = state.specialCfg && state.specialCfg.spectrumMode;
+  var canBlend = false;
+  var blendResult = null;
+  var merges = (typeof player.mergesLeft === 'number') ? player.mergesLeft : 3;
+
+  // فحص إمكانية الدمج وحساب الناتج لتلوين الزر
+  if (isSpectrum && isMyTurn && state.hasDrawn && sel.length === 2 && merges > 0) {
+    if (isValidSpectrumBlend(sel[0], sel[1])) {
+      canBlend = true;
+      blendResult = computeSpectrumResult(sel[0], sel[1]);
+    }
   }
-}
 
   var el = $('actions');
   if (!el.dataset.built) {
     el.dataset.built = '1';
+    // الترتيب الأصلي للأزرار
     el.innerHTML =
       '<button class="btn-draw" id="btnDraw" type="button">اسحب</button>' +
       '<button class="btn-lay" id="btnLay" type="button">ضع المرحلة</button>' +
@@ -5627,7 +5792,7 @@ if (isPrism && isMyTurn && state.hasDrawn && sel.length === 2) {
       '<button class="btn-inventory" id="inventoryBtn" type="button" title="المخزون">🎒</button>' +
       '<button class="btn-hit" id="btnHit" type="button">اضرب</button>' +
       '<button class="btn-discard" id="btnDiscard" type="button">تخلص</button>' +
-      '<button class="btn-blend hidden" id="btnBlend" type="button" style="background:linear-gradient(160deg, #ff8a00, #e52e71); color:#fff; font-weight:900">دمج</button>';
+      '<button class="btn-blend hidden" id="btnBlend" type="button">دمج</button>';
     
     $('btnDraw').onclick = function() { actionDraw('deck'); };
     $('btnLay').onclick = function() { actionLayPhase(); };
@@ -5638,30 +5803,40 @@ if (isPrism && isMyTurn && state.hasDrawn && sel.length === 2) {
     $('btnBlend').onclick = function() { actionBlend(); };
   }
 
-// 7 أعمدة فقط عند ظهور الدمج، وإلا 6
-el.style.gridTemplateColumns = (isPrism && canBlend) ? 'repeat(7, minmax(0, 1fr))' : 'repeat(6, minmax(0, 1fr))';
-var bb = $('btnBlend');
-if (bb) {
-  if (isPrism && canBlend) {
-    bb.classList.remove('hidden');
-    bb.disabled = false;
-    var blendColors = { '0,1': ['#CE93D8', '#8E24AA'], '0,3': ['#FFB74D', '#FB8C00'], '1,3': ['#6cf0b5', '#069c56'] };
-    var bcol = blendColors[blendKey] || ['#ff8a00', '#e52e71'];
-    bb.style.background = 'linear-gradient(160deg, ' + bcol[0] + ', ' + bcol[1] + ')';
-    bb.style.color = '#fff';
-    bb.style.fontWeight = '900';
-    bb.style.textShadow = '0 1px 2px rgba(0,0,0,0.6)';
-    bb.style.boxShadow = '0 0 14px ' + bcol[1] + ', inset 0 0 4px rgba(255,255,255,0.3)';
-    bb.style.border = '1.5px solid ' + bcol[0];
-    bb.textContent = '🎨 دمج';
-  } else {
-    bb.classList.add('hidden');
-    bb.disabled = true;
-    bb.style.background = '';
-    bb.style.boxShadow = '';
-    bb.style.border = '';
+  // المنطق الأصلي: 7 أعمدة عند الدمج، و6 عند عدمه
+  el.style.gridTemplateColumns = (isSpectrum && canBlend) ? 'repeat(7, minmax(0, 1fr))' : 'repeat(6, minmax(0, 1fr))';
+  
+  var bb = $('btnBlend');
+  if (bb) {
+    if (isSpectrum && canBlend && blendResult) {
+      bb.classList.remove('hidden');
+      bb.disabled = false;
+      bb.innerHTML = 'دمج <span class="blend-badge">' + merges + '</span>';
+      
+      // تلوين زر الدمج بناءً على لون البطاقة الناتجة
+      if (blendResult.type === 'num') {
+        var hex = colorHex(blendResult.col);
+        bb.style.background = 'linear-gradient(160deg, ' + hex + ' 0%, rgba(0,0,0,0.7) 150%)';
+        bb.style.boxShadow = '0 0 12px ' + hex + ', inset 0 0 4px rgba(255,255,255,0.4)';
+        bb.style.border = '1.5px solid ' + hex;
+      } else if (blendResult.type === 'wild') {
+        bb.style.background = 'linear-gradient(160deg, #f4b942 0%, #7a4d00 150%)';
+        bb.style.boxShadow = '0 0 12px #f4b942, inset 0 0 4px rgba(255,255,255,0.4)';
+        bb.style.border = '1.5px solid #f4b942';
+      } else if (blendResult.type === 'skip') {
+        bb.style.background = 'linear-gradient(160deg, #4a69bd 0%, #050a1a 150%)';
+        bb.style.boxShadow = '0 0 12px #4a69bd, inset 0 0 4px rgba(255,255,255,0.4)';
+        bb.style.border = '1.5px solid #4a69bd';
+      }
+    } else {
+      bb.classList.add('hidden');
+      bb.disabled = true;
+      // إعادة تصفير الألوان عند إخفاء الزر
+      bb.style.background = '';
+      bb.style.boxShadow = '';
+      bb.style.border = '';
+    }
   }
-}
 
   var bDraw = $('btnDraw');
   if (bDraw) {
@@ -6251,17 +6426,17 @@ pushActionLog(state, pId, 'hit', 'ضرب ' + hAdded.length + ' بطاقة');
   var p1 = (msg.payload || {}).id1;
   var p2 = (msg.payload || {}).id2;
   var h = state.players[pId].hand;
-  var cc1 = h.find(c => c.id === p1);
-  var cc2 = h.find(c => c.id === p2);
-  if (cc1 && cc2 && cc1.type === 'num' && cc2.type === 'num') {
-    var k = Math.min(cc1.col, cc2.col) + ',' + Math.max(cc1.col, cc2.col);
-    if (k === '0,3' || k === '0,1' || k === '1,3') {
-      var mixMap = { '0,3': 4, '0,1': 5, '1,3': 2 };
-      var nc = mixMap[k];
-      var nv = Math.min(12, cc1.value + cc2.value);
-      state.players[pId].hand = h.filter(c => c.id !== p1 && c.id !== p2);
-      state.players[pId].hand.push({ type: 'num', value: nv, col: nc, id: nextUniqueId() });
-      state.selected = [];
+  var cc1 = h.find(function(c) { return c.id === p1; });
+  var cc2 = h.find(function(c) { return c.id === p2; });
+  var gp = state.players[pId];
+  if (cc1 && cc2 && gp.mergesLeft > 0 && isValidSpectrumBlend(cc1, cc2)) {
+    var res = computeSpectrumResult(cc1, cc2);
+    if (res) {
+      gp.hand = h.filter(function(c) { return c.id !== p1 && c.id !== p2; });
+      var nc = { type: res.type, id: nextUniqueId() };
+      if (res.type === 'num') { nc.value = res.value; nc.col = res.col; }
+      gp.hand.push(nc);
+      gp.mergesLeft--;
     }
   }
 }
@@ -7074,8 +7249,8 @@ function getDailyChallenge() {
     reward: tpl.reward,
     diff: tpl.diff,
     desc: tpl.desc,
-    dateKey: today.toISOString().slice(0, 10),
-    seed: seed
+    dateKey: getLocalDateKey(today),
+seed: seed
   };
 }
 function dailyChallengeToPhase(d) {
@@ -8033,10 +8208,12 @@ if (pId === app.myPlayerId) {
 function actionBlend() {
   var state = app.state; if (!state || state.gameOver) return;
   var pId = app.viewerId;
-  if (state.turnIndex !== pId) return;
-  if (!state.hasDrawn) return;
+  if (state.turnIndex !== pId) { setStatus('ليس دورك', 'var(--red)'); return; }
+  if (!state.hasDrawn) { setStatus('اسحب بطاقة أولاً', 'var(--red)'); return; }
   if (app.busy) return;
-  
+  if (!state.specialCfg || !state.specialCfg.spectrumMode) {
+    setStatus('الدمج متاح في وضع الطيف فقط', 'var(--red)'); return;
+  }
   var player = state.players[pId];
   var sel = [];
   for (var i = 0; i < state.selected.length; i++) {
@@ -8044,41 +8221,92 @@ function actionBlend() {
       if (player.hand[j].id === state.selected[i]) { sel.push(player.hand[j]); break; }
     }
   }
-  
-  if (sel.length !== 2 || sel[0].type !== 'num' || sel[1].type !== 'num') {
-    setStatus('اختر بطاقتين رقميتين للدمج', 'var(--red)');
-    SoundFX.play('error');
-    return;
+  if (sel.length !== 2) {
+    setStatus('اختر بطاقتين فقط للدمج', 'var(--red)'); SoundFX.play('error'); return;
   }
-  
+  var merges = (typeof player.mergesLeft === 'number') ? player.mergesLeft : 3;
+  if (merges <= 0) {
+    setStatus('انتهت محاولات الدمج في هذه الجولة (3/3)', 'var(--red)');
+    SoundFX.play('error'); return;
+  }
   var c1 = sel[0], c2 = sel[1];
-  var key = Math.min(c1.col, c2.col) + ',' + Math.max(c1.col, c2.col);
-  if (key !== '0,3' && key !== '0,1' && key !== '1,3') {
-    setStatus('هذان اللونان لا يمكن دمجهما!', 'var(--red)');
-    SoundFX.play('error');
-    return;
+  if (!isValidSpectrumBlend(c1, c2)) {
+    setStatus('هاتان البطاقتان لا يمكن دمجهما (سينتج بني)', 'var(--red)');
+    SoundFX.play('error'); return;
   }
-  
   if (isGuest()) {
     setBusy(true);
     sendToHost({ type: 'action', action: 'blend', payload: { id1: c1.id, id2: c2.id } });
     return;
   }
-  
-  var mixMap = { '0,3': 4, '0,1': 5, '1,3': 2 };
-  var newColor = mixMap[key];
-  var newValue = Math.min(12, c1.value + c2.value);
-  
+  // حساب النتيجة
+  var result = computeSpectrumResult(c1, c2);
+  if (!result) {
+    setStatus('لا يمكن الدمج', 'var(--red)'); SoundFX.play('error'); return;
+  }
   pushUndoSnapshot();
   player.hand = player.hand.filter(function(c) { return c.id !== c1.id && c.id !== c2.id; });
-  player.hand.push({ type: 'num', value: newValue, col: newColor, id: nextUniqueId() });
-  
+  var newCard = { type: result.type, id: nextUniqueId() };
+  if (result.type === 'num') { newCard.value = result.value; newCard.col = result.col; }
+  player.hand.push(newCard);
+  player.mergesLeft = merges - 1;
   state.selected = [];
-  setStatus('🎨 تم دمج البطاقات بنجاح!', 'var(--purple)');
-  SoundFX.play('reward');
+  setStatus('🎨 ' + result.reason + ' · متبقي ' + player.mergesLeft + '/3', 'var(--purple)');
+  SoundFX.play('reward'); vibrateOn('lay');
   resetRenderCache(); scheduleRender(); syncStateToPeers();
 }
-
+function computeSpectrumResult(c1, c2) {
+  // Wild + Wild = Wild
+  if (c1.type === 'wild' && c2.type === 'wild') {
+    return { type: 'wild', reason: 'Wild + Wild = Wild' };
+  }
+  // Skip + Skip = Skip
+  if (c1.type === 'skip' && c2.type === 'skip') {
+    return { type: 'skip', reason: 'Skip + Skip = Skip' };
+  }
+  // Wild + Skip = Wild
+  if ((c1.type === 'wild' && c2.type === 'skip') || (c1.type === 'skip' && c2.type === 'wild')) {
+    return { type: 'wild', reason: 'Wild يبتلع Skip' };
+  }
+  // Wild + رقم = رقم (+3)
+  if ((c1.type === 'wild' && c2.type === 'num') || (c1.type === 'num' && c2.type === 'wild')) {
+    var numC = c1.type === 'num' ? c1 : c2;
+    return { type: 'num', value: Math.min(12, numC.value + 3), col: numC.col,
+             reason: 'Wild يقوّي الرقم (+3)' };
+  }
+  // Skip + رقم = رقم (نفس القيمة)
+  if ((c1.type === 'skip' && c2.type === 'num') || (c1.type === 'num' && c2.type === 'skip')) {
+    var numC2 = c1.type === 'num' ? c1 : c2;
+    return { type: 'num', value: numC2.value, col: numC2.col,
+             reason: 'Skip يتبخر ويبقى الرقم' };
+  }
+  // رقم + رقم
+  if (c1.type === 'num' && c2.type === 'num') {
+    // نفس اللون + نفس الرقم
+    if (c1.col === c2.col && c1.value === c2.value) {
+      return { type: 'num', value: Math.min(12, c1.value + c2.value), col: c1.col,
+               reason: 'بطاقتان متطابقتان (' + c1.value + '+' + c2.value + '=' + Math.min(12, c1.value + c2.value) + ')' };
+    }
+    // نفس اللون + أرقام مختلفة
+    if (c1.col === c2.col) {
+      return { type: 'num', value: Math.min(12, c1.value + c2.value), col: c1.col,
+               reason: 'نفس اللون (مجموع القيم)' };
+    }
+    // نفس الرقم + لونين مختلفين
+    if (c1.value === c2.value) {
+      var mixedCol = mixColors(c1.col, c2.col);
+      if (mixedCol < 0) return null;
+      return { type: 'num', value: c1.value, col: mixedCol,
+               reason: COLORS[c1.col].name + '+' + COLORS[c2.col].name + '=' + COLORS[mixedCol].name };
+    }
+    // ألوان وأرقام مختلفة
+    var mixedCol2 = mixColors(c1.col, c2.col);
+    if (mixedCol2 < 0) return null;
+    return { type: 'num', value: Math.min(12, c1.value + c2.value), col: mixedCol2,
+             reason: COLORS[c1.col].name + '+' + COLORS[c2.col].name + '=' + COLORS[mixedCol2].name };
+  }
+  return null;
+}
 function askSideChoice(cardDesc, onChoose) {
   var modal = $('sideChoiceModal');
   if (!modal) { onChoose('right'); return; }
@@ -8364,28 +8592,27 @@ function actionClearSelection() {
 /* ============================================================
    WIN / LOSE
    ============================================================ */
-function triggerPrismTieBreaker(state, tiedPlayerIds) {
+function triggerspectrumTieBreaker(state, tiedPlayerIds) {
   state.isTieBreaker = true;
   state.tie = false;
   state.gameOver = false;
-  
-  // ✅ 5 شروط ثابتة يتم الاختيار بينها عشوائياً
-  var tieConditions = [
-    { sets: [4], runs: [], color: 0, desc: 'مجموعة من 4 (4 متطابقة)' },
+
+  //   وضع الطيف: مرحلة عشوائية واحدة
+  var spectrumConditions = [
+    { sets: [3], runs: [], color: 0, desc: 'مجموعة من 3' },
+    { sets: [], runs: [4], color: 0, desc: 'متتالية من 4' },
+    { sets: [4], runs: [], color: 0, desc: 'مجموعة من 4' },
     { sets: [3], runs: [4], color: 0, desc: 'مجموعة 3 + متتالية 4' },
-    { sets: [], runs: [5], color: 0, desc: 'متتالية من 5' },
-    { sets: [3, 3], runs: [], color: 0, desc: 'مجموعتان × 3' },
     { sets: [], runs: [], color: 5, desc: '5 بطاقات من نفس اللون' }
   ];
-  
-  var randomCondition = tieConditions[Math.floor(Math.random() * tieConditions.length)];
-  
-  // تحويل الوضع إلى PRISM
-  state.specialCfg = { key: 'prism', name: 'PRISM (كسر التعادل)', startHand: 10, drawCount: 1, prismMode: true };
+  var randomCondition = spectrumConditions[Math.floor(Math.random() * spectrumConditions.length)];
+
+  // تفعيل وضع الطيف
+  state.specialCfg = { key: 'spectrum', name: '  الطيف', startHand: 10, drawCount: 1, spectrumMode: true };
   state.phasesLimit = 1;
   state.phasesList = [randomCondition];
-  
-  // إعادة توزيع 10 بطاقات لكل لاعب من الرزمة الجديدة
+
+  // إعادة توزيع 10 بطاقات من رزمة الطيف الجديدة (7 ألوان)
   var deck = createDeck(state.specialCfg);
   state.deck = deck;
   for (var k = 0; k < state.players.length; k++) {
@@ -8394,21 +8621,20 @@ function triggerPrismTieBreaker(state, tiedPlayerIds) {
     state.players[k].phase = 0;
     state.players[k].score = 0;
     state.players[k].laidThisTurn = false;
+    state.players[k].mergesLeft = 3;
   }
   var fd = pickInitialDiscard(deck);
   state.discard = fd ? [fd] : [];
-  
-  // بدء الدور من أول لاعب متعادل
   state.turnIndex = tiedPlayerIds[0];
   state.round = 1;
   state.hasDrawn = false;
-  
-  app.dailyChallengeActive = false;
-  
-  setStatus('⚔️ تعادل! كسر التعادل (PRISM): ' + randomCondition.desc, 'var(--gold)');
-  
+  state.selected = []; state.hintCards = [];
+  state.actionLog = state.actionLog || [];
+
+  setStatus('  تعادل! وضع الطيف — ' + randomCondition.desc, 'var(--gold)');
+
   if (app.mode !== 'lan') {
-    showRoundOverlay('تعادل!', function() {
+    showSpectrumIntro(function() {
       resetRenderCache(); previouslyRenderedMelds = {};
       scheduleRender();
       startTurnIfNeeded();
@@ -8417,13 +8643,73 @@ function triggerPrismTieBreaker(state, tiedPlayerIds) {
     resetRenderCache(); previouslyRenderedMelds = {};
     scheduleRender();
     if (isHost()) {
-      broadcastToGuests({ type: 'roundOverlay', round: 'تعادل!' });
+      broadcastToGuests({ type: 'roundOverlay', round: '  وضع الطيف' });
       syncStateToPeers();
       startTurnIfNeeded();
     }
   }
 }
 
+/* ============================================================
+     تلميح وضع الطيف — يظهر عند الدخول
+   ============================================================ */
+function showSpectrumIntro(callback) {
+  var existing = $('spectrumIntroModal');
+  if (existing) existing.remove();
+
+  var tableRows = '';
+  for (var i = 0; i < 7; i++) {
+    for (var j = i + 1; j < 7; j++) {
+      var res = mixColors(i, j);
+      if (res < 0) continue;
+      var isNew = res >= 7;
+      tableRows += '<div style="display:flex;align-items:center;justify-content:center;gap:6px;padding:4px 8px;font-size:11px">' +
+        '<span style="color:' + colorHex(i) + ';font-weight:900">' + COLORS[i].name + '</span>' +
+        '<span style="opacity:.6">+</span>' +
+        '<span style="color:' + colorHex(j) + ';font-weight:900">' + COLORS[j].name + '</span>' +
+        '<span style="opacity:.6">=</span>' +
+        '<span style="color:' + colorHex(res) + ';font-weight:900;' + (isNew ? 'text-shadow:0 0 6px currentColor' : '') + '">' + COLORS[res].name + (isNew ? ' ⭐' : '') + '</span>' +
+      '</div>';
+    }
+  }
+
+  var modal = document.createElement('div');
+  modal.id = 'spectrumIntroModal';
+  modal.className = 'overlay';
+  modal.innerHTML =
+    '<div class="overlay-content" style="max-width:460px;max-height:88vh;overflow-y:auto">' +
+      '<div style="text-align:center;font-size:36px;margin-bottom:6px"> </div>' +
+      '<h2 style="color:#f4b942;margin-bottom:6px">وضع الطيف</h2>' +
+      '<p style="font-size:11px;line-height:1.7;opacity:.9;margin-bottom:12px">' +
+        'رزمة جديدة بـ <b>7 ألوان طبيعية</b>. يمكنك دمج بطاقتين لتكوين <b>5 ألوان نادرة</b> ⭐.<br>' +
+        'لديك <b style="color:#f4b942">3 دمجات</b> لكل جولة فقط — فكّر قبل الاستخدام!<br>' +
+        'أي خلطة أخرى تنتج <b style="color:#8fa5a0">بني</b> ❌ (ممنوعة).' +
+      '</p>' +
+      '<div style="background:rgba(0,0,0,0.4);border:1px solid rgba(244,185,66,0.4);border-radius:10px;padding:8px;margin-bottom:12px">' +
+        '<div style="text-align:center;font-size:11.5px;font-weight:900;color:#f4b942;margin-bottom:6px">🎨 جدول الدمج</div>' +
+        tableRows +
+        '<div style="margin-top:8px;padding-top:8px;border-top:1px dashed rgba(255,255,255,0.15);font-size:10.5px;line-height:1.6;color:#8fa5a0;text-align:right">' +
+          '• نفس اللون = مجموع القيم (حد أقصى 12)<br>' +
+          '• نفس الرقم + لونين مختلفين = يبقى الرقم ويتغير اللون<br>' +
+          '• Wild + رقم = الرقم + 3<br>' +
+          '• Skip + رقم = يبقى الرقم<br>' +
+          '• Wild/Skip مع بعضهما = Wild أو Skip' +
+        '</div>' +
+      '</div>' +
+      '<button id="spectrumIntroOkBtn" style="width:100%;padding:13px;background:linear-gradient(160deg,#ffd75e,#c98a05);color:#241a00;border-radius:11px;font-size:14px;font-weight:900;border:0;cursor:pointer">🎮 ابدأ دور الطيف</button>' +
+    '</div>';
+  document.body.appendChild(modal);
+
+  var okBtn = $('spectrumIntroOkBtn');
+  if (okBtn) okBtn.onclick = function() {
+    modal.remove();
+    if (callback) callback();
+  };
+}
+function colorHex(idx) {
+  var map = ['#ff3b4e','#2e8bff','#12d17a','#ffcb1f','#FB8C00','#8E24AA','#3f3db5','#ff4500','#ffbf00','#b4d61a','#00bcd4','#e91e63'];
+  return map[idx] || '#fff';
+}
 function checkWinOrNewRound(state, pId) {
   var player = state.players[pId]; if (!player) return;
   if (player.hand.length !== 0) return;
@@ -8465,7 +8751,7 @@ var winners = completed.filter(function(p) { return p.score === minScore; });
 
 if (winners.length > 1 && !state.isTieBreaker) {
   var wIds = winners.map(function(w) { return w.id; });
-  triggerPrismTieBreaker(state, wIds);
+  triggerspectrumTieBreaker(state, wIds);
   return;
 }
 
@@ -8540,8 +8826,8 @@ function handleWinAchievements() {
     app.stats.dailyChallengeDone[app.dailyChallengeDateKey] = true;
     
     // --- التحديث الجديد: حساب الستريك وحفظ لوحة الشرف ---
-    var today = new Date().toISOString().slice(0, 10);
-    var yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    var today = getLocalDateKey();
+var yesterday = getLocalDateKey(new Date(Date.now() - 86400000));
     if (app.stats.lastDailyDate === yesterday) {
       app.stats.dailyStreak = (app.stats.dailyStreak || 0) + 1;
     } else if (app.stats.lastDailyDate !== today) {
@@ -8763,34 +9049,40 @@ function cpuLayStep(pId) {
   var state = app.state; if (!state || state.gameOver) return;
   var p = state.players[pId]; if (!p || !p.isCPU) { cpuContext.active = false; return; }
   
-  // ✅ ذكاء الكمبيوتر في وضع PRISM (الدمج)
-  if (state.specialCfg && state.specialCfg.prismMode) {
-    var cpPhase = state.phasesList ? state.phasesList[p.phase] : null;
-    var mixMap = { '0,3': 4, '0,1': 5, '1,3': 2 };
-    for (var i = 0; i < p.hand.length; i++) {
-      for (var j = i + 1; j < p.hand.length; j++) {
-        var c1 = p.hand[i], c2 = p.hand[j];
-        if (c1.type !== 'num' || c2.type !== 'num') continue;
-        var key = Math.min(c1.col, c2.col) + ',' + Math.max(c1.col, c2.col);
-        if (mixMap[key] !== undefined) {
-          var newColor = mixMap[key];
-          var newValue = Math.min(12, c1.value + c2.value);
-          // تجربة الدمج لمعرفة إن كان سيساعد
-          var testHand = p.hand.filter(function(c) { return c.id !== c1.id && c.id !== c2.id; });
-          testHand.push({ type: 'num', value: newValue, col: newColor, id: 'test' });
-          
-          if (findBestMeldsForPhase(testHand, cpPhase)) {
-            // الدمج يساعد! قم بتنفيذه
-            p.hand = testHand.map(function(c) { return c.id === 'test' ? { type: 'num', value: newValue, col: newColor, id: nextUniqueId() } : c; });
-            p.light = Math.min(10, p.light + 2);
-            pushActionLog(state, pId, 'lay', '🎨 قام الكمبيوتر بدمج البطاقات!');
-            resetRenderCache(); scheduleRender(); syncStateToPeers();
-            break;
-          }
+// ✅ ذكاء الكمبيوتر في وضع الطيف — يبحث عن أفضل دمج يخدم مرحلته
+if (state.specialCfg && state.specialCfg.spectrumMode && (p.mergesLeft || 0) > 0) {
+  var cpPhase = state.phasesList ? state.phasesList[p.phase] : null;
+  var bestBlend = null;
+  for (var i = 0; i < p.hand.length; i++) {
+    for (var j = i + 1; j < p.hand.length; j++) {
+      var c1 = p.hand[i], c2 = p.hand[j];
+      if (!isValidSpectrumBlend(c1, c2)) continue;
+      var res = computeSpectrumResult(c1, c2);
+      if (!res) continue;
+      var testHand = p.hand.filter(function(c) { return c.id !== c1.id && c.id !== c2.id; });
+      testHand.push({ type: res.type, value: res.value, col: res.col, id: 'test' });
+      var melds = findBestMeldsForPhase(testHand, cpPhase);
+      if (melds && melds.length > 0) {
+        // هل يقلل عدد البطاقات المتبقية بعد وضع المرحلة؟
+        var remaining = testHand.length;
+        for (var m = 0; m < melds.length; m++) remaining -= melds[m].cards.length;
+        if (!bestBlend || remaining < bestBlend.remaining) {
+          bestBlend = { c1: c1, c2: c2, result: res, remaining: remaining };
         }
       }
     }
   }
+  if (bestBlend) {
+    p.hand = p.hand.filter(function(c) { return c.id !== bestBlend.c1.id && c.id !== bestBlend.c2.id; });
+    var newCard = { type: bestBlend.result.type, id: nextUniqueId() };
+    if (bestBlend.result.type === 'num') { newCard.value = bestBlend.result.value; newCard.col = bestBlend.result.col; }
+    p.hand.push(newCard);
+    p.mergesLeft--;
+    pushActionLog(state, pId, 'lay', '🎨 الكمبيوتر دمج بطاقتين (' + bestBlend.result.reason + ')');
+    setStatus(p.name + ' استخدم الدمج (' + p.mergesLeft + ' متبقي)');
+    resetRenderCache(); scheduleRender(); syncStateToPeers();
+  }
+}
 
   var skill = getCpuSkill();
   if (p.phase >= state.phasesLimit) { cpuHitStep(pId); return; }
@@ -8905,6 +9197,11 @@ function cpuDiscardStep(pId) {
     else if (c.type === 'skip') usefulness += 3;
     var finalScore = usefulness * 10 - value;
 finalScore += (Math.random() - 0.5) * getCpuMistakeChance() * 30;
+
+/* 🏁 أولوية قصوى: إنهاء اليد إن أمكن (Wild لا يُرمى) */
+if (p.hand.length <= 2 && c.type !== 'wild') {
+  finalScore -= 9999;
+}
 
 // 🧠 لا تتخلص من بطاقة يمكن أن يضربها الخصم على مجموعاته
 if (c.type === 'num' && isCardUsefulToOpponent(state, pId, c)) {
@@ -10280,21 +10577,22 @@ function attachAdvancedPhaseHandlers() {
 
       /* 4) زر حذف مرحلة */
       var rmPhaseBtn = t.closest('[data-remove-phase]');
-      if (rmPhaseBtn) {
-        ev.preventDefault();
-        var phD = rmPhaseBtn.closest('.adv-phase'); if (!phD) return;
-        var idxD = parseInt(phD.getAttribute('data-idx'), 10);
-        if (app.customAdvancedPhases.length <= 1) { alert('يجب وجود مرحلة واحدة على الأقل'); return; }
-        if (!confirm('حذف المرحلة ' + (idxD + 1) + '؟')) return;
-        app.customAdvancedPhases.splice(idxD, 1);
-        for (var i = 0; i < app.customAdvancedPhases.length; i++) {
-          if (/^مرحلة\s*\d+$/.test(app.customAdvancedPhases[i].desc)) {
-            app.customAdvancedPhases[i].desc = 'مرحلة ' + (i + 1);
-          }
-        }
-        saveAdvancedPhases(); buildAdvancedCustomList();
-        return;
+if (rmPhaseBtn) {
+  ev.preventDefault();
+  var phD = rmPhaseBtn.closest('.adv-phase'); if (!phD) return;
+  var idxD = parseInt(phD.getAttribute('data-idx'), 10);
+  if (app.customAdvancedPhases.length <= 1) { showConfirmDialog('تنبيه', 'يجب وجود مرحلة واحدة على الأقل', null, null); return; }
+  showConfirmDialog('حذف المرحلة', 'هل تريد حذف المرحلة ' + (idxD + 1) + '؟', function() {
+    app.customAdvancedPhases.splice(idxD, 1);
+    for (var i = 0; i < app.customAdvancedPhases.length; i++) {
+      if (/^مرحلة\s*\d+$/.test(app.customAdvancedPhases[i].desc)) {
+        app.customAdvancedPhases[i].desc = 'مرحلة ' + (i + 1);
       }
+    }
+    saveAdvancedPhases(); buildAdvancedCustomList();
+  });
+  return;
+}
 
       /* 5) زر إضافة مرحلة جديدة */
       var addPhaseBtn = t.closest('.adv-add-phase-btn');
@@ -10402,7 +10700,7 @@ function getDailyDiscount() {
     var rng = function() { s = (s * 9301 + 49297) % 233280; return s / 233280; };
     var keys = ['wild','swap','recover','shield','skipGuard','discard','forceDisc','freeze','peek','spy','extraTurn','complete'];
     var idx = Math.floor(rng() * keys.length);
-    return { key: keys[idx], discount: 0.4, dateKey: today.toISOString().slice(0, 10) };
+    return { key: keys[idx], discount: 0.4, dateKey: getLocalDateKey(today) };
   } catch (e) { return null; }
 }
 
@@ -10468,21 +10766,21 @@ function shopMsg(msg, isErr) {
   el._t = setTimeout(function () { el.style.display = 'none'; }, 2800);
 }
 /* ⚠️ تحذير قبل إكمال المرحلة إذا كانت البطاقات غير كافية */
-function confirmForcedComplete() {
-  if (!app.state || app.state.gameOver) return true;
+function confirmForcedComplete(callback) {
+  if (typeof callback !== 'function') callback = function() {};
+  if (!app.state || app.state.gameOver) { callback(true); return; }
   var me = app.state.players[app.viewerId];
-  if (!me) return true;
-  // لو استُخدم مسبقاً أو أكمل كل المراحل → اترك applyShopEffect يعرض الخطأ المناسب
-  if (me.autoCompleted || me.phase >= app.state.phasesLimit) return true;
+  if (!me) { callback(true); return; }
+  if (me.autoCompleted || me.phase >= app.state.phasesLimit) { callback(true); return; }
   var phaseObj = app.state.phasesList[me.phase];
-  if (!phaseObj) return true;
+  if (!phaseObj) { callback(true); return; }
   var melds = findBestMeldsForPhase(me.hand, phaseObj);
-  if (melds && melds.length > 0) return true; // البطاقات كافية — لا تحذير
-  return confirm(
-    '⚠️ تنبيه\n\n' +
-    'بطاقاتك الحالية لا تكفي لتكوين المجموعات المطلوبة للمرحلة ' + (me.phase + 1) + '.\n\n' +
-    'سيتم إكمال المرحلة بدون وضع مجموعات على الطاولة، وستبقى بطاقاتك في يدك.\n\n' +
-    'هل تريد المتابعة؟'
+  if (melds && melds.length > 0) { callback(true); return; }
+  showConfirmDialog(
+    '⚠️ تنبيه',
+    'بطاقاتك الحالية لا تكفي لتكوين المجموعات المطلوبة للمرحلة ' + (me.phase + 1) + '.<br><br>سيتم إكمال المرحلة بدون وضع مجموعات على الطاولة، وستبقى بطاقاتك في يدك.<br><br>هل تريد المتابعة؟',
+    function() { callback(true); },
+    function() { callback(false); }
   );
 }
 function openShop() {
@@ -10565,26 +10863,38 @@ function buyShopItem(key, explicitPrice) {
     return;
   }
   var inGame = !!(app.state && !app.state.gameOver);
-if (!inGame) {
-  if (item.needsGame) { shopMsg('يجب أن تكون داخل اللعبة', true); return; }
-  if (key === 'complete') {
-    if (!confirm('⚠️ تنبيه\n\nهذا العنصر يُكلف ' + price + ' عملة ويُستخدم مرة واحدة فقط داخل المباراة.\n\nهل أنت متأكد من الشراء؟')) return;
+  if (!inGame) {
+    if (item.needsGame) { shopMsg('يجب أن تكون داخل اللعبة', true); return; }
+    if (key === 'complete') {
+      showConfirmDialog('تأكيد الشراء', 'هذا العنصر يُكلف ' + price + ' عملة ويُستخدم مرة واحدة فقط داخل المباراة. هل أنت متأكد؟', function() {
+        spendCoins(price); addToInventory(key); refreshAllCoinDisplays();
+        shopMsg('✓ تم الشراء — محفوظ في مخزونك');
+        SoundFX.play('reward');
+        setTimeout(openShop, 250);
+      });
+      return;
+    }
+    spendCoins(price); addToInventory(key); refreshAllCoinDisplays();
+    shopMsg('✓ تم الشراء — محفوظ في مخزونك');
+    SoundFX.play('reward');
+    setTimeout(openShop, 250);
+    return;
   }
-  spendCoins(price); addToInventory(key); refreshAllCoinDisplays();
-  shopMsg('✓ تم الشراء — محفوظ في مخزونك');
-  SoundFX.play('reward');
-  setTimeout(openShop, 250);
-  return;
+  if (key === 'complete') {
+    confirmForcedComplete(function(ok) {
+      if (!ok) return;
+      _executeBuyShopItemInGame(key, price, item);
+    });
+    return;
+  }
+  _executeBuyShopItemInGame(key, price, item);
 }
-
-/* ✅ تحذير قبل شراء "إكمال المرحلة" */
-if (key === 'complete' && !confirmForcedComplete()) return;
-
-if (app.mode === 'lan' && isGuest()) {
-  sendToHost({ type: 'shopAction', itemKey: key, price: price });
-  shopMsg('⏳ جاري تطبيق ' + item.name + '...');
-  return;
-}
+function _executeBuyShopItemInGame(key, price, item) {
+  if (app.mode === 'lan' && isGuest()) {
+    sendToHost({ type: 'shopAction', itemKey: key, price: price });
+    shopMsg('⏳ جاري تطبيق ' + item.name + '...');
+    return;
+  }
   var r = applyShopEffect(app.state, app.viewerId, key, false);
   if (!r.ok) { shopMsg('تعذّر: ' + (r.reason || 'غير معروف'), true); SoundFX.play('error'); return; }
   spendCoins(price); refreshAllCoinDisplays();
@@ -10605,12 +10915,16 @@ function buyShopBundle(bundle) {
     SoundFX.play('error'); return;
   }
   var inGame = !!(app.state && !app.state.gameOver);
-
-  /* ✅ تحذير إذا احتوت الحزمة على "إكمال المرحلة" */
   if (bundle.items.indexOf('complete') >= 0 && inGame) {
-    if (!confirmForcedComplete()) return;
+    confirmForcedComplete(function(ok) {
+      if (!ok) return;
+      _doApplyShopBundle(bundle, inGame);
+    });
+    return;
   }
-
+  _doApplyShopBundle(bundle, inGame);
+}
+function _doApplyShopBundle(bundle, inGame) {
   var appliedCount = 0;
   for (var i = 0; i < bundle.items.length; i++) {
     var key = bundle.items[i];
@@ -10953,8 +11267,6 @@ function useInventoryItem(idx) {
   if (!item) { removeFromInventoryByIndex(idx); invMsg('عنصر غير معروف — أُزيل', true); return; }
 var inGame = !!(app.state && !app.state.gameOver);
 if (!inGame) { invMsg('استخدم هذا العنصر داخل اللعبة', true); return; }
-
-/* ✅ تحذير قبل استخدام "إكمال المرحلة" من المخزون */
 if (key === 'complete') {
   var meNow = app.state && app.state.players ? app.state.players[app.viewerId] : null;
   if (meNow && app.state && (app.state.phasesLimit - meNow.phase <= 1)) {
@@ -10962,7 +11274,11 @@ if (key === 'complete') {
     SoundFX.play('error');
     return;
   }
-  if (!confirmForcedComplete()) return;
+  confirmForcedComplete(function(ok) {
+    if (!ok) return;
+    _executeUseInventoryItem(idx, key, item);
+  });
+  return;
 }
 
 
@@ -10985,6 +11301,28 @@ if (key === 'complete') {
   if (app.mode === 'lan' && isHost()) syncStateToPeers();
   setTimeout(openInventory, 300);
 }
+
+function _executeUseInventoryItem(idx, key, item) {
+ if (app.mode === 'lan' && isGuest()) {
+    sendToHost({ type: 'shopAction', itemKey: key });
+    removeFromInventoryByIndex(idx);
+    invMsg('✓ جاري تطبيق ' + item.name);
+    return;
+  }
+  var r = applyShopEffect(app.state, app.viewerId, key, false);
+  if (!r.ok) { invMsg('تعذّر: ' + (r.reason || 'غير معروف'), true); SoundFX.play('error'); return; }
+  removeFromInventoryByIndex(idx);
+  invMsg('✓ استُخدم ' + item.name);
+  if (r.message) {
+    if (key === 'peek' && r.peekCards) showPeekResult(r.peekCards);
+    else setStatus(r.message, 'var(--purple)');
+  }
+  SoundFX.play('reward');
+  resetRenderCache(); scheduleRender();
+  if (app.mode === 'lan' && isHost()) syncStateToPeers();
+  setTimeout(openInventory, 300);
+}
+
 /* ─── Force Discard Modal ─── */
 var _forceDiscContext = null;
 function showForceDiscModal(state, pId, targets) {
@@ -11523,9 +11861,10 @@ if (ffb) ffb.onclick = function() {
   var dcb = $('dailyChallengeBtn');
 if (dcb) dcb.onclick = function() {
   if (isDailyChallengeDone()) {
-    if (!confirm('أكملت تحدي اليوم بالفعل — هل تريد اللعب مجدداً بدون مكافأة؟')) return;
-  }
-  startDailyChallenge();
+  showConfirmDialog('التحدي اليومي', 'أكملت تحدي اليوم بالفعل — هل تريد اللعب مجدداً بدون مكافأة؟', function() { startDailyChallenge(); });
+  return;
+}
+startDailyChallenge();
 };
 }
 function isFullscreen() {
@@ -11834,7 +12173,13 @@ function attachGameHandlers() {
       }
     };
   }
-  $('quitBtn').onclick = function() { if (confirm('هل تريد الخروج من اللعبة؟')) leaveCurrentGame(); };
+  $('quitBtn').onclick = function() {
+  showConfirmDialog('الخروج من اللعبة', 'هل تريد الخروج من اللعبة الحالية؟', function() { leaveCurrentGame(); });
+};
+var spectrumHelpBtn = $('spectrumHelpBtn');
+if (spectrumHelpBtn) {
+  spectrumHelpBtn.onclick = function() { showSpectrumIntro(null); };
+}
   $('gameSettingsBtn').onclick = function() { openSettingsModal(); };
   $('historyBtn').onclick = function() { openHistoryModal(); };
   var sbs = document.querySelectorAll('.sort-btn');
@@ -12092,7 +12437,7 @@ var step = (g.parity === 'odd' || g.parity === 'even') ? 2 : 1;
 
   /* ═══ اللون (Color) ═══ */
   if (colorSize > 0) {
-    html += '<div style="font-size:13px;font-weight:900;color:#c4b5fd;margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid rgba(196,181,253,0.3)">🌈 اللون</div>';
+    html += '<div style="font-size:13px;font-weight:900;color:#c4b5fd;margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid rgba(196,181,253,0.3)">  اللون</div>';
     html += '<div style="background:rgba(0,0,0,0.4);border-radius:10px;padding:12px;margin-bottom:10px;border:1px solid rgba(196,181,253,0.4)">';
     html += '<div style="font-size:13px;font-weight:900;color:#c4b5fd;margin-bottom:6px">' + colorSize + ' بطاقات من نفس اللون</div>';
     html += '<div style="font-size:11px;line-height:1.7;margin-bottom:8px;opacity:.9">بدون شرط التسلسل أو التكرار — فقط نفس اللون</div>';
@@ -12492,6 +12837,8 @@ function restoreFromUpdateBackup() {
 function applyUpdateNow() {
   // ✅ 1) نسخة احتياطية كاملة قبل أي شيء
   backupLocalStorageForUpdate();
+  // 🧹 حذف اللعبة المحفوظة القديمة — قد لا تتوافق مع الإصدار الجديد
+  try { localStorage.removeItem('p10TYEYYIY_savedGame'); } catch (e) {}
 
   var done = false;
   function finish() {
