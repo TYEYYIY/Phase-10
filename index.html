@@ -2833,7 +2833,7 @@ html.theme-epic .p10-card[class*="face-"] {
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '23.4.7';
+var APP_VERSION = '23.4.8';
 var APP_BUILD_DATE = '1-9-2026';
 var APP_LAST_UPDATE = '6-11-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
@@ -5343,13 +5343,16 @@ var _cardHTMLCache = {};
 var _cardHTMLCacheCount = 0;
 function buildCardHTML(card, options) {
   options = options || {};
-  /* إذا البطاقة بلا توهج/تحديد → استخدم cache (شائع في melds) */
+  /* إذا البطاقة بلا توهج/تحديد → استخدم cache */
   if (!options.selected && !options.hint && !options.hitReady && card && card.id) {
-    var cached = _cardHTMLCache[card.id];
+    // ✅ الحل السحري: نربط الذاكرة المؤقتة بشكل البطاقة ونمط الـ Wild
+    var cacheKey = card.id + '_' + app.settings.faceStyle + '_' + (app.settings.wildStyle || 'default');
+    var cached = _cardHTMLCache[cacheKey];
     if (cached !== undefined) return cached;
+    
     cached = _buildCardHTMLInternal(card, options);
     if (_cardHTMLCacheCount > 300) { _cardHTMLCache = {}; _cardHTMLCacheCount = 0; }
-    _cardHTMLCache[card.id] = cached;
+    _cardHTMLCache[cacheKey] = cached;
     _cardHTMLCacheCount++;
     return cached;
   }
