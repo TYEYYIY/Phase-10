@@ -1282,13 +1282,33 @@ input, textarea { font-family: inherit; }
 .p10-card .card-art { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 6; pointer-events: none; }
 
 /* ألوان نقية ومشرقة جداً لسهولة التمييز */
-.p10-card.col-red    { --cc: #FF1A1A; --cc-l: #FF6B6B; --cc-d: #B30000; --cc-s: rgba(255,26,26,0.45); }
-.p10-card.col-blue   { --cc: #007BFF; --cc-l: #66B2FF; --cc-d: #0056B3; --cc-s: rgba(0,123,255,0.45); }
-.p10-card.col-green  { --cc: #00D250; --cc-l: #66E896; --cc-d: #008A35; --cc-s: rgba(0,210,80,0.45); }
-.p10-card.col-yellow { --cc: #FFCC00; --cc-l: #FFE066; --cc-d: #B38F00; --cc-s: rgba(255,204,0,0.45); }
-.p10-card.col-orange { --cc: #FF7F00; --cc-l: #FFB366; --cc-d: #B35900; --cc-s: rgba(255,127,0,0.45); }
-.p10-card.col-purple { --cc: #9C27B0; --cc-l: #CE93D8; --cc-d: #6A1B9A; --cc-s: rgba(156,39,176,0.45); }
-.p10-card.col-indigo { --cc: #3F51B5; --cc-l: #7986CB; --cc-d: #283593; --cc-s: rgba(63,81,181,0.45); }
+/* ===== الألوان الأساسية السبعة (طبيعية) ===== */
+/* أحمر صريح جداً */
+.p10-card.col-red    { --cc: #FF0000; --cc-l: #FF6666; --cc-d: #990000; --cc-s: rgba(255,0,0,0.5); }
+/* أزرق ملكي صريح */
+.p10-card.col-blue   { --cc: #0044FF; --cc-l: #6699FF; --cc-d: #002299; --cc-s: rgba(0,68,255,0.5); }
+/* أخضر عشبي ساطع */
+.p10-card.col-green  { --cc: #00CC00; --cc-l: #66FF66; --cc-d: #007A00; --cc-s: rgba(0,204,0,0.5); }
+/* أصفر ذهبي ساطع جداً */
+.p10-card.col-yellow { --cc: #FFEA00; --cc-l: #FFFF99; --cc-d: #B3A300; --cc-s: rgba(255,234,0,0.5); }
+/* برتقالي صريح */
+.p10-card.col-orange { --cc: #FF6600; --cc-l: #FFA366; --cc-d: #993D00; --cc-s: rgba(255,102,0,0.5); }
+/* بنفسجي (موف) ساطع */
+.p10-card.col-purple { --cc: #9900FF; --cc-l: #CC66FF; --cc-d: #5C0099; --cc-s: rgba(153,0,255,0.5); }
+/* نيلي كحلي داكن جداً (مختلف تماماً عن الأزرق) */
+.p10-card.col-indigo { --cc: #1A237E; --cc-l: #5C6BC0; --cc-d: #0D124A; --cc-s: rgba(26,35,126,0.5); }
+
+/* ===== الألوان النادرة الخمسة (وضع الطيف) ===== */
+/* قرمزي (أحمر دموي داكن ليتميز عن الأحمر الصريح) */
+.p10-card.col-vermilion { --cc: #D50000; --cc-l: #FF5252; --cc-d: #8B0000; --cc-s: rgba(213,0,0,0.5); }
+/* عسلي (برتقالي ذهبي عميق ليتميز عن الأصفر والبرتقالي) */
+.p10-card.col-amber     { --cc: #FF8F00; --cc-l: #FFC046; --cc-d: #C56000; --cc-s: rgba(255,143,0,0.5); }
+/* ليموني (أخضر مصفر نيون ساطع ليتميز عن الأخضر) */
+.p10-card.col-chartreuse{ --cc: #C6FF00; --cc-l: #E4FF54; --cc-d: #8A9900; --cc-s: rgba(198,255,0,0.5); }
+/* تركوازي (سماوي فيروزي ساطع) */
+.p10-card.col-teal      { --cc: #00B8D4; --cc-l: #5DF2D6; --cc-d: #008E76; --cc-s: rgba(0,184,212,0.5); }
+/* أرجواني (زهري صارخ - ماجنتا) */
+.p10-card.col-magenta   { --cc: #FF007F; --cc-l: #FF66B2; --cc-d: #B30059; --cc-s: rgba(255,0,127,0.5); }
 .p10-card.col-vermilion { --cc: #FF3300; --cc-l: #FF8866; --cc-d: #992200; --cc-s: rgba(255,51,0,0.45); }
 .p10-card.col-amber { --cc: #FFAA00; --cc-l: #FFCC66; --cc-d: #B37700; --cc-s: rgba(255,170,0,0.45); }
 .p10-card.col-chartreuse { --cc: #AADD00; --cc-l: #CCFF33; --cc-d: #669900; --cc-s: rgba(170,221,0,0.45); }
@@ -2563,34 +2583,49 @@ html.theme-wood body {
   border: 3px solid #fff;
   box-shadow: inset 0 0 20px rgba(255,255,255,0.6), 0 0 25px rgba(244,185,66,0.6) !important;
 }
-.p10-card.face-exclusive-gold .center-num { color: #7a4d00 !important; text-shadow: 0 2px 0 #fff, 0 4px 8px rgba(0,0,0,0.4) !important; }
 .p10-card.face-exclusive-carbon {
   background: repeating-linear-gradient(45deg, #0a0a0a 0 4px, #1a1a1a 4px 8px);
   border: 3px solid #4a4a4a;
 }
-.p10-card.face-exclusive-carbon .center-num { color: #00ff88 !important; text-shadow: 0 0 15px #00ff88, 0 0 30px #00ff88 !important; }
 .p10-card.face-exclusive-crystal {
   background: linear-gradient(135deg, #e0f7ff 0%, #a0d8ff 40%, #5ba0ff 100%);
   border: 3px solid #fff;
   box-shadow: inset 0 0 30px rgba(255,255,255,0.9), 0 0 25px rgba(120,200,255,0.7) !important;
 }
-.p10-card.face-exclusive-crystal .center-num { color: #0a52cc !important; text-shadow: 0 1px 0 #fff, 0 3px 8px rgba(0,0,0,0.3) !important; }
 .p10-card.face-exclusive-neon {
   background: radial-gradient(circle at 50% 50%, #1a0a2a 0%, #05010a 100%);
   border: 3px solid #ff00ff;
   box-shadow: inset 0 0 30px rgba(255,0,255,0.5), 0 0 30px rgba(0,255,255,0.6) !important;
 }
-.p10-card.face-exclusive-neon .center-num { color: #00ffff !important; text-shadow: 0 0 10px #00ffff, 0 0 25px #ff00ff !important; }
-/* 6️⃣ تصحيح البطاقات الصغيرة في القوائم والمعروضات */
-.setting-item .preview-card .p10-card .center-num,
-.meld .p10-card .center-num {
-  font-size: 1.15em !important;
+
+/* ✅ إجبار الدائرة المركزية على أخذ لون البطاقة الصريح */
+.p10-card[class*="face-exclusive-"] .center-dot {
+  background: var(--cc) !important;
+  border: 3px solid #fff !important;
+  box-shadow: 0 0 15px var(--cc), inset 0 0 10px rgba(0,0,0,0.5) !important;
 }
-.setting-item .preview-card .p10-card .tl-num,
-.setting-item .preview-card .p10-card .br-num,
-.meld .p10-card .tl-num,
-.meld .p10-card .br-num {
-  font-size: 0.5em !important;
+
+/* ✅ الرقم باللون الأبيض ليكون مقروءاً بوضوح فوق لون البطاقة */
+.p10-card[class*="face-exclusive-"] .center-num {
+  color: #ffffff !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.9) !important;
+  font-weight: 900 !important;
+}
+
+/* ✅ أرقام الزوايا (أعلى اليسار وأسفل اليمين) تأخذ لون البطاقة مع توهج أبيض */
+.p10-card[class*="face-exclusive-"] .tl-num,
+.p10-card[class*="face-exclusive-"] .br-num {
+  color: var(--cc) !important;
+  text-shadow: 0 0 6px #fff, 0 2px 4px rgba(0,0,0,1) !important;
+  font-weight: 900 !important;
+}
+
+/* ✅ النقاط الصغيرة في الزوايا تأخذ لون البطاقة */
+.p10-card[class*="face-exclusive-"] .tl-dot,
+.p10-card[class*="face-exclusive-"] .br-dot {
+  background: var(--cc) !important;
+  box-shadow: 0 0 6px var(--cc), 0 1px 2px rgba(0,0,0,0.8) !important;
+  border: 1.5px solid #fff !important;
 }
 
 /* ============================================================
@@ -2798,9 +2833,9 @@ html.theme-epic .p10-card[class*="face-"] {
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '23.3.9';
+var APP_VERSION = '23.4.7';
 var APP_BUILD_DATE = '1-9-2026';
-var APP_LAST_UPDATE = '5-11-2026';
+var APP_LAST_UPDATE = '6-11-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
 var UPDATE_CHECK_INTERVAL_MS = 30 * 60 * 1000; /* 30 دقيقة */
 
@@ -4327,23 +4362,30 @@ if (startHand > maxStartHand) {
     players.push({ id: j, name: c.name || dn, isCPU: !!c.isCPU, hand: [], melds: [], phase: 0, score: 0, hitsThisTurn: 0, shieldRounds: 0, skipImmune: false, autoCompleted: false, laidThisTurn: false, mergesLeft: 3 });
   }
   assignPersonalities(players);
+// ✅ إنشاء عدادات الإحصائيات للمباراة كاملة
+var matchAnalytics = {};
+for (var m = 0; m < players.length; m++) {
+  matchAnalytics[m] = { draws: 0, drawsFromDiscard: 0, discards: 0, lays: 0, hits: 0, skipsUsed: 0, totalHitCards: 0, bestHitTurn: 0 };
+}
   var deck = createDeck(spCfg);
   for (var k = 0; k < players.length; k++) players[k].hand = deck.splice(0, startHand);
   var firstDiscard = pickInitialDiscard(deck);
   var discard = firstDiscard ? [firstDiscard] : [];
-  return {
-  players: players, deck: deck, discard: discard,
-  turnIndex: Math.floor(Math.random() * players.length),
-  hasDrawn: false, selected: [], round: 1, roundLog: [], hintCards: [],
-  playerCount: players.length, specialCfg: spCfg,
-  phasesLimit: spCfg.phasesLimit || phases.length,
-  phasesList: phases, phasePackKey: pack.key,
-  turnNumber: 1, aiFirstLayTurn: {}, actionLog: [],
-  lastDiscard: {}, extraTurnFor: null,
-  /* ✅ مزامنة إعدادات المضيف للجميع */
-  turnTimerEnabled: spCfg.turnTimer ? true : (app.settings.turnTimerEnabled === true),
-  turnTimerSeconds: spCfg.turnTimer || app.settings.turnTimerSeconds || 30
-};
+
+    return {
+    players: players, deck: deck, discard: discard,
+    turnIndex: Math.floor(Math.random() * players.length),
+    hasDrawn: false, selected: [], round: 1, roundLog: [], hintCards: [],
+    playerCount: players.length, specialCfg: spCfg,
+    phasesLimit: spCfg.phasesLimit || phases.length,
+    phasesList: phases, phasePackKey: pack.key,
+    turnNumber: 1, aiFirstLayTurn: {}, actionLog: [],
+    lastDiscard: {}, extraTurnFor: null,
+    turnTimerEnabled: spCfg.turnTimer ? true : (app.settings.turnTimerEnabled === true),
+    turnTimerSeconds: spCfg.turnTimer || app.settings.turnTimerSeconds || 30,
+    _isTransitioningRound: false,
+    matchAnalytics: matchAnalytics
+  };
 }
 function startNewRound(state, winnerId) {
   var summary = { winnerName: '', players: [] };
@@ -4361,7 +4403,7 @@ function startNewRound(state, winnerId) {
     }
   }
   saveStatsToStorage();
-  state.roundLog.push({ round: state.round, winner: winnerId });
+  state.roundLog.push({ round: state.round, winner: winnerId, summary: summary });
   state.round++;
 
 /* ✅ تحدي السرعة: فشل فقط إذا لم تُكمل المرحلة بحلول الجولة الثالثة */
@@ -4425,6 +4467,7 @@ if (!modal) {
 }, 400);
 }
 function resetRoundForState(state, winnerId) {
+  state._isTransitioningRound = false;
   var startHand = (state.specialCfg && state.specialCfg.startHand) || GAME_CONST.START_HAND;
   var deck = createDeck(state.specialCfg);
   state.deck = deck;
@@ -4511,7 +4554,7 @@ function endRoundByDeckExhaustion() {
     summary.players.push({ id: p.id, name: p.name, points: pen, score: p.score, isWinner: false });
   }
   
-  state.roundLog.push({ round: state.round, exhausted: true, winner: -1 });
+  state.roundLog.push({ round: state.round, exhausted: true, winner: -1, summary: summary });
   state.round++;
   saveStatsToStorage();
 
@@ -5812,12 +5855,13 @@ function updateActionsButtons() {
   }
 
   // المنطق الأصلي: 7 أعمدة عند الدمج، و6 عند عدمه
-  el.style.gridTemplateColumns = (isSpectrum && canBlend) ? 'repeat(7, minmax(0, 1fr))' : 'repeat(6, minmax(0, 1fr))';
+  var showBlendBtn = (isSpectrum && canBlend && blendResult !== null);
+el.style.gridTemplateColumns = showBlendBtn ? 'repeat(7, minmax(0, 1fr))' : 'repeat(6, minmax(0, 1fr))';
   
   var bb = $('btnBlend');
-  if (bb) {
-    if (isSpectrum && canBlend && blendResult) {
-      bb.classList.remove('hidden');
+if (bb) {
+  if (showBlendBtn) {
+    bb.classList.remove('hidden');
       bb.disabled = false;
       bb.innerHTML = 'دمج <span class="blend-badge">' + merges + '</span>';
       
@@ -7168,10 +7212,18 @@ function showLoseOverlay() {
    SMART ANALYTICS
    ============================================================ */
 function computeMatchAnalytics() {
-  var state = app.state; if (!state || !state.actionLog) return null;
-  var myId = app.myPlayerId;
-  var log = state.actionLog;
+  var state = app.state; if (!state) return null;
+  var myId = app.myPlayerId || app.viewerId;
+  
+  // ✅ قراءة الإحصائيات التراكمية للمباراة كاملة
+  if (state.matchAnalytics && state.matchAnalytics[myId]) {
+    return state.matchAnalytics[myId];
+  }
+
+  // خطة بديلة في حال اللعب على لعبة قديمة محفوظة
   var stats = { draws: 0, drawsFromDiscard: 0, discards: 0, lays: 0, hits: 0, skipsUsed: 0, totalHitCards: 0, bestHitTurn: 0 };
+  if (!state.actionLog) return stats;
+  var log = state.actionLog;
   for (var i = 0; i < log.length; i++) {
     var e = log[i];
     if (e.pid !== myId) continue;
@@ -7866,6 +7918,7 @@ if (fromWhere === 'discard' && state.discard.length > 0) {
     player.hand.push(top);
     drawn.push({ card: top, html: srcEl ? srcEl.outerHTML : '' });
     state.hasDrawn = true; setStatus('سحبت من المهملات');
+    if (state.matchAnalytics && state.matchAnalytics[pId]) state.matchAnalytics[pId].drawsFromDiscard++;
   } else {
   for (var i = 0; i < dc; i++) {
     if (state.deck.length === 0) break;
@@ -7877,6 +7930,7 @@ if (fromWhere === 'discard' && state.discard.length > 0) {
   if (drawn.length === 0) { handleDeckExhaustion(state); return; }
   state.hasDrawn = true;
   setStatus(dc > 1 ? ('سحبت ' + drawn.length + ' بطاقات') : 'سحبت — اختر إجراءك');
+  if (state.matchAnalytics && state.matchAnalytics[pId]) state.matchAnalytics[pId].draws += drawn.length;
 }
   SoundFX.play('draw');
   if (fromWhere === 'discard' && drawn.length > 0) {
@@ -7977,16 +8031,17 @@ var wilds = [];
 }
 function actionLayPhase() {
   var state = app.state; if (!state || state.gameOver) return;
+  SoundFX.ensureContext(); // <--- إضافة مهمة لضمان عمل الصوت
   var pId = app.viewerId;
   if (state.turnIndex !== pId) { setStatus('ليس دورك الآن', 'var(--red)'); SoundFX.play('error'); return; }
   if (!state.hasDrawn) { setStatus('اسحب بطاقة أولاً', 'var(--red)'); SoundFX.play('error'); return; }
   if (app.busy) return;
   var player = state.players[pId];
   if (player.laidThisTurn) {
-  setStatus('وضعت مرحلتك بالفعل في هذه الجولة', 'var(--red)');
-  SoundFX.play('error');
-  return;
-}
+    setStatus('وضعت مرحلتك بالفعل في هذه الجولة', 'var(--red)');
+    SoundFX.play('error');
+    return;
+  }
   var sel = [];
   for (var i = 0; i < state.selected.length; i++) for (var j = 0; j < player.hand.length; j++) if (player.hand[j].id === state.selected[i]) { sel.push(player.hand[j]); break; }
   if (sel.length === 0) {
@@ -8000,14 +8055,13 @@ function actionLayPhase() {
   var melds = analyzeSelection(sel, cp);
   if (melds) adjustWildPositions(melds, player);
   if (!melds) {
-  setStatus('البطاقات لا تحقق المرحلة الحالية', 'var(--red)');
-  SoundFX.play('error');
-  if (checkDailyViolation('layFail', 'محاولة وضع مرحلة غير صحيحة')) return;
-  var exp = explainWhyCannotLay(sel, cp, player);
-  showWhyModal('لماذا لا يمكن وضع المرحلة؟', exp.reasons, exp.suggestions);
-  return;
-}
-
+    setStatus('البطاقات لا تحقق المرحلة الحالية', 'var(--red)');
+    SoundFX.play('error');
+    if (checkDailyViolation('layFail', 'محاولة وضع مرحلة غير صحيحة')) return;
+    var exp = explainWhyCannotLay(sel, cp, player);
+    showWhyModal('لماذا لا يمكن وضع المرحلة؟', exp.reasons, exp.suggestions);
+    return;
+  }
   /* ✅ تحدي النقاء: منع Wild */
   if (app.state.dailyChallenge && app.state.dailyChallenge.type === 'purity') {
     for (var wcheck = 0; wcheck < sel.length; wcheck++) {
@@ -8033,13 +8087,17 @@ function actionLayPhase() {
   for (var c = 0; c < melds.length; c++) { melds[c].phase = player.phase; player.melds.push(melds[c]); }
   player.phase++;
   player.laidThisTurn = true;
+  if (state.matchAnalytics && state.matchAnalytics[pId]) state.matchAnalytics[pId].lays++;
   var laidThisTurn = state.turnNumber || 1;
   if (!state.aiFirstLayTurn) state.aiFirstLayTurn = {};
   if (state.aiFirstLayTurn[pId] === undefined) state.aiFirstLayTurn[pId] = laidThisTurn;
   pushActionLog(state, pId, 'lay', 'وضع المرحلة ' + player.phase + ' (' + melds.length + ' مجموعة)');
   state.selected = []; state.hintCards = [];
-  SoundFX.play('phase');
+  SoundFX.play('lay'); // <--- تشغيل صوت وضع المرحلة
+  SoundFX.play('phase'); // <--- صوت إضافي
   resetRenderCache(); scheduleRender(); syncStateToPeers();
+  
+  // ... (باقي كود الأنيميشن والحركة كما هو بدون تغيير) ...
   if (shouldRunAnimations()) {
     afterPaint(function() {
       var ms = $('meldsScroll');
@@ -8083,7 +8141,6 @@ function actionLayPhase() {
   setStatus(player.name + ' وضع المرحلة ' + player.phase + '/' + state.phasesLimit);
   if (player.phase >= state.phasesLimit) {
     setStatus(player.name + ' أكمل كل المراحل! بانتظار نهاية الجولات', 'var(--green)');
-    SoundFX.play('phase');
     if (pId === app.myPlayerId) unlockAchievement('completeAllPhases');
   }
   if (player.hand.length === 0) checkWinOrNewRound(state, pId);
@@ -8161,6 +8218,11 @@ function executeHitOnCards(state, pId, hittable) {
     } else { targets.push({ pid: -1, midx: -1 }); }
   }
   player.hitsThisTurn = (player.hitsThisTurn || 0) + done.length;
+  if (state.matchAnalytics && state.matchAnalytics[pId]) {
+  state.matchAnalytics[pId].hits++;
+  state.matchAnalytics[pId].totalHitCards += done.length;
+  if (done.length > state.matchAnalytics[pId].bestHitTurn) state.matchAnalytics[pId].bestHitTurn = done.length;
+}
   for (var mt = 0; mt < targets.length && mt < done.length; mt++) {
     if (targets[mt].pid >= 0) recordCpuMemoryHit(state, pId, targets[mt].pid);
   }
@@ -8419,6 +8481,11 @@ if (app.state.dailyChallenge && app.state.dailyChallenge.type === 'purity') {
     }
     if (added.length === 0) return;
     player.hitsThisTurn = (player.hitsThisTurn || 0) + added.length;
+    if (state.matchAnalytics && state.matchAnalytics[vId]) {
+  state.matchAnalytics[vId].hits++;
+  state.matchAnalytics[vId].totalHitCards += added.length;
+  if (added.length > state.matchAnalytics[vId].bestHitTurn) state.matchAnalytics[vId].bestHitTurn = added.length;
+}
     var hitMap = {};
     for (var a = 0; a < added.length; a++) hitMap[added[a]] = true;
     state.selected = state.selected.filter(function(id) { return !hitMap[id]; });
@@ -8500,6 +8567,10 @@ var skipCount = 0;
     if (dc.type === 'skip') skipCount++;
   }
   if (discarded.length === 0) return;
+  if (state.matchAnalytics && state.matchAnalytics[pId]) {
+  state.matchAnalytics[pId].discards += discarded.length;
+  if (skipCount > 0) state.matchAnalytics[pId].skipsUsed += skipCount;
+}
 if (!state.lastDiscard) state.lastDiscard = {};
 state.lastDiscard[pId] = discarded[discarded.length - 1];
 vibrateOn('discard');
@@ -8721,8 +8792,10 @@ function colorHex(idx) {
 function checkWinOrNewRound(state, pId) {
   var player = state.players[pId]; if (!player) return;
   if (player.hand.length !== 0) return;
+  if (state._isTransitioningRound) return; // <--- قفل لمنع التكرار
+  state._isTransitioningRound = true;      // <--- تفعيل القفل
+  
   var lim = state.phasesLimit;
-
   /* ⛑️ إصلاح 1: احسب عقوبات الجولة الأخيرة لجميع اللاعبين (عدا من فرّغ يده) */
   var roundPenalties = {};
   for (var ri = 0; ri < state.players.length; ri++) {
@@ -9341,6 +9414,7 @@ function showGameOver() {
   var iAm = winner && me && winner.id === me.id && !state.tie;
   if (state.tie) { $('overTitle').textContent = '🤝 تعادل!'; }
   else { $('overTitle').textContent = iAm ? '🎉 فزت!' : (winner ? winner.name + ' فاز' : 'انتهت اللعبة'); }
+  
   var html = '';
   for (var j = 0; j < sorted.length; j++) {
     var p = sorted[j];
@@ -9351,9 +9425,66 @@ function showGameOver() {
     html += '<div class="score-row"><span class="' + cls + '">' + (isW ? '👑 ' : (j + 1) + '. ') + nm + '</span><span class="mid">مرحلة ' + Math.min(p.phase + 1, state.phasesLimit) + ' · ' + p.hand.length + ' بطاقات</span><span class="lose">' + p.score + ' نقطة</span></div>';
   }
   $('overScores').innerHTML = html;
+
+  // ✅ إضافة زر تفاعلي لسجل الجولات
+  if (state.roundLog && state.roundLog.length > 0) {
+    var validRounds = state.roundLog.filter(function(r) { return r.summary; });
+    if (validRounds.length > 0) {
+      // زر العرض
+      var logHtml = '<button id="toggleRoundDetailsBtn" type="button" style="width:100%; margin-top:16px; padding:10px; background:linear-gradient(160deg,var(--gold-alpha-20),var(--gold-alpha-10)); border:1px solid var(--gold-alpha-40); border-radius:10px; color:var(--gold); font-size:13px; font-weight:900; display:flex; justify-content:center; align-items:center; gap:6px; cursor:pointer; outline:none;">';
+      logHtml += '📜 عرض تفاصيل الجولات (' + validRounds.length + ' جولة) ⬇️</button>';
+      
+      // الحاوية المخفية (تظهر عند الضغط)
+      logHtml += '<div id="roundDetailsContainer" style="display:none; margin-top:10px; background:rgba(0,0,0,0.4); border-radius:12px; padding:12px; border:1px solid var(--border-1); max-height:220px; overflow-y:auto;">';
+      logHtml += '<div style="display:flex; flex-direction:column; gap:8px;">';
+      
+      for (var r = 0; r < validRounds.length; r++) {
+        var rl = validRounds[r];
+        var winName = rl.winner >= 0 && state.players[rl.winner] ? state.players[rl.winner].name : 'لا فائز (نفاد)';
+        logHtml += '<div style="background:rgba(255,255,255,0.05); border-radius:8px; padding:8px; border-right:3px solid ' + (rl.winner >= 0 ? 'var(--green)' : 'var(--red)') + '">';
+        logHtml += '<div style="font-size:11px; font-weight:900; color:var(--gold); margin-bottom:6px; display:flex; justify-content:space-between">';
+        logHtml += '<span>الجولة ' + rl.round + '</span>';
+        logHtml += '<span style="color:#fff">🏆 ' + escapeHTML(winName) + '</span>';
+        logHtml += '</div>';
+        
+        logHtml += '<div style="display:flex; flex-wrap:wrap; gap:6px">';
+        for (var s = 0; s < rl.summary.players.length; s++) {
+          var sp = rl.summary.players[s];
+          var isW = sp.isWinner;
+          logHtml += '<span style="font-size:9.5px; background:' + (isW ? 'var(--gold-alpha-20)' : 'rgba(0,0,0,0.4)') + '; color:' + (isW ? 'var(--gold)' : 'var(--text-secondary)') + '; padding:2px 6px; border-radius:4px; border:1px solid ' + (isW ? 'var(--gold-alpha-40)' : 'transparent') + '">';
+          logHtml += escapeHTML(sp.name) + ': ' + (isW ? '0' : '+' + sp.points);
+          logHtml += '</span>';
+        }
+        logHtml += '</div></div>';
+      }
+      logHtml += '</div></div>';
+      
+      $('overScores').innerHTML += logHtml;
+
+      // ✅ ربط حدث الضغط بالزر
+      setTimeout(function() {
+        var toggleBtn = document.getElementById('toggleRoundDetailsBtn');
+        var container = document.getElementById('roundDetailsContainer');
+        if (toggleBtn && container) {
+          toggleBtn.onclick = function() {
+            SoundFX.play('tap');
+            if (container.style.display === 'none' || container.style.display === '') {
+              container.style.display = 'block';
+              toggleBtn.innerHTML = '📜 إخفاء تفاصيل الجولات ⬆️';
+            } else {
+              container.style.display = 'none';
+              toggleBtn.innerHTML = '📜 عرض تفاصيل الجولات (' + validRounds.length + ' جولة) ⬇️';
+            }
+          };
+        }
+      }, 100);
+    }
+  }
+
   var analyticsHTML = renderMatchAnalytics();
   var overScores = $('overScores');
   if (overScores && analyticsHTML) overScores.innerHTML += analyticsHTML;
+  
   var rb = $('rewardBanner');
   if (rb) {
     if (app.matchRewards.coinsEarned > 0 || app.matchRewards.achievementsUnlocked.length > 0) {
@@ -9644,7 +9775,8 @@ function serializeGameState(s) {
   gameOver: !!s.gameOver, tie: !!s.tie,
   turnTimerEnabled: s.turnTimerEnabled === true,
   turnTimerSeconds: s.turnTimerSeconds || 30,
-  dailyChallenge: s.dailyChallenge || null
+  dailyChallenge: s.dailyChallenge || null,
+  matchAnalytics: s.matchAnalytics || null
 };
 }
 function deserializeGameState(o) {
@@ -9679,7 +9811,8 @@ function deserializeGameState(o) {
   gameOver: !!o.gameOver, tie: !!o.tie,
   turnTimerEnabled: o.turnTimerEnabled === true,
   turnTimerSeconds: o.turnTimerSeconds || 30,
-  dailyChallenge: o.dailyChallenge || null
+  dailyChallenge: o.dailyChallenge || null,
+  matchAnalytics: o.matchAnalytics || null
 };
 }
 function computeChecksum(payload) {
@@ -10292,11 +10425,12 @@ function buildWildStyleGrid() {
   }
   g.innerHTML = html;
   g.onclick = function(ev) {
-    var it = ev.target.closest('[data-wild]'); if (!it) return;
-    app.settings.wildStyle = it.getAttribute('data-wild');
-    saveSettingsToStorage(); buildWildStyleGrid(); buildMenuPreview();
-    resetRenderCache(); if (app.state) scheduleRender();
-  };
+  var it = ev.target.closest('[data-wild]'); if (!it) return;
+  app.settings.wildStyle = it.getAttribute('data-wild');
+  saveSettingsToStorage(); buildWildStyleGrid(); buildMenuPreview();
+  _cardHTMLCache = {}; _cardHTMLCacheCount = 0; // ✅ تفريغ الذاكرة المؤقتة
+  resetRenderCache(); if (app.state) scheduleRender();
+};
 }
 function buildGalleryGrid(mode) {
   var g = $('galleryGrid'); if (!g) return;
@@ -12500,6 +12634,69 @@ var step2 = (rc2 === 'odd' || rc2 === 'even') ? 2 : 1;
   $('phaseDetailBody').innerHTML = html;
   $('phaseDetailModal').classList.remove('hidden');
 }
+
+function openHistoryModal() {
+  var state = app.state;
+  if (!state) return;
+  var body = $('historyBody');
+  if (!body) return;
+  
+  var html = '';
+  
+  // 1. Round History (نتائج الجولات)
+  if (state.roundLog && state.roundLog.length > 0) {
+    html += '<h3 style="color:var(--gold);font-size:13px;margin-bottom:8px;border-bottom:1px solid var(--border-1);padding-bottom:4px;text-align:right">🏁 نتائج الجولات</h3>';
+    html += '<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">';
+    for (var i = 0; i < state.roundLog.length; i++) {
+      var rl = state.roundLog[i];
+      var winName = (rl.winner >= 0 && state.players[rl.winner]) ? state.players[rl.winner].name : 'لا فائز (نفاد الرزمة)';
+      var color = rl.winner >= 0 ? 'var(--green)' : 'var(--red)';
+      html += '<div style="background:rgba(0,0,0,0.3);border-radius:8px;padding:8px 12px;border-right:3px solid ' + color + ';display:flex;justify-content:space-between;align-items:center">';
+      html += '<span style="font-size:12px;font-weight:800;color:var(--text-secondary)">الجولة ' + rl.round + '</span>';
+      html += '<span style="font-size:12px;font-weight:900;color:' + color + '">' + (rl.winner >= 0 ? '👑 ' : '') + escapeHTML(winName) + '</span>';
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+
+  // 2. Action Log (سجل الأحداث)
+  if (state.actionLog && state.actionLog.length > 0) {
+    html += '<h3 style="color:var(--gold);font-size:13px;margin-bottom:8px;border-bottom:1px solid var(--border-1);padding-bottom:4px;text-align:right">📜 سجل الأحداث التفصيلي</h3>';
+    html += '<div style="background:rgba(0,0,0,0.4);border-radius:10px;padding:10px;max-height:45vh;overflow-y:auto;font-size:11.5px;line-height:1.6;text-align:right">';
+    
+    // نعرض الأحداث من الأحدث للأقدم
+    for (var j = state.actionLog.length - 1; j >= 0; j--) {
+      var e = state.actionLog[j];
+      var icon = '🔹';
+      if (e.action === 'draw') icon = '📥';
+      else if (e.action === 'drawDiscard') icon = '♻️';
+      else if (e.action === 'discard') icon = '🗑️';
+      else if (e.action === 'lay') icon = '🎯';
+      else if (e.action === 'hit') icon = '⚔️';
+      else if (e.action === 'turn') icon = '🔄';
+      else if (e.action === 'skip') icon = '⏭️';
+      else if (e.action === 'round') icon = '🏁';
+      
+      var isMine = (e.pid === app.myPlayerId || e.pid === app.viewerId);
+      var nameHtml = (e.name && e.action !== 'round' && e.action !== 'turn') ? '<span style="color:' + (isMine ? 'var(--green)' : 'var(--gold)') + ';font-weight:800">' + escapeHTML(e.name) + '</span> ' : '';
+      
+      html += '<div style="padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;gap:6px;align-items:baseline;' + (isMine ? 'background:rgba(244,185,66,0.05);border-radius:4px;padding:4px 6px;' : '') + '">';
+      html += '<span style="flex-shrink:0">' + icon + '</span>';
+      html += '<div>' + nameHtml + e.details + '</div>';
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+
+  if (html === '') {
+    html = '<div style="text-align:center;padding:30px;opacity:0.6">لا يوجد سجل بعد، العب قليلاً!</div>';
+  }
+
+  body.innerHTML = html;
+  $('historyModal').classList.remove('hidden');
+  SoundFX.play('tap');
+}
+
 function openSettingsModal() {
   $('settingsNameInput').value = app.settings.playerName || '';
   buildFaceGrid(); buildBackGrid(); buildWildStyleGrid();
@@ -12569,30 +12766,35 @@ function attachSettingsHandlers() {
   })(spbs[p]);
   var rb = $('resetCpuSkillBtn'); if (rb) rb.onclick = resetCpuSkill;
   var fg = $('faceGrid');
-  if (fg) fg.onclick = function(ev) {
-    var it = ev.target.closest('[data-face]'); if (!it) return;
-    app.settings.faceStyle = it.getAttribute('data-face');
-    saveSettingsToStorage();
-    buildFaceGrid(); buildMenuPreview(); resetRenderCache(); scheduleRender();
-  };
+if (fg) fg.onclick = function(ev) {
+  var it = ev.target.closest('[data-face]'); if (!it) return;
+  app.settings.faceStyle = it.getAttribute('data-face');
+  saveSettingsToStorage();
+  buildFaceGrid(); buildMenuPreview(); 
+  _cardHTMLCache = {}; _cardHTMLCacheCount = 0; // ✅ تفريغ الذاكرة المؤقتة
+  resetRenderCache(); scheduleRender();
+};
   var bg = $('backGrid');
-  if (bg) bg.onclick = function(ev) {
-    var it = ev.target.closest('[data-back]'); if (!it) return;
-    app.settings.backStyle = it.getAttribute('data-back');
-    saveSettingsToStorage();
-    buildBackGrid(); buildMenuPreview(); resetRenderCache(); scheduleRender();
-  };
+if (bg) bg.onclick = function(ev) {
+  var it = ev.target.closest('[data-back]'); if (!it) return;
+  app.settings.backStyle = it.getAttribute('data-back');
+  saveSettingsToStorage();
+  buildBackGrid(); buildMenuPreview(); 
+  _cardHTMLCache = {}; _cardHTMLCacheCount = 0; // ✅ تفريغ الذاكرة المؤقتة
+  resetRenderCache(); scheduleRender();
+};
   var gg = $('galleryGrid');
-  if (gg) gg.onclick = function(ev) {
-    var fi = ev.target.closest('[data-face]');
-    var bi = ev.target.closest('[data-back]');
-    if (fi) { app.settings.faceStyle = fi.getAttribute('data-face'); saveSettingsToStorage(); buildMenuPreview(); }
-    if (bi) { app.settings.backStyle = bi.getAttribute('data-back'); saveSettingsToStorage(); }
-    var active = document.querySelector('.settings-tab[data-gtab].active');
-    var n = active ? active.getAttribute('data-gtab') : 'faces';
-    buildGalleryGrid(n);
-    resetRenderCache(); scheduleRender();
-  };
+if (gg) gg.onclick = function(ev) {
+  var fi = ev.target.closest('[data-face]');
+  var bi = ev.target.closest('[data-back]');
+  if (fi) { app.settings.faceStyle = fi.getAttribute('data-face'); saveSettingsToStorage(); buildMenuPreview(); }
+  if (bi) { app.settings.backStyle = bi.getAttribute('data-back'); saveSettingsToStorage(); }
+  var active = document.querySelector('.settings-tab[data-gtab].active');
+  var n = active ? active.getAttribute('data-gtab') : 'faces';
+  buildGalleryGrid(n);
+  _cardHTMLCache = {}; _cardHTMLCacheCount = 0; // ✅ تفريغ الذاكرة المؤقتة
+  resetRenderCache(); scheduleRender();
+};
   var musicBtns = document.querySelectorAll('[data-musicstyle]');
 for (var mb = 0; mb < musicBtns.length; mb++) {
   (function(btn) {
