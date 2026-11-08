@@ -991,12 +991,77 @@ input, textarea { font-family: inherit; }
   z-index: 100;
 }
 
-./* ✅ تثبيت أبعاد الشريط العلوي ومنع التداخل */
-.topbar { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 5px; flex-shrink: 0; min-height: 34px; padding: 3px 5px; background: linear-gradient(90deg, rgba(0,0,0,0.5), rgba(0,0,0,0.2)); border-radius: 9px; border: 1px solid var(--border-1); position: relative; }
-.btn-group { flex-shrink: 0; display: flex; gap: 3px; }
-.turn-info { display: flex; align-items: center; justify-content: flex-end; gap: 6px; min-width: 0; flex: 1 1 auto; overflow: hidden; }
-.turn-name { font-size: 12.5px; font-weight: 800; color: var(--gold); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; text-align: right; line-height: 1.1; display: flex; align-items: center; justify-content: flex-end; gap: 4px; flex-shrink: 1; }
-.cur-stats { display: inline-flex; gap: 4px; align-items: center; flex-shrink: 0; max-width: 60%; overflow-x: auto; scrollbar-width: none; }
+./* ✅ الحل الجذري المطلق: إجبار كل شيء على البقاء في سطر واحد */
+.topbar {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important; /* يمنع النزول لسطر جديد نهائياً */
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 3px !important;
+  flex-shrink: 0 !important;
+  min-height: 36px !important;
+  padding: 3px 5px !important;
+  background: linear-gradient(90deg, rgba(0,0,0,0.5), rgba(0,0,0,0.2)) !important;
+  border-radius: 9px !important;
+  border: 1px solid var(--border-1) !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important; 
+}
+
+.turn-info {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 3px !important;
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+.turn-name {
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  color: var(--gold) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  flex: 0 1 auto !important;
+  min-width: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+}
+
+.cur-stats {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 2px !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+  overflow-x: auto !important;
+  scrollbar-width: none !important;
+}
+.cur-stats::-webkit-scrollbar { display: none !important; }
+
+.btn-group {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 2px !important;
+  flex-shrink: 0 !important;
+  align-items: center !important;
+}
+
+/* تصغير الأزرار قليلاً لتناسب الشاشات الصغيرة */
+.btn-group button {
+  padding: 4px 6px !important;
+  min-width: 26px !important;
+}
 .turn-icon { color: var(--gold); flex-shrink: 0; display: flex; align-items: center; font-size: 14px; }
 .cur-stats { display: inline-flex; gap: 5px; align-items: center; flex-shrink: 0; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
 .cur-stats::-webkit-scrollbar { display: none; }
@@ -2882,6 +2947,92 @@ html.theme-epic .p10-card[class*="face-"] {
 .mus-item { background: rgba(0,0,0,0.5); border: 1.5px solid var(--gold-alpha-40); padding: 4px 12px; border-radius: 12px; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 900; color: #fff; }
 .mus-icon { font-size: 14px; }
 
+/* ============================================================ */
+/* ✅ التحديث الجذري: إخفاء اسم اللعبة أثناء اللعب وإصلاح الشريط العلوي */
+/* ============================================================ */
+body.playing .brand-bar {
+  display: none !important; /* إخفاء شريط POWER BY */
+}
+
+/* إجبار الشريط العلوي على سطر واحد بارتفاع ثابت */
+.topbar {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: 38px !important; /* ارتفاع ثابت يمنع النزول لسطر جديد */
+  padding: 3px 5px !important;
+  gap: 4px !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+.turn-info {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 3px !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+.turn-name {
+  display: flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  flex: 0 1 auto !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+/* ✅ تصغير الأيقونة (الحرف) بجانب الاسم */
+.turn-name .avatar-circle {
+  width: 20px !important;
+  height: 20px !important;
+  font-size: 9px !important;
+  margin: 0 !important;
+  border-width: 1px !important;
+  flex-shrink: 0 !important;
+}
+
+/* منع النص من كسر السطر وإظهار ... إذا طال الاسم */
+.turn-name > span {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  font-size: 11px !important;
+}
+
+.cur-stats {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 2px !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+}
+
+/* تصغير حجم الإحصائيات قليلاً لتوفير مساحة */
+.cur-chip {
+  padding: 2px 6px !important;
+  font-size: 9px !important;
+}
+
+.btn-group {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 2px !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+}
+
+.btn-group button {
+  padding: 4px 6px !important;
+  min-width: 26px !important;
+}
 </style>
 <script>
 "use strict";
@@ -2920,7 +3071,7 @@ html.theme-epic .p10-card[class*="face-"] {
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '23.4.9';
+var APP_VERSION = '23.4.10';
 var APP_BUILD_DATE = '1-9-2026';
 var APP_LAST_UPDATE = '9-11-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
@@ -3246,6 +3397,13 @@ function showScreen(id) {
   for (var i = 0; i < screens.length; i++) { screens[i].classList.remove('active'); screens[i].style.display = 'none'; }
   var t = $(id);
   if (t) { t.classList.add('active'); t.style.display = 'flex'; }
+  
+  // ✅ إخفاء شريط العلامة التجارية أثناء اللعب لتوفير مساحة
+  if (id === 'game') {
+    document.body.classList.add('playing');
+  } else {
+    document.body.classList.remove('playing');
+  }
 }
 function setStatus(msg, color) {
   var el = $('status'); if (!el) return;
