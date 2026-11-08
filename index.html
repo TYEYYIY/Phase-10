@@ -48,7 +48,25 @@
 
   <div id="menu" class="screen active" role="main" aria-label="القائمة الرئيسية">
     <h1>PHASE 10</h1>
-    <p class="subtitle">لعبة الورق الشهيرة — القواعد الرسمية</p>
+
+
+<!-- ✅ شريط المستوى والعملات الجديد -->
+<div class="menu-stats-container">
+  <div class="menu-stat-box" id="menuLevelBox">
+    <div class="msb-icon">⭐</div>
+    <div class="msb-content">
+      <div class="msb-label">المستوى <span id="menuLevelVal">1</span></div>
+      <div class="msb-bar"><div class="msb-fill" id="menuXpFill" style="width: 0%;"></div></div>
+    </div>
+  </div>
+  <div class="menu-stat-box" id="menuCoinsBox">
+    <div class="msb-icon"><span class="named-coin" style="width:22px;height:22px;font-size:7px;border-width:1px;margin:0;">TY</span></div>
+    <div class="msb-content">
+      <div class="msb-label" style="margin-top:2px">العملات</div>
+      <div class="msb-value" id="menuCoinsVal">0</div>
+    </div>
+  </div>
+</div>
     <div class="cards-preview" id="menuPreview" aria-hidden="true"></div>
     <div class="mode-grid">
       <button class="mode-btn" data-mode="cpu" type="button" aria-label="اللعب ضد الكمبيوتر">
@@ -973,10 +991,13 @@ input, textarea { font-family: inherit; }
   z-index: 100;
 }
 
-.topbar { width: 100%; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 5px; align-items: center; flex-shrink: 0; min-height: 34px; padding: 3px 5px; background: linear-gradient(90deg, rgba(0,0,0,0.5), rgba(0,0,0,0.2)); border-radius: 9px; border: 1px solid var(--border-1); position: relative; }
-.turn-info { display: flex; align-items: center; gap: 6px; min-width: 0; padding: 0 3px; overflow: hidden; flex: 1 1 auto; }
+./* ✅ تثبيت أبعاد الشريط العلوي ومنع التداخل */
+.topbar { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 5px; flex-shrink: 0; min-height: 34px; padding: 3px 5px; background: linear-gradient(90deg, rgba(0,0,0,0.5), rgba(0,0,0,0.2)); border-radius: 9px; border: 1px solid var(--border-1); position: relative; }
+.btn-group { flex-shrink: 0; display: flex; gap: 3px; }
+.turn-info { display: flex; align-items: center; justify-content: flex-end; gap: 6px; min-width: 0; flex: 1 1 auto; overflow: hidden; }
+.turn-name { font-size: 12.5px; font-weight: 800; color: var(--gold); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; text-align: right; line-height: 1.1; display: flex; align-items: center; justify-content: flex-end; gap: 4px; flex-shrink: 1; }
+.cur-stats { display: inline-flex; gap: 4px; align-items: center; flex-shrink: 0; max-width: 60%; overflow-x: auto; scrollbar-width: none; }
 .turn-icon { color: var(--gold); flex-shrink: 0; display: flex; align-items: center; font-size: 14px; }
-.turn-name { font-size: 12.5px; font-weight: 800; color: var(--gold); white-space: nowrap; overflow: visible; text-overflow: clip; flex: 1 1 auto; min-width: 0; max-width: none; text-align: right; line-height: 1.1; display: flex; align-items: center; justify-content: flex-start; gap: 4px; }
 .cur-stats { display: inline-flex; gap: 5px; align-items: center; flex-shrink: 0; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
 .cur-stats::-webkit-scrollbar { display: none; }
 .cur-chip { display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px; border-radius: 8px; background: rgba(0,0,0,0.4); border: 1px solid var(--gold-alpha-30); white-space: nowrap; font-size: 10.5px; font-weight: 800; color: var(--gold); }
@@ -1110,7 +1131,7 @@ input, textarea { font-family: inherit; }
   opacity: 1;
 }
 
-.hand .card-slot { cursor: grab; position: relative; touch-action: pan-y; transition: transform 0.2s; }
+.hand .card-slot { cursor: grab; position: relative; touch-action: none; transition: transform 0.2s; }
 .hand .card-slot.dragging,
 .hand .card-slot.rearrange-mode { touch-action: none; }
 .hand .card-slot .p10-card { box-shadow: 0 3px 10px rgba(0,0,0,0.45); }
@@ -1232,6 +1253,67 @@ input, textarea { font-family: inherit; }
 .log-card.skip       { background: #0f1d4a; color: #ff4444; border: 1px solid #4a69bd; }
 
 /* CARDS — Base */
+/* ✅ تنسيق شريط الإحصائيات في القائمة الرئيسية */
+.menu-stats-container {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  max-width: 340px;
+  margin: 5px auto 10px auto;
+  z-index: 10;
+}
+.menu-stat-box {
+  flex: 1;
+  background: linear-gradient(160deg, rgba(0,0,0,0.7), rgba(0,0,0,0.4));
+  border: 1.5px solid var(--gold-alpha-40);
+  border-radius: 12px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 0 2px 5px rgba(0,0,0,0.5);
+}
+.msb-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.msb-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.msb-label {
+  font-size: 9.5px;
+  color: var(--text-secondary);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.msb-value {
+  font-size: 14px;
+  color: var(--gold);
+  font-weight: 900;
+  line-height: 1.1;
+  text-align: right;
+}
+.msb-bar {
+  width: 100%;
+  height: 5px;
+  background: rgba(0,0,0,0.6);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 2px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.msb-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4ade80, #f4b942);
+  transition: width 0.5s ease;
+}
 .p10-card {
   width: var(--card-width); height: var(--card-height);
   border-radius: 9px; position: relative; overflow: hidden; flex-shrink: 0;
@@ -1248,6 +1330,8 @@ input, textarea { font-family: inherit; }
     inset 0 1px 0 rgba(255,255,255,0.7),
     0 3px 8px rgba(0,0,0,0.42),
     0 1px 0 rgba(255,255,255,0.12);
+    backface-visibility: hidden;
+transform: translateZ(0);
 }
 /* ✨ إطار داخلي أبيض رقيق فوق أي تصميم */
 .p10-card[class*="face-"]::before {
@@ -2794,6 +2878,9 @@ html.theme-epic .p10-card[class*="face-"] {
 @media (prefers-reduced-motion: reduce) {
   html.theme-epic body::before { animation: none !important; }
 }
+.menu-user-stats { display: flex; gap: 8px; margin-top: 2px; margin-bottom: 4px; z-index: 10; }
+.mus-item { background: rgba(0,0,0,0.5); border: 1.5px solid var(--gold-alpha-40); padding: 4px 12px; border-radius: 12px; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 900; color: #fff; }
+.mus-icon { font-size: 14px; }
 
 </style>
 <script>
@@ -2833,9 +2920,9 @@ html.theme-epic .p10-card[class*="face-"] {
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '23.4.8';
+var APP_VERSION = '23.4.9';
 var APP_BUILD_DATE = '1-9-2026';
-var APP_LAST_UPDATE = '6-11-2026';
+var APP_LAST_UPDATE = '9-11-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
 var UPDATE_CHECK_INTERVAL_MS = 30 * 60 * 1000; /* 30 دقيقة */
 
@@ -4111,16 +4198,7 @@ window.addEventListener('resize', function() {
 function computeHandSignature(sh, state) {
   var ids = '';
   for (var i = 0; i < sh.length; i++) ids += sh[i].id + ',';
-  var hoSig = '';
-  if (app.handOrder && app.handOrder.length > 0) {
-    /* بصمة DJB2 مدمجة — أرخص بكثير من join على مصفوفة كبيرة */
-    var h = 5381;
-    for (var j = 0; j < app.handOrder.length; j++) {
-      var s = app.handOrder[j];
-      for (var k = 0; k < s.length; k++) h = ((h * 33) ^ s.charCodeAt(k)) >>> 0;
-    }
-    hoSig = h.toString(36);
-  }
+  var hoSig = app.handOrder ? app.handOrder.join(',') : '';
   return ids + '|' + state.selected.join(',') + '|' + (state.hintCards ? state.hintCards.join(',') : '') +
          '|' + app.settings.faceStyle + '|' + app.sortMode + '|' + (state.hasDrawn ? '1' : '0') +
          '|' + state.turnIndex + '|' + hoSig;
@@ -4383,7 +4461,6 @@ for (var m = 0; m < players.length; m++) {
     lastDiscard: {}, extraTurnFor: null,
     turnTimerEnabled: spCfg.turnTimer ? true : (app.settings.turnTimerEnabled === true),
     turnTimerSeconds: spCfg.turnTimer || app.settings.turnTimerSeconds || 30,
-    _isTransitioningRound: false,
     matchAnalytics: matchAnalytics
   };
 }
@@ -4467,7 +4544,6 @@ if (!modal) {
 }, 400);
 }
 function resetRoundForState(state, winnerId) {
-  state._isTransitioningRound = false;
   var startHand = (state.specialCfg && state.specialCfg.startHand) || GAME_CONST.START_HAND;
   var deck = createDeck(state.specialCfg);
   state.deck = deck;
@@ -8146,7 +8222,9 @@ function actionLayPhase() {
     setStatus(player.name + ' أكمل كل المراحل! بانتظار نهاية الجولات', 'var(--green)');
     if (pId === app.myPlayerId) unlockAchievement('completeAllPhases');
   }
-  if (player.hand.length === 0) checkWinOrNewRound(state, pId);
+  if (player.hand.length === 0) {
+  setTimeout(function() { if (app.state === state && !state.gameOver) checkWinOrNewRound(state, pId); }, 100);
+}
   autoSaveGame();
 }
 function actionHit() {
@@ -8501,7 +8579,9 @@ setTimeout(function() { if (added.length > 0) showHitBurst(added.length); }, 250
 syncStateToPeers();
     var mEl = document.querySelector('.meld[data-pid="' + pid + '"][data-midx="' + midx + '"]');
     if (mEl) { mEl.classList.add('just-hit'); setTimeout(function() { mEl.classList.remove('just-hit'); }, 850); }
-    if (player.hand.length === 0) checkWinOrNewRound(state, vId);
+    if (player.hand.length === 0) {
+  setTimeout(function() { if (app.state === state && !state.gameOver) checkWinOrNewRound(state, vId); }, 100);
+}
     autoSaveGame();
   };
   if (wildBoth) {
@@ -8795,8 +8875,7 @@ function colorHex(idx) {
 function checkWinOrNewRound(state, pId) {
   var player = state.players[pId]; if (!player) return;
   if (player.hand.length !== 0) return;
-  if (state._isTransitioningRound) return; // <--- قفل لمنع التكرار
-  state._isTransitioningRound = true;      // <--- تفعيل القفل
+
   
   var lim = state.phasesLimit;
   /* ⛑️ إصلاح 1: احسب عقوبات الجولة الأخيرة لجميع اللاعبين (عدا من فرّغ يده) */
@@ -9572,7 +9651,7 @@ function leaveCurrentGame() {
   app.pendingDailyReward = null;
   app.pendingDailyOpponents = null;
   app.pendingDailyDiff = null;
-  
+  refreshAllCoinDisplays();
   showScreen('menu');
 }
 function handlePassAndPlayStart() {
@@ -10905,6 +10984,18 @@ function refreshAllCoinDisplays() {
   var st = $('settingsCoinTotal'); if (st) st.textContent = avail;
   var tc = $('totalCoins'); if (tc) tc.innerHTML = buildCoinHTML(avail, 'md');
   var sc = $('shopCoins'); if (sc) sc.innerHTML = 'العملات: ' + buildCoinHTML(avail);
+
+  // ✅ تحديث الإحصائيات في الصفحة الرئيسية
+  var lv = $('menuLevelVal');
+  var xp = $('menuXpFill');
+  var coins = $('menuCoinsVal');
+  
+  if (lv || xp || coins) {
+    var levelInfo = getPlayerLevel();
+    if (lv) lv.textContent = levelInfo.level;
+    if (xp) xp.style.width = (levelInfo.progress * 100) + '%';
+    if (coins) coins.textContent = avail;
+  }
 }
 function shopMsg(msg, isErr) {
   var el = $('shopMsg'); if (!el) return;
@@ -13175,7 +13266,7 @@ function initializeApp() {
     try { updateCpuSkillDisplay(); } catch (e) {}
 try { renderDailyBadge(); } catch (e) {}
 try { updateFaceBackCounts(); } catch (e) {}
-
+try { refreshAllCoinDisplays(); } catch (e) {}
     var sv = loadSavedGame();
     if (sv && app.settings.autoSave) {
       var rb = $('resumeBtn');
