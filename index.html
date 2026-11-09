@@ -3071,7 +3071,7 @@ body.playing .brand-bar {
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '23.4.10';
+var APP_VERSION = '23.4.11';
 var APP_BUILD_DATE = '1-9-2026';
 var APP_LAST_UPDATE = '9-11-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
@@ -6905,15 +6905,23 @@ function showGuestRoundScore(summary) {
 function handleHostMessage(msg) {
   if (!msg || !msg.type) return;
   if (msg.type === 'joined') { app.myPlayerId = msg.playerId; app.viewerId = msg.playerId; net.myName = net.myName || msg.hostName; setRoomStatus('✓ انضممت كـ ' + net.myName, 'ok'); showLobby(); return; }
-  if (msg.type === 'reassign') {
-    app.myPlayerId = msg.playerId; app.viewerId = msg.playerId;
-    if (msg.state) {
-      var proc = ingestStateFromPeer(msg.state);
-      if (proc) { app.state = proc; resetRenderCache(); previouslyRenderedMelds = {}; scheduleRender(); }
+if (msg.type === 'reassign') {
+  app.myPlayerId = msg.playerId; app.viewerId = msg.playerId;
+  if (msg.state) {
+    var proc = ingestStateFromPeer(msg.state);
+    if (proc) { 
+      app.state = proc; 
+      app.mode = 'lan'; // ✅ تأكيد وضع الشبكة
+      resetRenderCache(); 
+      previouslyRenderedMelds = {}; 
+      scheduleRender(); 
+      showScreen('game'); // ✅ نقل اللاعب لشاشة اللعب فوراً
+      setTimeout(function() { startTurnIfNeeded(); }, 300); // ✅ استئناف دوره
     }
-    setStatus('تم إعادة تعيينك في اللعبة', 'var(--gold)');
-    return;
   }
+  setStatus('تم إعادة تعيينك في اللعبة', 'var(--gold)');
+  return;
+}
   if (msg.type === 'lobby') { renderLobbyPlayers(msg.players); return; }
   if (msg.type === 'roundScore') { showGuestRoundScore(msg.summary); return; }
   if (msg.type === 'roundOverlay') { showRoundOverlay(msg.round || 0, function() { resetRenderCache(); scheduleRender(); }); return; }
@@ -8774,13 +8782,19 @@ if (state.selected.length < 1 || state.selected.length > maxD) {
   SoundFX.play('error');
   return;
 }
-/* ⛔ لا يمكن التخلص من Wild (قاعدة رسمية) */
-for (var wci = 0; wci < state.selected.length; wci++) {
-  for (var wcj = 0; wcj < player.hand.length; wcj++) {
-    if (player.hand[wcj].id === state.selected[wci] && player.hand[wcj].type === 'wild') {
-      setStatus('⛔ لا يمكن التخلص من Wild', 'var(--red)');
-      SoundFX.play('error');
-      return;
+/* ⛔ لا يمكن التخلص من Wild (إلا إذا كانت اليد كلها Wild) */
+var hasNonWild = false;
+for (var i = 0; i < player.hand.length; i++) {
+  if (player.hand[i].type !== 'wild') { hasNonWild = true; break; }
+}
+if (hasNonWild) {
+  for (var wci = 0; wci < state.selected.length; wci++) {
+    for (var wcj = 0; wcj < player.hand.length; wcj++) {
+      if (player.hand[wcj].id === state.selected[wci] && player.hand[wcj].type === 'wild') {
+        setStatus('⛔ لا يمكن التخلص من Wild (لديك بطاقات أخرى، تخلص منها)', 'var(--red)');
+        SoundFX.play('error');
+        return;
+      }
     }
   }
 }
