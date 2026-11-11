@@ -82,23 +82,40 @@
         <span class="info"><span class="name">شبكة / لعب جماعي</span><span class="desc">اتصال مباشر بين اللاعبين</span></span>
       </button>
     </div>
-    <div class="bottom-btns">
-      <button id="resumeBtn" type="button" style="display:none;background:linear-gradient(160deg,#5be08f,#22a862);color:#04240f">▶ استئناف اللعبة</button>
-      <button id="settingsBtn" type="button">⚙ الإعدادات</button>
-      <button id="menuRulesBtn" type="button">📖 القواعد</button>
-      <button id="achievementsBtn" type="button">🏆 الإنجازات</button>
-      <button id="leaderboardBtn" type="button">📊 المتصدرون</button>
-      <button id="themeToggleBtn" type="button">🎨 الثيم</button>
-      <button id="fullscreenBtn" type="button">⛶ ملء الشاشة</button>
-      <button id="shopBtn" type="button">🛒 المتجر</button>
-      <button id="galleryBtn" type="button">🖼 معرض البطاقات</button>
-      <button id="profileBtn" type="button">👤 ملفي الشخصي</button>
-      <button id="tutorialBtn" type="button">🎓 تعليم سريع</button>
-<button id="aboutBtn" type="button">ℹ️ حول التطبيق</button>
-<button id="dailyChallengeBtn" class="daily-btn" type="button">🎯 التحدي اليومي<span class="daily-badge hidden" id="dailyBadge">NEW</span></button>
-<button id="dailyLeaderboardBtn" type="button">🏆 متصدرو التحدي</button>
-<button id="pwaInstallBtn" type="button" style="display:none; background:linear-gradient(160deg, #5be08f, #22a862); color:#04240f; font-weight:bold; border: 1px solid #4ade80;">📲 تثبيت التطبيق</button>
-    </div>
+<div class="bottom-btns">
+  <button id="resumeBtn" type="button" style="display:none;background:linear-gradient(160deg,#5be08f,#22a862);color:#04240f">▶ استئناف اللعبة</button>
+  
+<!-- الصف الأول: حسابي والإعدادات -->
+<div style="width:100%; display:flex; gap:5px; justify-content:center; max-width:340px;">
+  <button id="profileBtn" type="button" style="flex:1; background:linear-gradient(160deg, rgba(168,85,247,0.2), rgba(168,85,247,0.1)); border-color:rgba(168,85,247,0.4); color:#c4b5fd;">👤 حسابي</button>
+  <button id="settingsBtn" type="button" style="flex:1;">⚙ الإعدادات</button>
+</div>
+
+<!-- الصف الثاني: المتجر وحول التطبيق (بجانب بعضهما) -->
+<div style="width:100%; display:flex; gap:5px; justify-content:center; margin-top:5px; max-width:340px;">
+  <button id="shopBtn" type="button" style="flex:1; background:linear-gradient(160deg, rgba(244,185,66,0.2), rgba(244,185,66,0.1)); border-color:rgba(244,185,66,0.4); color:#f4b942;">🛒 المتجر</button>
+  <button id="aboutBtn" type="button" style="flex:1;">ℹ️ حول التطبيق</button>
+</div>
+
+<!-- الصف الثالث: التحدي اليومي وملء الشاشة -->
+<div style="width:100%; display:flex; gap:5px; justify-content:center; margin-top:5px; max-width:340px;">
+  <button id="dailyChallengeBtn" class="daily-btn" type="button" style="flex:1;">🎯 التحدي اليومي<span class="daily-badge hidden" id="dailyBadge">NEW</span></button>
+  <button id="fullscreenBtn" type="button" style="flex:0 0 50px; padding:9px 0; font-size:14px;">⛶</button>
+</div>
+
+<button id="pwaInstallBtn" type="button" style="display:none; background:linear-gradient(160deg, #5be08f, #22a862); color:#04240f; font-weight:bold; border: 1px solid #4ade80; margin-top:5px;">📲 تثبيت التطبيق</button>
+
+<!-- الأزرار المخفية (لا تحذفها، نستخدمها برمجياً) -->
+<div style="display:none;">
+  <button id="menuRulesBtn" type="button"></button>
+  <button id="achievementsBtn" type="button"></button>
+  <button id="leaderboardBtn" type="button"></button>
+  <button id="themeToggleBtn" type="button"></button>
+  <button id="galleryBtn" type="button"></button>
+  <button id="tutorialBtn" type="button"></button>
+  <button id="dailyLeaderboardBtn" type="button"></button>
+</div>
+</div>
   </div>
 
   <div id="localSetup" class="screen setup-screen">
@@ -135,10 +152,15 @@
       <div class="row-label">أسماء اللاعبين</div>
       <div class="names-editor" id="namesEditor"></div>
     </div>
-    <div class="setup-actions">
-      <button class="btn-gold" id="startLocalBtn" type="button">▶ ابدأ اللعبة</button>
-      <button class="btn-ghost" id="localBackBtn" type="button">← رجوع</button>
-    </div>
+  <div style="display:flex; gap:8px; width:100%; max-width:440px; margin-top:10px;">
+  <button class="btn-gold" id="profileGoAchievementsBtn" type="button" style="flex:1; padding:12px; border-radius:10px; font-weight:800; font-size:12px; background:linear-gradient(160deg,#a855f7,#7c3aed); color:#fff;">🏆 الإنجازات</button>
+  <button class="btn-gold" id="profileGoLeaderboardBtn" type="button" style="flex:1; padding:12px; border-radius:10px; font-weight:800; font-size:12px;">📊 المتصدرون</button>
+  <button class="btn-gold" id="profileGoDailyLbBtn" type="button" style="flex:1; padding:12px; border-radius:10px; font-weight:800; font-size:12px; background:linear-gradient(160deg,#f4b942,#c98a05); color:#241a00;">🏆 اليوم</button>
+</div>
+<div class="setup-actions">
+  <button class="btn-gold" id="exportProfileBtn" type="button">📸 مشاركة ملفي</button>
+  <button class="btn-ghost" id="profileBackBtn" type="button">← رجوع</button>
+</div>
   </div>
 
   <div id="lanSetup" class="screen setup-screen">
@@ -221,10 +243,17 @@
     <div class="row-label">📜 آخر المباريات</div>
     <div id="matchHistoryBody"></div>
   </div>
-  <div class="setup-actions">
-    <button class="btn-gold" id="exportProfileBtn" type="button">📸 مشاركة ملفي</button>
-    <button class="btn-ghost" id="profileBackBtn" type="button">← رجوع</button>
-  </div>
+<!-- ✅ زر الإنجازات والمتصدرين الموحد -->
+<div style="display:flex; gap:8px; width:100%; max-width:440px; margin-top:10px;">
+  <button class="btn-gold" id="profileGoAchievementsBtn" type="button" onclick="buildAchievementsList(); document.getElementById('achievementsModal').classList.remove('hidden');" style="flex:1; padding:12px; border-radius:10px; font-weight:800; font-size:12px; background:linear-gradient(160deg,#a855f7,#7c3aed); color:#fff;">🏆 الإنجازات</button>
+  <button class="btn-gold" id="profileGoLeaderboardBtn" type="button" onclick="showLeaderboardModal();" style="flex:1; padding:12px; border-radius:10px; font-weight:800; font-size:12px; background:linear-gradient(160deg,#f4b942,#c98a05); color:#241a00;">🏆 المتصدرون</button>
+</div>
+
+  <!-- أزرار الرجوع والمشاركة الأصلية -->
+<div class="setup-actions" style="margin-top: 10px;">
+  <button class="btn-gold" id="exportProfileBtn" type="button" onclick="exportProfileAsImage();">📸 مشاركة ملفي</button>
+  <button class="btn-ghost" id="profileBackBtn" type="button" onclick="showScreen('menu');">← رجوع</button>
+</div>
 </div>
 
   <div id="lobbyScreen" class="screen setup-screen">
@@ -617,7 +646,13 @@
       <p style="text-align:center;font-size:10px;color:#8fa5a0;margin-bottom:7px">18 تصميم ظهور فريد</p>
       <div class="settings-grid" id="backGrid"></div>
     </div>
-    <button class="primary" id="closeSettings" type="button">حفظ وإغلاق</button>
+    <div style="display:flex; gap:6px; margin-top:16px; flex-wrap:wrap;">
+  <button class="ghost" id="settingsGoRulesBtn" type="button" style="flex:1; padding:10px; font-size:11px; min-width:45%;">📖 القواعد</button>
+  <button class="ghost" id="settingsGoGalleryBtn" type="button" style="flex:1; padding:10px; font-size:11px; min-width:45%;">🖼 معرض البطاقات</button>
+  <button class="ghost" id="settingsGoThemeBtn" type="button" style="flex:1; padding:10px; font-size:11px; min-width:45%;">🎨 تغيير الثيم</button>
+  <button class="ghost" id="settingsGoTutorialBtn" type="button" style="flex:1; padding:10px; font-size:11px; min-width:45%;">🎓 تعليم سريع</button>
+</div>
+<button class="primary" id="closeSettings" type="button" style="margin-top:10px;">حفظ وإغلاق</button>
   </div>
 </div>
 
@@ -3071,9 +3106,9 @@ body.playing .brand-bar {
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '23.4.11';
+var APP_VERSION = '23.5.0';
 var APP_BUILD_DATE = '1-9-2026';
-var APP_LAST_UPDATE = '9-11-2026';
+var APP_LAST_UPDATE = '12-11-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
 var UPDATE_CHECK_INTERVAL_MS = 30 * 60 * 1000; /* 30 دقيقة */
 
@@ -12177,6 +12212,25 @@ function buildProfileScreen() {
     }
     histBody.innerHTML = histHTML;
   }
+// ✅ ربط الأزرار برمجياً للتأكد من عملها
+setTimeout(function() {
+  var btnAch = $('profileGoAchievementsBtn');
+  if (btnAch) {
+    btnAch.onclick = function() {
+      SoundFX.play('tap');
+      buildAchievementsList();
+      $('achievementsModal').classList.remove('hidden');
+    };
+  }
+  
+  var btnLb = $('profileGoLeaderboardBtn');
+  if (btnLb) {
+    btnLb.onclick = function() {
+      SoundFX.play('tap');
+      showLeaderboardModal();
+    };
+  }
+}, 50);
 }
 function exportProfileAsImage() {
   var levelInfo = getPlayerLevel();
@@ -13438,6 +13492,42 @@ function initializeApp() {
     try { updateCpuSkillDisplay(); } catch (e) {}
 try { renderDailyBadge(); } catch (e) {}
 try { updateFaceBackCounts(); } catch (e) {}
+
+// ✅ ربط أزرار القوائم الجديدة بشكل آمن
+try {
+  if (document.getElementById('profileGoAchievementsBtn')) {
+    document.getElementById('profileGoAchievementsBtn').onclick = () => { 
+      buildAchievementsList(); 
+      document.getElementById('achievementsModal').classList.remove('hidden'); 
+    };
+  }
+  
+  // ✅ دمج المتصدرين في زر واحد يفتح النافذة الرئيسية (التي تحتوي على التبويبات)
+  if (document.getElementById('profileGoLeaderboardBtn')) {
+    document.getElementById('profileGoLeaderboardBtn').onclick = () => { 
+      showLeaderboardModal(); 
+    };
+  }
+  
+  if (document.getElementById('settingsGoRulesBtn')) {
+    document.getElementById('settingsGoRulesBtn').onclick = () => { document.getElementById('settingsModal').classList.add('hidden'); document.getElementById('rulesModal').classList.remove('hidden'); };
+  }
+  if (document.getElementById('settingsGoGalleryBtn')) {
+    document.getElementById('settingsGoGalleryBtn').onclick = () => { document.getElementById('settingsModal').classList.add('hidden'); document.getElementById('galleryBtn').click(); };
+  }
+  if (document.getElementById('settingsGoThemeBtn')) {
+    document.getElementById('settingsGoThemeBtn').onclick = () => { document.getElementById('themeToggleBtn').click(); };
+  }
+  if (document.getElementById('settingsGoTutorialBtn')) {
+    document.getElementById('settingsGoTutorialBtn').onclick = () => { document.getElementById('settingsModal').classList.add('hidden'); openTutorial(0); };
+  }
+
+  
+  // ✅ إصلاح إضافي مضمون لزر الرجوع في الملف الشخصي
+  if (document.getElementById('profileBackBtn')) {
+    document.getElementById('profileBackBtn').onclick = () => { showScreen('menu'); };
+  }
+} catch (e) { console.error('Menu binding error:', e); }
 try { refreshAllCoinDisplays(); } catch (e) {}
     var sv = loadSavedGame();
     if (sv && app.settings.autoSave) {
