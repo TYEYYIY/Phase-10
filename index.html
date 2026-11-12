@@ -118,50 +118,45 @@
 </div>
   </div>
 
-  <div id="localSetup" class="screen setup-screen">
-    <h2 id="localSetupTitle">إعداد اللعبة</h2>
-    <div class="setup-box">
-      <div class="row-label">الاسم</div>
-      <input id="myNameInput" class="name-input-setting" type="text" maxlength="14" placeholder="اكتب اسمك">
-    </div>
-    <div class="setup-box">
-      <div class="row-label">حزمة المراحل</div>
-      <div class="pack-grid" id="localPackGrid"></div>
-      <button class="btn-ghost" id="openCustomBuilderBtn" type="button" style="margin-top:6px;padding:9px;border-radius:9px;font-size:11.5px;font-weight:700">⚙ منشئ المراحل المخصص</button>
-    </div>
-    <div class="setup-box">
-      <div class="row-label">وضع خاص</div>
-      <div class="special-modes-grid" id="localSpecialModes"></div>
-    </div>
-    <div class="setup-box">
-      <div class="row-label">عدد اللاعبين</div>
-      <div class="count-selector" id="localCount"></div>
-    </div>
-    <div class="setup-box hidden" id="cpuDifficultyBox">
-      <div class="row-label">عدد الخصوم</div>
-      <div class="count-selector" id="cpuCount"></div>
-    </div>
-    <div class="setup-box">
-      <div class="row-label">مستوى ذكاء الخصم</div>
-      <div class="cpu-skill-display">
-        <div class="cpu-skill-bar"><div class="cpu-skill-fill" id="cpuSkillFill"></div></div>
-        <div class="cpu-skill-label" id="cpuSkillLabel"></div>
-      </div>
-    </div>
-    <div class="setup-box">
-      <div class="row-label">أسماء اللاعبين</div>
-      <div class="names-editor" id="namesEditor"></div>
-    </div>
-  <div style="display:flex; gap:8px; width:100%; max-width:440px; margin-top:10px;">
-  <button class="btn-gold" id="profileGoAchievementsBtn" type="button" style="flex:1; padding:12px; border-radius:10px; font-weight:800; font-size:12px; background:linear-gradient(160deg,#a855f7,#7c3aed); color:#fff;">🏆 الإنجازات</button>
-  <button class="btn-gold" id="profileGoLeaderboardBtn" type="button" style="flex:1; padding:12px; border-radius:10px; font-weight:800; font-size:12px;">📊 المتصدرون</button>
-  <button class="btn-gold" id="profileGoDailyLbBtn" type="button" style="flex:1; padding:12px; border-radius:10px; font-weight:800; font-size:12px; background:linear-gradient(160deg,#f4b942,#c98a05); color:#241a00;">🏆 اليوم</button>
-</div>
-<div class="setup-actions">
-  <button class="btn-gold" id="exportProfileBtn" type="button">📸 مشاركة ملفي</button>
-  <button class="btn-ghost" id="profileBackBtn" type="button">← رجوع</button>
-</div>
+<div id="localSetup" class="screen setup-screen">
+  <h2 id="localSetupTitle">إعداد اللعبة</h2>
+  <div class="setup-box">
+    <div class="row-label">الاسم</div>
+    <input id="myNameInput" class="name-input-setting" type="text" maxlength="14" placeholder="اكتب اسمك">
   </div>
+  <div class="setup-box">
+    <div class="row-label">حزمة المراحل</div>
+    <div class="pack-grid" id="localPackGrid"></div>
+    <button class="btn-ghost" id="openCustomBuilderBtn" type="button" style="margin-top:6px;padding:9px;border-radius:9px;font-size:11.5px;font-weight:700">⚙ منشئ المراحل المخصص</button>
+  </div>
+  <div class="setup-box">
+    <div class="row-label">وضع خاص</div>
+    <div class="special-modes-grid" id="localSpecialModes"></div>
+  </div>
+  <div class="setup-box">
+    <div class="row-label">عدد اللاعبين</div>
+    <div class="count-selector" id="localCount"></div>
+  </div>
+  <div class="setup-box hidden" id="cpuDifficultyBox">
+    <div class="row-label">عدد الخصوم</div>
+    <div class="count-selector" id="cpuCount"></div>
+  </div>
+  <div class="setup-box">
+    <div class="row-label">مستوى ذكاء الخصم</div>
+    <div class="cpu-skill-display">
+      <div class="cpu-skill-bar"><div class="cpu-skill-fill" id="cpuSkillFill"></div></div>
+      <div class="cpu-skill-label" id="cpuSkillLabel"></div>
+    </div>
+  </div>
+  <div class="setup-box">
+    <div class="row-label">أسماء اللاعبين</div>
+    <div class="names-editor" id="namesEditor"></div>
+  </div>
+  <div class="setup-actions">
+    <button class="btn-gold" id="startLocalBtn" type="button">▶ ابدأ اللعبة</button>
+    <button class="btn-ghost" id="localBackBtn" type="button">← رجوع</button>
+  </div>
+</div>
 
   <div id="lanSetup" class="screen setup-screen">
     <h2>إعداد الشبكة</h2>
@@ -243,17 +238,18 @@
     <div class="row-label">📜 آخر المباريات</div>
     <div id="matchHistoryBody"></div>
   </div>
-<!-- ✅ زر الإنجازات والمتصدرين الموحد -->
-<div style="display:flex; gap:8px; width:100%; max-width:440px; margin-top:10px;">
-  <button class="btn-gold" id="profileGoAchievementsBtn" type="button" onclick="buildAchievementsList(); document.getElementById('achievementsModal').classList.remove('hidden');" style="flex:1; padding:12px; border-radius:10px; font-weight:800; font-size:12px; background:linear-gradient(160deg,#a855f7,#7c3aed); color:#fff;">🏆 الإنجازات</button>
-  <button class="btn-gold" id="profileGoLeaderboardBtn" type="button" onclick="showLeaderboardModal();" style="flex:1; padding:12px; border-radius:10px; font-weight:800; font-size:12px; background:linear-gradient(160deg,#f4b942,#c98a05); color:#241a00;">🏆 المتصدرون</button>
-</div>
+  
+  <!-- ✅ أزرار الإنجازات والمتصدرين (تم وضعها هنا بشكل صحيح) -->
+  <div style="display:flex; gap:8px; width:100%; max-width:440px; margin-top:10px; z-index: 10;">
+    <button class="btn-gold" id="profileGoAchievementsBtn" type="button" onclick="buildAchievementsList(); document.getElementById('achievementsModal').classList.remove('hidden');" style="flex:1; padding:12px; border-radius:10px; font-weight:800; font-size:12px; background:linear-gradient(160deg,#a855f7,#7c3aed); color:#fff;">🏆 الإنجازات</button>
+    <button class="btn-gold" id="profileGoLeaderboardBtn" type="button" onclick="showLeaderboardModal();" style="flex:1; padding:12px; border-radius:10px; font-weight:800; font-size:12px; background:linear-gradient(160deg,#f4b942,#c98a05); color:#241a00;">🏆 المتصدرون</button>
+    <button class="btn-gold" id="profileGoDailyLbBtn" type="button" onclick="showDailyLeaderboard();" style="flex:1; padding:12px; border-radius:10px; font-weight:800; font-size:12px; background:linear-gradient(160deg,#22a862,#4ade80); color:#fff;">📅 اليوم</button>
+  </div>
 
-  <!-- أزرار الرجوع والمشاركة الأصلية -->
-<div class="setup-actions" style="margin-top: 10px;">
-  <button class="btn-gold" id="exportProfileBtn" type="button" onclick="exportProfileAsImage();">📸 مشاركة ملفي</button>
-  <button class="btn-ghost" id="profileBackBtn" type="button" onclick="showScreen('menu');">← رجوع</button>
-</div>
+  <div class="setup-actions" style="margin-top: 10px;">
+    <button class="btn-gold" id="exportProfileBtn" type="button" onclick="exportProfileAsImage()">📸 مشاركة ملفي</button>
+    <button class="btn-ghost" id="profileBackBtn" type="button" onclick="showScreen('menu')">← رجوع</button>
+  </div>
 </div>
 
   <div id="lobbyScreen" class="screen setup-screen">
@@ -3106,7 +3102,7 @@ body.playing .brand-bar {
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '23.5.1';
+var APP_VERSION = '23.5.2';
 var APP_BUILD_DATE = '1-9-2026';
 var APP_LAST_UPDATE = '12-11-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
