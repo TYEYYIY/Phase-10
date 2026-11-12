@@ -3102,7 +3102,7 @@ body.playing .brand-bar {
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '23.5.2';
+var APP_VERSION = '23.5.3';
 var APP_BUILD_DATE = '1-9-2026';
 var APP_LAST_UPDATE = '12-11-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
@@ -4379,11 +4379,11 @@ function scheduleRender() {
 
 function resetResetMeldsCache() { previouslyRenderedMelds = {}; }
 
-function resetRenderCache() { for (var k in renderCache) renderCache[k] = ''; }
-window.addEventListener('resize', function() {
-  resetRenderCache();
-  if (app.state) { scheduleRender(); fitTurnName(); }
-});
+function resetRenderCache() { 
+  for (var k in renderCache) renderCache[k] = ''; 
+  _cardHTMLCache = {}; // ✅ تفريغ ذاكرة البطاقات
+  _cardHTMLCacheCount = 0;
+}
 function computeHandSignature(sh, state) {
   var ids = '';
   for (var i = 0; i < sh.length; i++) ids += sh[i].id + ',';
@@ -5617,8 +5617,8 @@ function buildCardHTML(card, options) {
   options = options || {};
   /* إذا البطاقة بلا توهج/تحديد → استخدم cache */
   if (!options.selected && !options.hint && !options.hitReady && card && card.id) {
-    // ✅ الحل السحري: نربط الذاكرة المؤقتة بشكل البطاقة ونمط الـ Wild
-    var cacheKey = card.id + '_' + app.settings.faceStyle + '_' + (app.settings.wildStyle || 'default');
+    // ✅ الحل الجذري: إضافة بيانات البطاقة (الرقم والنوع واللون) إلى المفتاح
+    var cacheKey = card.id + '_' + card.type + '_' + (card.value || '') + '_' + (card.col !== undefined ? card.col : '') + '_' + app.settings.faceStyle + '_' + (app.settings.wildStyle || 'default');
     var cached = _cardHTMLCache[cacheKey];
     if (cached !== undefined) return cached;
     
