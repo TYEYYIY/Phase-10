@@ -3106,7 +3106,7 @@ body.playing .brand-bar {
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '23.5.0';
+var APP_VERSION = '23.5.1';
 var APP_BUILD_DATE = '1-9-2026';
 var APP_LAST_UPDATE = '12-11-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
@@ -4763,10 +4763,17 @@ function advanceTurn(state, skipCount) {
   var actualAdvance = 0;
   var currentIdx = state.turnIndex;
   var safety = 0;
-  while (actualAdvance < skipCount && safety < 20) {
-  currentIdx = (currentIdx + 1) % state.playerCount;
-  var target = state.players[currentIdx];
-  if (target && target.skipImmune && skipCount > 1) {
+  while (actualAdvance < skipCount && safety < 50) {
+currentIdx = (currentIdx + 1) % state.playerCount;
+var target = state.players[currentIdx];
+
+// ✅ تخطي اللاعبين المستبعدين من وضع الطيف
+if (state.isTieBreaker && target && target.isTieBreakerActive === false) {
+  safety++;
+  continue;
+}
+
+if (target && target.skipImmune && skipCount > 1) {
     target.skipImmune = false;
     setStatus('🚫 ' + target.name + ' محصّن ضد Skip!', 'var(--purple)');
     pushActionLog(state, -1, 'skip', '🚫 ' + target.name + ' محصّن ضد Skip');
@@ -5781,6 +5788,10 @@ function renderPlayersList() {
   });
   for (var i = 0; i < sorted.length; i++) {
     var p = sorted[i];
+    
+    // ✅ إخفاء اللاعبين المستبعدين في وضع الطيف من القائمة
+    if (state.isTieBreaker && p.isTieBreakerActive === false) continue;
+
     var isMe = p.id === app.viewerId || p.id === app.myPlayerId;
     var isCurrent = p.id === state.turnIndex;
     var cls = 'plist-item' + (isMe ? ' me' : '') + (isCurrent ? ' current' : '');
@@ -6007,18 +6018,23 @@ function renderAllMelds(state, vId) {
   var sel = [];
   for (var i = 0; i < state.selected.length; i++) for (var j = 0; j < vp.hand.length; j++) if (vp.hand[j].id === state.selected[i]) { sel.push(vp.hand[j]); break; }
   var hittableMap = {};
-if (state.hasDrawn && state.turnIndex === vId && sel.length > 0) {
-  var siegeRestrictedForView = !!(state.specialCfg && state.specialCfg.onlyOwnHit) ||
-                               !!(state.dailyChallenge && state.dailyChallenge.type === 'siege');
-  for (var k = 0; k < sel.length; k++) for (var pi = 0; pi < state.players.length; pi++) {
-    if (siegeRestrictedForView && pi !== vId) continue;
-    var p = state.players[pi];
-    for (var mi = 0; mi < p.melds.length; mi++) if (canHitMeld(sel[k], p.melds[mi])) hittableMap[pi + '_' + mi] = true;
+  if (state.hasDrawn && state.turnIndex === vId && sel.length > 0) {
+    var siegeRestrictedForView = !!(state.specialCfg && state.specialCfg.onlyOwnHit) ||
+                                 !!(state.dailyChallenge && state.dailyChallenge.type === 'siege');
+    for (var k = 0; k < sel.length; k++) for (var pi = 0; pi < state.players.length; pi++) {
+      if (siegeRestrictedForView && pi !== vId) continue;
+      var p = state.players[pi];
+      for (var mi = 0; mi < p.melds.length; mi++) if (canHitMeld(sel[k], p.melds[mi])) hittableMap[pi + '_' + mi] = true;
+    }
   }
-}
   var newRendered = {};
   for (var pi2 = 0; pi2 < state.players.length; pi2++) {
-    var player = state.players[pi2]; if (player.melds.length === 0) continue;
+    var player = state.players[pi2]; 
+    
+    // ✅ إخفاء مجموعات اللاعبين المستبعدين في وضع الطيف
+    if (state.isTieBreaker && player.isTieBreakerActive === false) continue;
+    
+    if (player.melds.length === 0) continue;
     hasAny = true;
     var isV = player.id === vId;
     html += '<div class="melds-section"><div class="melds-label ' + (isV ? 'you' : '') + '">' + (isV ? '[أنت] ' : '') + escapeHTML(player.name) + '</div><div class="melds-row">';
@@ -6028,14 +6044,13 @@ if (state.hasDrawn && state.turnIndex === vId && sel.length > 0) {
       newRendered[key] = true;
       var tl;
       if (meld.type === 'set') tl = 'مجموعة ' + meld.num;
-else if (meld.type === 'run') {
-  var rs = meld.step || 1;
-  /* ✅ lo هو دائماً أصغر رقم في المتتالية، لذا lo % 2 يحدد النوع بدقة */
-  var label = (rs === 2)
-    ? ((meld.lo % 2 === 1) ? 'متتالية فردية' : 'متتالية زوجية')
-    : 'متتالية';
-  tl = label + ' ' + meld.lo + '⬅️' + meld.hi + ' (' + COLORS[meld.col || 0].name + ')';
-}
+      else if (meld.type === 'run') {
+        var rs = meld.step || 1;
+        var label = (rs === 2)
+          ? ((meld.lo % 2 === 1) ? 'متتالية فردية' : 'متتالية زوجية')
+          : 'متتالية';
+        tl = label + ' ' + meld.lo + '⬅️' + meld.hi + ' (' + COLORS[meld.col || 0].name + ')';
+      }
       else tl = 'لون ' + COLORS[meld.col].name;
       var canHit = !!hittableMap[pi2 + '_' + mi2];
       var extra = canHit ? ' can-hit' : '';
@@ -8966,7 +8981,6 @@ function triggerspectrumTieBreaker(state, tiedPlayerIds) {
   state.tie = false;
   state.gameOver = false;
 
-  //   وضع الطيف: مرحلة عشوائية واحدة
   var spectrumConditions = [
     { sets: [3], runs: [], color: 0, desc: 'مجموعة من 3' },
     { sets: [], runs: [4], color: 0, desc: 'متتالية من 4' },
@@ -8976,22 +8990,34 @@ function triggerspectrumTieBreaker(state, tiedPlayerIds) {
   ];
   var randomCondition = spectrumConditions[Math.floor(Math.random() * spectrumConditions.length)];
 
-  // تفعيل وضع الطيف
   state.specialCfg = { key: 'spectrum', name: '  الطيف', startHand: 10, drawCount: 1, spectrumMode: true };
   state.phasesLimit = 1;
   state.phasesList = [randomCondition];
 
-  // إعادة توزيع 10 بطاقات من رزمة الطيف الجديدة (7 ألوان)
   var deck = createDeck(state.specialCfg);
   state.deck = deck;
+  
+  // ✅ تصفية اللاعبين: إعطاء البطاقات للمتعادلين فقط، وإفراغ يد الباقين
+  var activeCount = 0;
   for (var k = 0; k < state.players.length; k++) {
-    state.players[k].hand = deck.splice(0, 10);
-    state.players[k].melds = [];
-    state.players[k].phase = 0;
-    state.players[k].score = 0;
-    state.players[k].laidThisTurn = false;
-    state.players[k].mergesLeft = 3;
+    var p = state.players[k];
+    var isTied = tiedPlayerIds.indexOf(p.id) !== -1;
+    
+    p.isTieBreakerActive = isTied;
+    p.melds = [];
+    p.phase = 0;
+    p.laidThisTurn = false;
+    p.mergesLeft = 3;
+    
+    if (isTied) {
+      p.hand = deck.splice(0, 10);
+      p.score = 0; // تصفير نقاط المتعادلين لبداية عادلة
+      activeCount++;
+    } else {
+      p.hand = []; // إفراغ يد غير المتعادلين لكي لا يشاركوا
+    }
   }
+  
   var fd = pickInitialDiscard(deck);
   state.discard = fd ? [fd] : [];
   state.turnIndex = tiedPlayerIds[0];
@@ -9000,7 +9026,7 @@ function triggerspectrumTieBreaker(state, tiedPlayerIds) {
   state.selected = []; state.hintCards = [];
   state.actionLog = state.actionLog || [];
 
-  setStatus('  تعادل! وضع الطيف — ' + randomCondition.desc, 'var(--gold)');
+  setStatus('  تعادل! وضع الطيف للمتعادلين فقط (' + activeCount + ' لاعب) — ' + randomCondition.desc, 'var(--gold)');
 
   if (app.mode !== 'lan') {
     showSpectrumIntro(function() {
@@ -9109,6 +9135,9 @@ function checkWinOrNewRound(state, pId) {
 /* الفائز = الأقل نقاطاً بين من أكملوا كل المراحل (بعد احتساب عقوبات الجولة) */
 var completed = [];
 for (var ci = 0; ci < state.players.length; ci++) {
+  // ✅ تجاهل اللاعبين غير النشطين في وضع الطيف
+  if (state.isTieBreaker && state.players[ci].isTieBreakerActive === false) continue;
+  
   if (state.players[ci].phase >= lim) completed.push(state.players[ci]);
 }
 
@@ -9692,13 +9721,16 @@ function showGameOver() {
       else if (tp.phase > best.phase || (tp.phase === best.phase && tp.score < best.score)) best = tp;
     }
     winner = best;
-  } else {
-    for (var i = 0; i < state.players.length; i++) {
-      if (state.players[i].phase >= state.phasesLimit) {
-        if (!winner || state.players[i].score < winner.score) winner = state.players[i];
-      }
+} else {
+  for (var i = 0; i < state.players.length; i++) {
+    // ✅ تجاهل اللاعبين غير النشطين
+    if (state.isTieBreaker && state.players[i].isTieBreakerActive === false) continue;
+    
+    if (state.players[i].phase >= state.phasesLimit) {
+      if (!winner || state.players[i].score < winner.score) winner = state.players[i];
     }
   }
+}
   var me = state.players[app.myPlayerId];
   var iAm = winner && me && winner.id === me.id && !state.tie;
   if (state.tie) { $('overTitle').textContent = '🤝 تعادل!'; }
@@ -12355,7 +12387,7 @@ function toggleFullscreen() {
 document.addEventListener('fullscreenchange', updateFullscreenButtonText);
 document.addEventListener('webkitfullscreenchange', updateFullscreenButtonText);
 function updateFullscreenButtonText() {
-  var b = $('fullscreenBtn'); if (b) b.textContent = isFullscreen() ? '⛶ إنهاء ملء الشاشة' : '⛶ ملء الشاشة';
+  var b = $('fullscreenBtn'); if (b) b.textContent = isFullscreen() ? '❌' : '⛶';
   var iconExpand = $('fullscreenIconExpand');
   var iconCollapse = $('fullscreenIconCollapse');
   if (iconExpand) iconExpand.style.display = isFullscreen() ? 'none' : 'block';
