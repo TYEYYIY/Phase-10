@@ -3102,9 +3102,9 @@ body.playing .brand-bar {
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '23.5.3';
+var APP_VERSION = '23.5.4';
 var APP_BUILD_DATE = '1-9-2026';
-var APP_LAST_UPDATE = '12-11-2026';
+var APP_LAST_UPDATE = '13-11-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
 var UPDATE_CHECK_INTERVAL_MS = 30 * 60 * 1000; /* 30 دقيقة */
 
@@ -9104,10 +9104,9 @@ function colorHex(idx) {
 function checkWinOrNewRound(state, pId) {
   var player = state.players[pId]; if (!player) return;
   if (player.hand.length !== 0) return;
-
-  
   var lim = state.phasesLimit;
-  /* ⛑️ إصلاح 1: احسب عقوبات الجولة الأخيرة لجميع اللاعبين (عدا من فرّغ يده) */
+
+  /* ⛑️ احسب عقوبات الجولة الأخيرة لجميع اللاعبين (عدا من فرّغ يده) */
   var roundPenalties = {};
   for (var ri = 0; ri < state.players.length; ri++) {
     var rp = state.players[ri];
@@ -9117,41 +9116,39 @@ function checkWinOrNewRound(state, pId) {
     roundPenalties[rp.id] = penSum;
   }
 
-  /* ⛑️ إصلاح 2: لا تنتهِ اللعبة إلا إذا كان من فرّغ يده قد أكمل كل المراحل */
-  if (player.phase >= lim) {
-    /* طبّق العقوبات على كل اللاعبين قبل تحديد الفائز */
-    for (var pi = 0; pi < state.players.length; pi++) {
-      var sp = state.players[pi];
-      var addPen = roundPenalties[sp.id] || 0;
-      sp.score += addPen;
-      app.stats.totalPenalty += addPen;
+  /* ✅ تطبيق العقوبات على الجميع (حتى لو انتهت اللعبة، يجب حساب نقاطهم) */
+  for (var pi = 0; pi < state.players.length; pi++) {
+    var sp = state.players[pi];
+    var addPen = roundPenalties[sp.id] || 0;
+    sp.score += addPen;
+    app.stats.totalPenalty += addPen;
+  }
+  saveStatsToStorage();
+
+  /* ✅ البحث عن أي لاعب (بما فيهم من أنهى يده الآن) قد أكمل جميع المراحل */
+  var completed = [];
+  for (var ci = 0; ci < state.players.length; ci++) {
+    if (state.players[ci].phase >= lim) completed.push(state.players[ci]);
+  }
+
+  /* 🏆 إذا وجدنا لاعباً أو أكثر أكملوا المراحل، تنتهي المباراة فوراً */
+  if (completed.length > 0) {
+    var minScore = completed[0].score;
+    for (var j = 1; j < completed.length; j++) {
+      if (completed[j].score < minScore) minScore = completed[j].score;
     }
-    saveStatsToStorage();
+    var winners = completed.filter(function(p) { return p.score === minScore; });
 
-/* الفائز = الأقل نقاطاً بين من أكملوا كل المراحل (بعد احتساب عقوبات الجولة) */
-var completed = [];
-for (var ci = 0; ci < state.players.length; ci++) {
-  // ✅ تجاهل اللاعبين غير النشطين في وضع الطيف
-  if (state.isTieBreaker && state.players[ci].isTieBreakerActive === false) continue;
-  
-  if (state.players[ci].phase >= lim) completed.push(state.players[ci]);
-}
+    // اكتشاف التعادل
+    if (winners.length > 1 && !state.isTieBreaker) {
+      var wIds = winners.map(function(w) { return w.id; });
+      triggerspectrumTieBreaker(state, wIds);
+      return;
+    }
 
-// ✅ اكتشاف التعادل
-var minScore = completed[0].score;
-for (var j = 1; j < completed.length; j++) {
-  if (completed[j].score < minScore) minScore = completed[j].score;
-}
-var winners = completed.filter(function(p) { return p.score === minScore; });
-
-if (winners.length > 1 && !state.isTieBreaker) {
-  var wIds = winners.map(function(w) { return w.id; });
-  triggerspectrumTieBreaker(state, wIds);
-  return;
-}
-
-var winner = winners[0];
-state.gameOver = true;
+    // إعلان الفائز
+    var winner = winners[0];
+    state.gameOver = true;
     setStatus(winner.name + ' فاز باللعبة!', 'var(--green)');
     try { recordWeeklyLeaderboard(); } catch (e) {}
     SoundFX.play('win'); showConfetti();
@@ -9165,7 +9162,7 @@ state.gameOver = true;
     return;
   }
 
-  /* لم يكمل المراحل → فاز بالجولة فقط، واللعبة تستمر */
+  /* 🔄 لم يكمل أحد المراحل → فاز بالجولة فقط، واللعبة تستمر */
   startNewRound(state, pId);
   setStatus(player.name + ' أنهى الجولة!');
   resetRenderCache();
