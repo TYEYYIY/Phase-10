@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="format-detection" content="telephone=no">
-<title>TYEYYIY — Phase 10 v22</title>
+<title>TYEYYIY — Phase 10</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="apple-touch-icon" href="icon.svg">
 <link rel="mask-icon" href="icon.svg" color="#f4b942">
@@ -799,7 +799,12 @@
     <button class="primary" id="closeSpy" type="button">إغلاق</button>
   </div>
 </div>
-
+<!-- ✅ شاشة إجبار الوضع الطولي للقوائم -->
+<div id="rotateOverlay" class="hidden">
+  <div style="font-size: 60px; margin-bottom: 15px; animation: rotatePhone 2s infinite ease-in-out;">📱</div>
+  <h2 style="color: #f4b942; font-size: 20px; font-weight: 900; margin-bottom: 10px;">قم بتدوير جهازك</h2>
+  <p style="color: #cfe8d9; font-size: 13px; text-align: center; line-height: 1.6;">الرجاء إمساك الهاتف بشكل طولي (عمودي)<br>لتصفح القوائم. الوضع الأفقي مخصص للعب فقط.</p>
+</div>
 <div id="waitTurnToast" class="wait-turn-toast" role="status" aria-live="polite">⏳ انتظر دورك</div>
 
 <div id="achToast" class="achievement-toast" role="status" aria-live="polite">
@@ -1196,12 +1201,12 @@ input, textarea { font-family: inherit; }
 .hand {
   width: 100%;
   display: flex;
-  row-gap: 16px;
+  row-gap: 14px;
   column-gap: 4px;
-  justify-content: center;
+  justify-content: flex-start; /* ✅ تثبيت البداية من اليمين */
   align-items: flex-end;
   align-content: flex-start;
-  padding: 18px 4px 4px 4px;
+  padding: 18px 8px 8px 8px; /* مساحة أمان */
   min-height: 0;
   height: auto;
   max-height: min(calc(var(--card-height) * 3 + 56px), 42vh);
@@ -1214,6 +1219,52 @@ input, textarea { font-family: inherit; }
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
 }
+/* ✅ فراغات مخصصة حسب الاتجاه لتحريك البطاقات بسلاسة */
+@media (orientation: landscape) {
+  .hand {
+    row-gap: 10px;
+    column-gap: 4px;
+    padding: 16px 4px 4px 4px;
+    max-height: min(calc(var(--card-height) * 2 + 34px), 40vh);
+  }
+}
+@media (orientation: portrait) {
+  .hand {
+    row-gap: 18px;      /* مساحة أوضح بين الصفوف لسحب البطاقة عمودياً */
+    column-gap: 5px;
+    padding: 22px 6px 6px 6px;
+    max-height: min(calc(var(--card-height) * 3 + 60px), 46vh);
+  }
+}
+/* ✅ فراغات مخصصة حسب اتجاه الشاشة */
+@media (orientation: landscape) {
+  .hand {
+    row-gap: 14px;
+    column-gap: 5px;
+    max-height: min(calc(var(--card-height) * 2 + 30px), 35vh); /* تقليل الارتفاع في الوضع الأفقي */
+  }
+}
+@media (orientation: portrait) {
+  .hand {
+    row-gap: 22px; /* مساحة إضافية للسحب العمودي في الوضع الرأسي */
+    column-gap: 6px;
+    max-height: min(calc(var(--card-height) * 3 + 60px), 44vh);
+  }
+}
+/* ✅ تأثير الكروت المتبعة للحزمة */
+.hand .card-slot.multi-dragging {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  pointer-events: none !important;
+  z-index: 9998;
+}
+.hand .card-slot.multi-dragging .p10-card {
+  transform: scale(0.9) rotate(-5deg) !important; /* تصغير وتدوير لتبدو خلف الكرت */
+  box-shadow: 0 10px 20px rgba(0,0,0,0.6) !important;
+  outline: 2px solid var(--gold) !important;
+  opacity: 0.9 !important;
+  transition: none !important;
+}
+
 .hand::-webkit-scrollbar { width: 4px; }
 .hand::-webkit-scrollbar-thumb { background: rgba(244,185,66,0.4); border-radius: 2px; }
 .hand::-webkit-scrollbar-track { background: transparent; }
@@ -1227,7 +1278,66 @@ input, textarea { font-family: inherit; }
   opacity: 1;
 }
 
-.hand .card-slot { cursor: grab; position: relative; touch-action: none; transition: transform 0.2s; }
+/* ✅ تحديد البطاقات (سواء كرت واحد أو عدة كروت) */
+.hand .card-slot.selected,
+.hand .card-slot:has(.p10-card.selected) {
+  transform: translateY(-18px) !important; /* ترتفع للأعلى بنفس المسافة دائماً */
+  z-index: 20;
+}
+
+/* ✅ تأثير النجاح للبطاقة المحددة (لا يؤثر على المساحات) */
+.hand .card-slot .p10-card.selected {
+  box-shadow: 0 12px 20px rgba(0,0,0,0.6), 0 0 15px var(--gold) !important;
+  outline: 2px solid var(--gold);
+}
+
+.hand .card-slot {
+  cursor: grab;
+  position: relative;
+  touch-action: none;
+  transition: transform 0.2s;
+  flex: 0 0 var(--card-width) !important;
+  width: var(--card-width) !important;
+  max-width: var(--card-width) !important;
+  height: var(--card-height) !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ✅ الفراغ النائب (الذي يظهر مكان الكروت المسحوبة) */
+.hand .placeholder,
+.hand .drop-zone {
+  flex: 0 0 var(--card-width) !important;
+  width: var(--card-width) !important;
+  max-width: var(--card-width) !important;
+  height: var(--card-height) !important;
+  border: 2px dashed var(--gold);
+  border-radius: 8px;
+  background: rgba(244, 185, 66, 0.1);
+  box-sizing: border-box;
+  pointer-events: none;
+  transition: transform 0.2s;
+  /* نفس المسافة البصرية كالبطاقة */
+  margin: 0;
+  padding: 0;
+}
+
+/* ✅ إذا كان النظام يضع حاوية لكل الكروت المسحوبة معاً (Multi-drag wrapper) */
+.hand .multi-drag-placeholder {
+  display: flex;
+  gap: var(--column-gap); /* نفس المسافة بين البطاقات */
+  flex: 0 0 auto !important; /* يمنع التمدد العشوائي */
+  height: var(--card-height) !important;
+}
+
+/* ✅ منع الكروت من التمدد وقت السحب */
+.hand .card-slot.dragging {
+  opacity: 0.9;
+  z-index: 9999;
+  pointer-events: none;
+  transform: scale(1.05) rotate(2deg); /* نفس أنيميشن الكرت الواحد */
+}
 .hand .card-slot.dragging,
 .hand .card-slot.rearrange-mode { touch-action: none; }
 .hand .card-slot .p10-card { box-shadow: 0 3px 10px rgba(0,0,0,0.45); }
@@ -3064,6 +3174,243 @@ body.playing .brand-bar {
   padding: 4px 6px !important;
   min-width: 26px !important;
 }
+
+/* ============================================================ */
+/* ✅ دعم الوضع الأفقي (Landscape) - حل نهائي لمشكلة اليد */
+/* ============================================================ */
+@media screen and (orientation: landscape) and (max-height: 800px) {
+  
+  /* تصغير البطاقات قليلاً */
+  :root {
+    --card-width: 40px;
+    --card-height: 56px;
+    --meld-card-width: 22px;
+    --meld-card-height: 32px;
+  }
+
+  body.playing .brand-bar { display: none !important; }
+  #game { padding: 2px !important; }
+
+  /* الحاوية الرئيسية: مقفولة تماماً */
+  .game-inner {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    gap: 2px !important;
+    overflow: hidden !important;
+  }
+
+  /* 1. الشريط العلوي */
+  .topbar {
+    flex: 0 0 30px !important;
+    height: 30px !important;
+    padding: 2px 5px !important;
+    margin: 0 !important;
+  }
+  .turn-info { flex: 1 1 0% !important; justify-content: flex-start !important; }
+  .btn-group { flex: 1 1 0% !important; justify-content: flex-end !important; }
+  .btn-group button { padding: 2px 4px !important; min-width: 22px !important; font-size: 11px !important; }
+
+  /* 2. شريط المرحلة في المنتصف */
+  .phase-box {
+    position: absolute !important;
+    top: 7px !important;
+    left: 47% !important;
+    transform: translateX(-50%) !important;
+    width: 390px !important;
+    height: 26px !important;
+    min-height: 26px !important;
+    max-height: 26px !important;
+    margin: 0 !important;
+    padding: 0 4px !important;
+    z-index: 10 !important;
+  }
+  .phase-box .phase-num { font-size: 9px !important; padding: 2px 4px !important; min-width: 45px !important; }
+  .phase-box .desc { font-size: 9px !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+  .phase-box .phase-progress { display: none !important; }
+
+  #status, .daily-challenge-bar { display: none !important; }
+
+  /* 3. منطقة اللعب (الملعب يمين، والرزمة يسار) */
+  .middle-section {
+    flex: 1 1 0px !important; /* يأخذ كل المساحة المتبقية */
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    gap: 4px !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .melds-scroll {
+    flex: 1 1 auto !important;
+    height: 100% !important;
+    padding: 4px !important;
+    margin: 0 !important;
+    border-radius: 6px !important;
+  }
+
+/* ✅ الرزمة والمهملات بجانب بعضهما على اليسار */
+.piles-row {
+  flex: 0 0 150px !important; /* زيادة العرض ليتسع للبطاقتين بجانب بعضهما */
+  display: flex !important;
+  flex-direction: row !important; /* ✅ وضعهما في صف أفقي */
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 4px !important;
+  margin: 0 !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  gap: 10px !important; /* مسافة بين الرزمة والمهملات */
+}
+
+/* تكبير البطاقات قليلاً وإزالة الهوامش السالبة القديمة */
+.pile { 
+  transform: scale(0.9); 
+  transform-origin: center; 
+  margin: 0 !important; 
+}
+
+  /* 4. شريط الترتيب وملء الشاشة */
+  .sort-bar {
+    display: flex !important;
+    flex: 0 0 24px !important;
+    height: 24px !important;
+    min-height: 24px !important;
+    max-height: 24px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .sort-btn { padding: 2px 8px !important; font-size: 9px !important; height: 20px !important; }
+  .inline-fullscreen-btn, .inline-spectrum-btn { height: 20px !important; width: 24px !important; }
+
+/* ✅ 5. بطاقات اليد: زيادة المساحة العلوية لمنع قص البطاقة المحددة */
+.hand {
+  width: 100%;
+  display: flex;
+  row-gap: 14px; /* مسافة مريحة بين الصفوف (تمنع التداخل وتسمح بالسحب) */
+  column-gap: 5px; /* مسافة بين البطاقات */
+  justify-content: flex-start; /* ✅ تبدأ من أقصى اليمين */
+  align-items: flex-end; /* البطاقات تصطف من الأسفل */
+  align-content: flex-start; /* الصفوف تتراكم من الأعلى */
+  padding: 16px 6px 6px 6px;
+  min-height: 0;
+  height: auto;
+  max-height: min(calc(var(--card-height) * 3 + 40px), 42vh);
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* ✅ توسيط مستقر لا يهتز عند سحب البطاقات من الأطراف */
+.hand {
+  justify-content: center !important;
+}
+.hand::before, .hand::after {
+  content: '';
+  margin: auto;
+}
+
+/* ✅ السماح بالتمرير الأفقي الأصلي للمتصفح */
+.hand .card-slot {
+  flex-shrink: 0 !important; 
+  touch-action: pan-x !important; /* ✅ يسمح بالتمرير الأفقي ويمنع اعتراض السحب العمودي */
+}
+
+/* ✅ تنسيق البطاقات المتعددة المسحوبة */
+.hand .card-slot.multi-dragging {
+  z-index: 9998 !important;
+  pointer-events: none !important;
+  opacity: 0.8 !important;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.6) !important;
+}
+
+/* ✅ تقليل حركة البطاقة المحددة في الوضع الأفقي حتى لا تختفي أطرافها */
+.p10-card.selected {
+  transform: translateY(-6px) scale(1.02) !important; /* بدلاً من -12px و 1.05 */
+}
+
+/* 8. شريط الأزرار السفلي (زيادة الارتفاع ليتسع للأحداث) */
+.game-footer {
+  flex: 0 0 39px !important; /* ✅ زيادة الارتفاع من 36 إلى 46 */
+  height: 39px !important;
+  min-height: 39px !important;
+  max-height: 39px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 4px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 100 !important;
+}
+
+.actions {
+  flex: 1 1 auto !important;
+  height: 100% !important;
+  display: grid !important;
+  grid-template-columns: repeat(6, 1fr) !important;
+  gap: 3px !important;
+}
+
+.actions button {
+  height: 100% !important;
+  padding: 0 2px !important;
+  font-size: 9.5px !important;
+  border-radius: 6px !important;
+}
+
+/* ✅ إصلاح التمرير داخل شريط الأحداث */
+.live-stream {
+  flex: 0 0 190px !important; 
+  height: 100% !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
+  font-size: 6px !important;
+  padding: 4px 6px !important; 
+  margin: 0 !important;
+  overflow-y: auto !important; 
+  display: flex !important;
+  flex-direction: column !important;
+  /* ✅ تم إزالة justify-content: flex-end لحل مشكلة التمرير */
+  touch-action: pan-y !important; /* ✅ السماح بالتمرير الرأسي باللمس */
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* ✅ منع الأحداث من الانضغاط عند زيادة عددها */
+.live-stream .ls-entry {
+  flex-shrink: 0 !important;
+}
+}
+
+/* ✅ شاشة إجبار الوضع الطولي */
+#rotateOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999; /* فوق كل شيء */
+  background: #0f2419;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+#rotateOverlay.hidden { display: none !important; }
+@keyframes rotatePhone {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-90deg); }
+}
+
+
+
 </style>
 <script>
 "use strict";
@@ -3102,9 +3449,9 @@ body.playing .brand-bar {
 /* ============================================================
    ⚙️ VERSION — عدّل هذه عند كل رفع جديد على GitHub
    ============================================================ */
-var APP_VERSION = '23.5.4';
+var APP_VERSION = '23.6.5';
 var APP_BUILD_DATE = '1-9-2026';
-var APP_LAST_UPDATE = '13-11-2026';
+var APP_LAST_UPDATE = '17-11-2026';
 var UPDATE_CHECK_FIRST_DELAY_MS = 5000;
 var UPDATE_CHECK_INTERVAL_MS = 30 * 60 * 1000; /* 30 دقيقة */
 
@@ -3429,13 +3776,35 @@ function showScreen(id) {
   var t = $(id);
   if (t) { t.classList.add('active'); t.style.display = 'flex'; }
   
-  // ✅ إخفاء شريط العلامة التجارية أثناء اللعب لتوفير مساحة
+  // ✅ إخفاء شريط العلامة التجارية أثناء اللعب
   if (id === 'game') {
     document.body.classList.add('playing');
   } else {
     document.body.classList.remove('playing');
   }
+
+  // ✅ التحقق من اتجاه الشاشة فوراً عند تغيير الشاشة
+  checkOrientation(id);
 }
+
+// ✅ دالة مراقبة اتجاه الشاشة
+function checkOrientation(currentScreenId) {
+  var screenId = currentScreenId || (document.querySelector('.screen.active') ? document.querySelector('.screen.active').id : '');
+  var isLandscape = window.matchMedia("(orientation: landscape)").matches;
+  var overlay = document.getElementById('rotateOverlay');
+  
+  if (overlay) {
+    if (isLandscape && screenId !== 'game') {
+      overlay.classList.remove('hidden'); // إظهار شاشة التدوير
+    } else {
+      overlay.classList.add('hidden');    // إخفاء الشاشة (مسموح باللعب الأفقي)
+    }
+  }
+}
+
+// ✅ تفعيل المراقبة عند تدوير الهاتف أو تغيير حجم النافذة
+window.addEventListener('resize', function() { checkOrientation(); });
+window.addEventListener('orientationchange', function() { checkOrientation(); });
 function setStatus(msg, color) {
   var el = $('status'); if (!el) return;
   el.textContent = msg;
@@ -4464,6 +4833,12 @@ function getCardValue(card) {
   if (card.type === 'skip') return 15;
   return card.value >= 10 ? 10 : 5;
 }
+function formatCardCount(n) {
+  if (n === 1) return 'بطاقة';
+  if (n === 2) return 'بطاقتين';
+  if (n >= 3 && n <= 10) return n + ' بطاقات';
+  return n + ' بطاقة';
+}
 /* ============================================================
      SPECTRUM MODE — جدول الدمج الكامل (نظام مغلق من 12 لوناً)
    ============================================================ */
@@ -4793,7 +5168,11 @@ state.players[i].hitsThisTurn = 0;
   state.turnNumber = (state.turnNumber || 1) + 1;
   app.undoStack = [];
   var np = state.players[state.turnIndex];
-  if (np) pushActionLog(state, -1, 'turn', 'الدور على ' + escapeHTML(np.name));
+if (np) {
+  if (np.id !== app.myPlayerId && np.id !== app.viewerId) {
+    pushActionLog(state, -1, 'turn', 'الدور على ' + escapeHTML(np.name));
+  }
+}
   if (np && np.hand.length === 0) {
     setTimeout(function() {
       if (app.state === state && !state.gameOver) {
@@ -4892,7 +5271,7 @@ saveStatsToStorage();
     
     var modal = $('roundScoreModal');
     if (modal) {
-      $('roundScoreWinner').innerHTML = '🔄 <b style="color:#ef4444">انتهت الرزمة بدون إكمال المرحلة!</b><br><span style="font-size:11px">سيتم إعادة التحدي من البداية للجميع...</span>';
+      $('roundScoreWinner').innerHTML = '🔄 <b style="color:#ef4444">انتهت الرزمة بدون إكمال المرحلة!</b><br><span style="font-size:11px">سيتم بدء جولة جديدة مع الحفاظ على المراحل الحالية...</span>';
       $('roundScoreBody').innerHTML = '';
       modal.classList.remove('hidden');
       SoundFX.play('error');
@@ -4901,12 +5280,12 @@ saveStatsToStorage();
         modal.classList.add('hidden');
         if (app.state !== state) return;
         
-        // إعادة تصفير المراحل والبطاقات للجميع
-        for (var k = 0; k < state.players.length; k++) {
-          state.players[k].phase = 0; 
-          state.players[k].melds = [];
-          state.players[k].autoCompleted = false;
-        }
+    // ✅ إعادة تصفير البطاقات والمجموعات فقط (بدون تصفير المراحل!)
+for (var k = 0; k < state.players.length; k++) {
+  state.players[k].melds = [];
+  state.players[k].autoCompleted = false;
+  state.players[k].laidThisTurn = false;
+}
         resetRoundForState(state, Math.floor(Math.random() * state.players.length));
         resetRenderCache(); previouslyRenderedMelds = {};
         scheduleRender(); syncStateToPeers();
@@ -8227,7 +8606,7 @@ if (fromWhere === 'discard' && state.discard.length > 0) {
   if (fromWhere === 'discard' && drawn.length > 0) {
     pushActionLog(state, pId, 'drawDiscard', 'سحب ' + logCardHTML(drawn[0].card) + ' من المهملات');
   } else if (drawn.length > 0) {
-    pushActionLog(state, pId, 'draw', 'سحب ' + drawn.length + ' بطاقة من الرزمة');
+    pushActionLog(state, pId, 'draw', 'سحب ' + formatCardCount(drawn.length) + ' من الرزمة');
   }
   /* ✅ احتفظ بالتحديد الذي وضعته قبل السحب */
 resetRenderCache(); scheduleRender(); syncStateToPeers();
@@ -8521,7 +8900,13 @@ function executeHitOnCards(state, pId, hittable) {
   }
   state.selected = []; state.hintCards = [];
 SoundFX.playEscalatingHit(done.length);
-pushActionLog(state, pId, 'hit', 'ضرب ' + done.length + ' بطاقة');
+var hitHTML = '';
+for (var h = 0; h < done.length; h++) {
+  for (var hh = 0; hh < hittable.length; hh++) {
+    if (hittable[hh].id === done[h]) { hitHTML += logCardHTML(hittable[hh]) + ' '; break; }
+  }
+}
+pushActionLog(state, pId, 'hit', 'ضرب ' + formatCardCount(done.length) + ' ' + hitHTML);
   setStatus(player.name + ' ضرب ' + done.length + ' ' + (done.length === 1 ? 'بطاقة' : 'بطاقات'));
   resetRenderCache(); scheduleRender(); syncStateToPeers();
   if (shouldRunAnimations() && done.length > 0) {
@@ -8784,7 +9169,13 @@ if (app.state.dailyChallenge && app.state.dailyChallenge.type === 'purity') {
     state.selected = state.selected.filter(function(id) { return !hitMap[id]; });
     state.hintCards = [];
     SoundFX.playEscalatingHit(added.length);
-pushActionLog(state, vId, 'hit', 'ضرب ' + added.length + ' بطاقة على ' + tp.name);
+var hitHTML = '';
+for (var h = 0; h < added.length; h++) {
+  for (var hh = 0; hh < sel.length; hh++) {
+    if (sel[hh].id === added[h]) { hitHTML += logCardHTML(sel[hh]) + ' '; break; }
+  }
+}
+pushActionLog(state, vId, 'hit', 'ضرب ' + formatCardCount(added.length) + ' ' + hitHTML + ' على ' + tp.name);
     setStatus(player.name + ' ضرب ' + added.length + ' بطاقة');
     resetRenderCache(); scheduleRender(); 
 setTimeout(function() { if (added.length > 0) showHitBurst(added.length); }, 250);
@@ -8878,7 +9269,7 @@ vibrateOn('discard');
 recordCpuMemoryDiscard(state, pId, discarded);
   var discHTML = '';
   for (var dci = 0; dci < discarded.length; dci++) discHTML += logCardHTML(discarded[dci]);
-  pushActionLog(state, pId, 'discard', 'تخلص من ' + discHTML + (skipCount > 0 ? ' (Skip ×' + skipCount + ')' : ''));
+  pushActionLog(state, pId, 'discard', 'رمي ' + discHTML + (skipCount > 0 ? ' (Skip ×' + skipCount + ')' : ''));
   state.selected = []; state.hintCards = []; state.hasDrawn = false;
   SoundFX.play(skipCount > 0 ? 'skip' : 'discard');
   stopTurnTimer();
@@ -9101,75 +9492,73 @@ function colorHex(idx) {
   var map = ['#ff3b4e','#2e8bff','#12d17a','#ffcb1f','#FB8C00','#8E24AA','#3f3db5','#ff4500','#ffbf00','#b4d61a','#00bcd4','#e91e63'];
   return map[idx] || '#fff';
 }
-function checkWinOrNewRound(state, pId) {
-  var player = state.players[pId]; if (!player) return;
-  if (player.hand.length !== 0) return;
-  var lim = state.phasesLimit;
+function checkWinOrNewRound(state, winnerId) {
+  var winner = state.players[winnerId];
+  if (!winner) return;
 
-  /* ⛑️ احسب عقوبات الجولة الأخيرة لجميع اللاعبين (عدا من فرّغ يده) */
-  var roundPenalties = {};
-  for (var ri = 0; ri < state.players.length; ri++) {
-    var rp = state.players[ri];
-    if (rp.id === pId) { roundPenalties[rp.id] = 0; continue; }
-    var penSum = 0;
-    for (var rj = 0; rj < rp.hand.length; rj++) penSum += getCardValue(rp.hand[rj]);
-    roundPenalties[rp.id] = penSum;
+  // 1. حساب النقاط وإنهاء الجولة الحالية (كما هو في كودك)
+  var summary = { winnerName: winner.name, players: [] };
+  for (var i = 0; i < state.players.length; i++) {
+    var p = state.players[i];
+    if (p.id === winnerId) {
+      summary.players.push({ id: p.id, name: p.name, points: 0, score: p.score, isWinner: true });
+    } else {
+      var pen = 0;
+      for (var j = 0; j < p.hand.length; j++) pen += getCardValue(p.hand[j]);
+      p.score += pen;
+      app.stats.totalPenalty += pen;
+      summary.players.push({ id: p.id, name: p.name, points: pen, score: p.score, isWinner: false });
+    }
   }
-
-  /* ✅ تطبيق العقوبات على الجميع (حتى لو انتهت اللعبة، يجب حساب نقاطهم) */
-  for (var pi = 0; pi < state.players.length; pi++) {
-    var sp = state.players[pi];
-    var addPen = roundPenalties[sp.id] || 0;
-    sp.score += addPen;
-    app.stats.totalPenalty += addPen;
-  }
+  
+  state.roundLog.push({ round: state.round, winner: winnerId, summary: summary });
   saveStatsToStorage();
 
-  /* ✅ البحث عن أي لاعب (بما فيهم من أنهى يده الآن) قد أكمل جميع المراحل */
-  var completed = [];
-  for (var ci = 0; ci < state.players.length; ci++) {
-    if (state.players[ci].phase >= lim) completed.push(state.players[ci]);
-  }
+  // 2. 🔍 البحث عن من أكمل المراحل (المرحلة 10 أو التحدي اليومي)
+  var completedPlayers = state.players.filter(function(p) { return p.phase >= state.phasesLimit; });
 
-  /* 🏆 إذا وجدنا لاعباً أو أكثر أكملوا المراحل، تنتهي المباراة فوراً */
-  if (completed.length > 0) {
-    var minScore = completed[0].score;
-    for (var j = 1; j < completed.length; j++) {
-      if (completed[j].score < minScore) minScore = completed[j].score;
+  if (completedPlayers.length > 0) {
+    // 🏆 اللعبة انتهت! هناك من أكمل المرحلة الأخيرة
+    var minScore = completedPlayers[0].score;
+    for (var c = 1; c < completedPlayers.length; c++) {
+      if (completedPlayers[c].score < minScore) minScore = completedPlayers[c].score;
     }
-    var winners = completed.filter(function(p) { return p.score === minScore; });
-
-    // اكتشاف التعادل
-    if (winners.length > 1 && !state.isTieBreaker) {
-      var wIds = winners.map(function(w) { return w.id; });
-      triggerspectrumTieBreaker(state, wIds);
-      return;
+    
+    var winners = completedPlayers.filter(function(p) { return p.score === minScore; });
+    
+    if (winners.length > 1) {
+      // ⚖️ تعادل في النقاط -> تفعيل وضع الطيف (كسر التعادل)
+      state.tie = true;
+      triggerspectrumTieBreaker(state, winners.map(function(w) { return w.id; }));
+    } else {
+      // 👑 إعلان الفائز فوراً (الأقل نقاطاً أو الوحيد الذي أكمل)
+      var finalWinner = winners[0];
+      state.gameOver = true;
+      state.winnerId = finalWinner.id;
+      state.tie = false;
+      
+      setStatus(finalWinner.name + ' فاز باللعبة!', 'var(--green)');
+      
+      if (finalWinner.id === app.myPlayerId) {
+        handleWinAchievements();
+        showWinOverlay();
+      } else {
+        handleLossAchievements();
+        showLoseOverlay();
+      }
+      
+      try { recordWeeklyLeaderboard(); } catch (e) {}
+      SoundFX.play('win'); showConfetti();
+      clearSavedGame();
+      
+      // إظهار شاشة نهاية اللعبة بدلاً من الانتقال للجولة التالية
+      setTimeout(function() { showGameOver(); }, 1400);
+      return; // 🛑 الخروج من الدالة لمنع الانتقال للجولة التالية
     }
-
-    // إعلان الفائز
-    var winner = winners[0];
-    state.gameOver = true;
-    setStatus(winner.name + ' فاز باللعبة!', 'var(--green)');
-    try { recordWeeklyLeaderboard(); } catch (e) {}
-    SoundFX.play('win'); showConfetti();
-    if (winner.id === app.myPlayerId) handleWinAchievements();
-    else handleLossAchievements();
-    if (app.mode === 'lan' && isHost()) syncStateToPeers();
-    if (winner.id === app.myPlayerId) showWinOverlay();
-    else showLoseOverlay();
-    clearSavedGame();
-    setTimeout(function() { showGameOver(); }, 1400);
-    return;
+  } else {
+    // 🔄 لا أحد أكمل المرحلة الأخيرة -> الانتقال للجولة التالية بشكل طبيعي
+    startNewRound(state, winnerId);
   }
-
-  /* 🔄 لم يكمل أحد المراحل → فاز بالجولة فقط، واللعبة تستمر */
-  startNewRound(state, pId);
-  setStatus(player.name + ' أنهى الجولة!');
-  resetRenderCache();
-  previouslyRenderedMelds = {};
-  scheduleRender();
-  if (app.mode === 'lan' && isHost()) syncStateToPeers();
-  autoSaveGame();
 }
 function handleWinAchievements() {
   var state = app.state; if (!state) return;
@@ -9284,44 +9673,77 @@ function startTurnIfNeeded() {
   var state = app.state; if (!state || state.gameOver) return;
   var cp = state.players[state.turnIndex]; if (!cp) return;
 
-  /* ⛑️ شبكة أمان: صفّر أي علم عالق في الوضع المحلي */
   if (app.mode === 'cpu' || app.mode === 'pass') {
     app.busy = false;
     app.dealing = false;
   }
 
-  /* ⛑️ شبكة أمان: لو اللاعب الحالي يده فارغة والجولة لم تُنهَ → أعد الفحص */
   if (cp.hand.length === 0) {
     cancelCpuContext();
     checkWinOrNewRound(state, state.turnIndex);
     return;
   }
 
-  if (app.mode === 'cpu') { 
-  if (cp.isCPU) { 
-    cancelCpuContext(); // <--- أضف هذا السطر
-    cpuTakeTurn(); 
-  } 
-}
+  if (app.mode === 'cpu') { if (cp.isCPU) cpuTakeTurn(); }
   else if (app.mode === 'lan') { if (isHost() && cp.isCPU) cpuTakeTurn(); }
   else if (app.mode === 'pass') { if (cp.id !== app.viewerId) showPassOverlay(cp); }
   updateHandDisabledState(); updateActionsButtons();
   maybeNotifyMyTurn();
   startTurnTimer();
+  
+  // ✅ نظام الملخص الذكي المدمج
   if ((state.turnIndex === app.myPlayerId || state.turnIndex === app.viewerId)
       && state.turnNumber !== lastShownTurnSummary) {
     lastShownTurnSummary = state.turnNumber;
+    
     if (state.actionLog && state.actionLog.length > 0) {
-      var lastOpp = null;
-      for (var li = state.actionLog.length - 1; li >= 0; li--) {
-        var le = state.actionLog[li];
-        if (le.pid !== app.myPlayerId && le.pid !== app.viewerId && le.action !== 'turn' && le.action !== 'round') {
-          lastOpp = le; break;
+      var summaryMap = {};
+      var myLastTurnIndex = -1;
+      
+      for (var i = state.actionLog.length - 1; i >= 0; i--) {
+        if (state.actionLog[i].pid === app.myPlayerId || state.actionLog[i].pid === app.viewerId) {
+          myLastTurnIndex = i;
+          break;
         }
       }
-      if (lastOpp && Date.now() - lastOpp.ts < 8000) {
+      
+      for (var i = myLastTurnIndex + 1; i < state.actionLog.length; i++) {
+        var e = state.actionLog[i];
+        if (e.action !== 'turn' && e.action !== 'round' && e.pid !== app.myPlayerId && e.pid !== app.viewerId && e.pid !== -1) {
+          var pid = e.pid;
+          if (!summaryMap[pid]) {
+            summaryMap[pid] = { name: e.name || 'لاعب', actions: [] };
+          }
+
+          var actText = "";
+          
+          if (e.action === 'draw') actText = "سحب";
+          else if (e.action === 'drawDiscard') actText = "أخذ من المهملات";
+          else if (e.action === 'discard') actText = e.details; 
+          else if (e.action === 'lay') {
+            // ✅ استخراج رقم المرحلة من تفاصيل الحدث
+            var phaseMatch = e.details.match(/\d+/);
+            actText = phaseMatch ? ("لعب المرحلة " + phaseMatch[0]) : "لعب المرحلة";
+          }
+          else if (e.action === 'hit') actText = e.details; 
+
+          if (actText && (summaryMap[pid].actions.length === 0 || summaryMap[pid].actions[summaryMap[pid].actions.length - 1] !== actText)) {
+            summaryMap[pid].actions.push(actText);
+          }
+        }
+      }
+
+      var finalSummaries = [];
+      for (var pid in summaryMap) {
+        var pData = summaryMap[pid];
+        finalSummaries.push('<span style="color:var(--gold); font-weight:900;">' + escapeHTML(pData.name) + '</span> ' + pData.actions.join(' و'));
+      }
+      
+      if (finalSummaries.length > 0) {
         setTimeout(function() {
-          showLiveStream('🔄', '<span class="ls-name">دورك الآن:</span> ' + lastOpp.details, 'turn', -1);
+          var turnBadge = '<span style="color:#fff; background:var(--gold); padding:2px 6px; border-radius:4px; font-weight:900; margin-left:4px;">🎯 دورك الآن:</span>';
+          var txt = turnBadge + ' ' + finalSummaries.join(' <span style="opacity:0.5; margin:0 4px;">|</span> ');
+          showLiveStream('🔄', txt, 'turn', -1);
         }, 700);
       }
     }
@@ -9551,7 +9973,15 @@ var shouldHit = hittable.length > 0 && Math.random() > adjChance;
     p.hitsThisTurn = (p.hitsThisTurn || 0) + done.length;
     SoundFX.play('hit');
     resetRenderCache(); scheduleRender(); syncStateToPeers();
-    if (done.length > 0) pushActionLog(state, pId, 'hit', 'ضرب ' + done.length + ' بطاقة');
+    if (done.length > 0) {
+  var hitHTML = '';
+  for (var h = 0; h < done.length; h++) {
+    for (var hh = 0; hh < picked.length; hh++) {
+      if (picked[hh].id === done[h]) { hitHTML += logCardHTML(picked[hh]) + ' '; break; }
+    }
+  }
+  pushActionLog(state, pId, 'hit', 'ضرب ' + formatCardCount(done.length) + ' ' + hitHTML);
+}
 if (done.length > 0) setStatus(p.name + ' ضرب ' + done.length + ' بطاقات');
 if (done.length >= 3) {
   document.body.classList.add('screen-shake');
@@ -9682,7 +10112,7 @@ var picked = scored.slice(0, toDiscardCount);
 SoundFX.play(skipCount > 0 ? 'skip' : 'discard');
   var cDiscHTML = '';
   for (var cdi = 0; cdi < discarded.length; cdi++) cDiscHTML += logCardHTML(discarded[cdi]);
-  pushActionLog(state, pId, 'discard', 'تخلص من ' + cDiscHTML);
+  pushActionLog(state, pId, 'discard', 'رمي ' + cDiscHTML);
   if (skipCount > 0) {
   var cpuAdv = (state.playerCount === 2) ? 2 : (1 + skipCount);
   advanceTurn(state, cpuAdv);
@@ -10313,7 +10743,8 @@ var dragState = {
   startX: 0, startY: 0, offsetX: 0, offsetY: 0,
   longPressTimer: null, longPressTriggered: false, dragStarted: false,
   dropIndex: -1, lastDropIndex: -1, isRTL: false, cachedRects: null,
-  dragReady: true, isMyTurn: true, captured: false
+  dragReady: true, isMyTurn: true, captured: false,
+  isMultiDrag: false, multiElements: [], lastScrollX: 0 /* ✅ حقول جديدة */
 };
 
 
@@ -10423,10 +10854,17 @@ if (dragState.active || dragState.cardId) {
 }
 
   dragState.cardId = cardId;
-  dragState.element = slot;
-  dragState.pointerId = ev.pointerId;
-  dragState.startX = ev.clientX;
-  dragState.startY = ev.clientY;
+dragState.element = slot;
+
+// ✅ إضافة حقول السحب المتعدد
+var state = app.state;
+dragState.isMultiDrag = state && state.selected.indexOf(cardId) >= 0 && state.selected.length > 1;
+dragState.multiElements = [];
+dragState.lastScrollX = ev.clientX;
+
+dragState.pointerId = ev.pointerId;
+dragState.startX = ev.clientX;
+dragState.startY = ev.clientY;
   dragState.active = false;
   dragState.dragStarted = false;
   dragState.longPressTriggered = false;
@@ -10450,12 +10888,27 @@ if (dragState.active || dragState.cardId) {
     }
   }, GAME_CONST.LONG_PRESS_MS);
 }
-function activateDrag(ev) {
+ function activateDrag(ev) {
   dragState.active = true;
   dragState.dragStarted = true;
   var slot = dragState.element; if (!slot) return;
   dragState.isRTL = (getComputedStyle($('myHand')).direction === 'rtl');
   dragState.cachedRects = null;
+
+  // ✅ تجهيز البطاقات المتعددة للسحب
+  if (dragState.isMultiDrag) {
+    var handEl = $('myHand');
+    var slots = handEl.querySelectorAll('.card-slot');
+    var state = app.state;
+    for (var i = 0; i < slots.length; i++) {
+      var id = slots[i].getAttribute('data-id');
+      if (state.selected.indexOf(id) >= 0 && slots[i] !== slot) {
+        dragState.multiElements.push(slots[i]);
+        slots[i].classList.add('multi-dragging');
+      }
+    }
+  }
+
   slot.classList.add('dragging');
   var r = slot.getBoundingClientRect();
   slot.style.position = 'fixed';
@@ -10471,6 +10924,15 @@ function updateDragPosition(ev) {
   var s = dragState.element; if (!s) return;
   s.style.left = (ev.clientX - dragState.offsetX) + 'px';
   s.style.top = (ev.clientY - dragState.offsetY) + 'px';
+
+  // ✅ تحريك بقية البطاقات المحددة مع البطاقة المسحوبة
+  if (dragState.isMultiDrag && dragState.multiElements.length > 0) {
+    var dx = ev.clientX - dragState.startX;
+    var dy = ev.clientY - dragState.startY;
+    for (var i = 0; i < dragState.multiElements.length; i++) {
+      dragState.multiElements[i].style.transform = 'translate(' + dx + 'px, ' + dy + 'px)';
+    }
+  }
 }
 function onDragPointerMove(ev) {
   if (!dragState.cardId || !dragState.element) return;
@@ -10479,38 +10941,55 @@ function onDragPointerMove(ev) {
   var dy = ev.clientY - dragState.startY;
   var dist = Math.sqrt(dx * dx + dy * dy);
 
+  // ✅ اعتراض الحركة الأفقية للتمرير (فقط في الوضع الأفقي)
+  var isLandscape = window.matchMedia("(orientation: landscape)").matches;
+  if (!dragState.dragStarted && isLandscape && Math.abs(dx) > Math.abs(dy) * 1.2 && Math.abs(dx) > 5) {
+    if (dragState.longPressTimer) {
+      clearTimeout(dragState.longPressTimer);
+      dragState.longPressTimer = null;
+    }
+    var handEl = $('myHand');
+    if (handEl) handEl.scrollLeft -= (ev.clientX - dragState.lastScrollX);
+    dragState.lastScrollX = ev.clientX;
+    return; // اترك الكود يكمل التمرير ولا تبدأ السحب
+  }
+
   /* 🔓 تجاوز عتبة السحب → ابدأ السحب الفعلي */
   if (!dragState.dragStarted && dist > GAME_CONST.DRAG_THRESHOLD) {
     if (dragState.longPressTimer) {
       clearTimeout(dragState.longPressTimer);
       dragState.longPressTimer = null;
     }
-    /* Pointer Capture: يضمن وصول كل أحداث pointerup/move حتى خارج البطاقة */
     if (!dragState.captured && dragState.pointerId !== null) {
       try {
         dragState.element.setPointerCapture(dragState.pointerId);
         dragState.captured = true;
-      } catch (err) { /* بعض المتصفحات لا تدعمه على العناصر */ }
+      } catch (err) {}
     }
     activateDrag(ev);
   }
 
-  /* 🎯 أثناء السحب الفعلي: تابع الموقع والفتحة الذهبية */
   if (dragState.active) {
     ev.preventDefault();
     updateDragPosition(ev);
     updateDropIndicator(ev);
   }
 }
+
 function updateDropIndicator(ev) {
   var handEl = $('myHand'); if (!handEl) return;
   var old = handEl.querySelector('.ghost-gap'); if (old) old.remove();
+  
   if (!dragState.cachedRects) {
     var tempItems = [];
     var all = handEl.querySelectorAll('.card-slot');
     var domIdx = 0;
     for (var i = 0; i < all.length; i++) {
+      // ✅ تجاهل البطاقة المسحوبة
       if (all[i] === dragState.element) continue;
+      // ✅ تجاهل بقية البطاقات المحددة (إصلاح الخطأ البرمجي)
+      if (dragState.isMultiDrag && app.state.selected.indexOf(all[i].getAttribute('data-id')) >= 0) continue;
+      
       var r = all[i].getBoundingClientRect();
       tempItems.push({
         el: all[i], left: r.left, right: r.right, top: r.top, bottom: r.bottom,
@@ -10519,10 +10998,12 @@ function updateDropIndicator(ev) {
     }
     dragState.cachedRects = tempItems;
   }
+  
   var items = dragState.cachedRects;
   if (items.length === 0) return;
   var slots = [];
   for (var si = 0; si < items.length; si++) slots.push(items[si].el);
+  
   var rows = [];
   for (var k = 0; k < items.length; k++) {
     var it = items[k];
@@ -10535,6 +11016,7 @@ function updateDropIndicator(ev) {
     if (it.bottom > found.bottom) found.bottom = it.bottom;
   }
   rows.sort(function(a, b) { return a.top - b.top; });
+  
   var targetRow = rows[0];
   var minRowDist = Infinity;
   for (var rr = 0; rr < rows.length; rr++) {
@@ -10544,18 +11026,22 @@ function updateDropIndicator(ev) {
     var dY = Math.abs(ev.clientY - midY);
     if (dY < minRowDist) { minRowDist = dY; targetRow = row; }
   }
+  
   var closest = null, minX = Infinity;
   for (var si2 = 0; si2 < targetRow.items.length; si2++) {
     var slotItem = targetRow.items[si2];
     var dx = Math.abs(ev.clientX - slotItem.centerX);
     if (dx < minX) { minX = dx; closest = slotItem; }
   }
+  
   if (!closest) { dragState.dropIndex = 0; return; }
+  
   var isRTL = dragState.isRTL;
   var centerX = closest.centerX;
   var bestIdx;
   if (isRTL) bestIdx = ev.clientX > centerX ? closest.domIdx : closest.domIdx + 1;
   else bestIdx = ev.clientX < centerX ? closest.domIdx : closest.domIdx + 1;
+  
   var firstItem = targetRow.items[0];
   var lastItem = targetRow.items[targetRow.items.length - 1];
   if (isRTL) {
@@ -10565,14 +11051,21 @@ function updateDropIndicator(ev) {
     if (ev.clientX < firstItem.left) bestIdx = firstItem.domIdx;
     if (ev.clientX > lastItem.right) bestIdx = lastItem.domIdx + 1;
   }
+  
   if (bestIdx < 0) bestIdx = 0;
   if (bestIdx > slots.length) bestIdx = slots.length;
+  
   var gap = document.createElement('div');
   gap.className = 'ghost-gap';
-  gap.style.width = (closest.right - closest.left) + 'px';
+  
+  // ✅ إصلاح حجم المؤشر ليتناسب مع عدد البطاقات المسحوبة
+  var multiplier = dragState.isMultiDrag ? app.state.selected.length : 1;
+  gap.style.width = ((closest.right - closest.left) * multiplier) + 'px';
   gap.style.height = (closest.bottom - closest.top) + 'px';
+  
   if (bestIdx < slots.length) handEl.insertBefore(gap, slots[bestIdx]);
   else handEl.appendChild(gap);
+  
   if (bestIdx !== dragState.lastDropIndex) {
     dragState.lastDropIndex = bestIdx;
     if (navigator.vibrate) try { navigator.vibrate(5); } catch (e) {}
@@ -10615,6 +11108,20 @@ function finalizeDragDrop(ev) {
   scheduleRender();  /* ✅ اكتمل السحب — نفّذ أي render كان مؤجلاً أثناء السحب */
 }
 function resetDragState() {
+  if (dragState.multiElements && dragState.multiElements.length > 0) {
+    for (var m = 0; m < dragState.multiElements.length; m++) {
+      dragState.multiElements[m].style.position = '';
+      dragState.multiElements[m].style.left = '';
+      dragState.multiElements[m].style.top = '';
+      dragState.multiElements[m].style.width = '';
+      dragState.multiElements[m].style.height = '';
+      dragState.multiElements[m].style.zIndex = '';
+      dragState.multiElements[m].style.transform = '';
+      dragState.multiElements[m].classList.remove('multi-dragging');
+    }
+    dragState.multiElements = [];
+  }
+
   var slot = dragState.element;
   if (slot) {
     try { if (dragState.captured && dragState.pointerId !== null) slot.releasePointerCapture(dragState.pointerId); } catch (err) {}
@@ -10664,19 +11171,34 @@ function reorderHandCard(cardId, targetIdx) {
   var state = app.state; if (!state) return;
   var p = state.players[app.viewerId]; if (!p) return;
   var cur = sortHandWithCustomOrder(p.hand, app.sortMode);
-  var ci = -1;
-  for (var i = 0; i < cur.length; i++) if (cur[i].id === cardId) { ci = i; break; }
-  if (ci < 0) return;
-  var reordered = cur.slice();
-  var moved = reordered.splice(ci, 1)[0];
-  var finalIdx = targetIdx;
-  if (finalIdx < 0) finalIdx = 0;
-  if (finalIdx > reordered.length) finalIdx = reordered.length;
-  reordered.splice(finalIdx, 0, moved);
-  var seenIds = {};
+  
+  var isMulti = dragState.isMultiDrag && state.selected.length > 1;
+  var selectedIds = isMulti ? state.selected.slice() : [cardId];
+  
+  var block = [];
+  var remaining = [];
+  
+  // فصل البطاقات المحددة عن الباقي
+  for (var i = 0; i < cur.length; i++) {
+    if (selectedIds.indexOf(cur[i].id) >= 0) {
+      block.push(cur[i]);
+    } else {
+      remaining.push(cur[i]);
+    }
+  }
+  
+  if (targetIdx > remaining.length) targetIdx = remaining.length;
+  if (targetIdx < 0) targetIdx = 0;
+  
   var newOrder = [];
-  for (var j = 0; j < reordered.length; j++) { newOrder.push(reordered[j].id); seenIds[reordered[j].id] = true; }
-  for (var k = 0; k < p.hand.length; k++) if (!seenIds[p.hand[k].id]) newOrder.push(p.hand[k].id);
+  for (var j = 0; j < targetIdx; j++) newOrder.push(remaining[j].id);
+  for (var k = 0; k < block.length; k++) newOrder.push(block[k].id);
+  for (var m = targetIdx; m < remaining.length; m++) newOrder.push(remaining[m].id);
+  
+  var seenIds = {};
+  for (var n = 0; n < newOrder.length; n++) seenIds[newOrder[n]] = true;
+  for (var q = 0; q < p.hand.length; q++) if (!seenIds[p.hand[q].id]) newOrder.push(p.hand[q].id);
+  
   app.handOrder = newOrder;
   saveHandOrderToStorage();
   SoundFX.play('drop');
@@ -13004,34 +13526,64 @@ function openHistoryModal() {
     html += '</div>';
   }
 
-  // 2. Action Log (سجل الأحداث)
-  if (state.actionLog && state.actionLog.length > 0) {
-    html += '<h3 style="color:var(--gold);font-size:13px;margin-bottom:8px;border-bottom:1px solid var(--border-1);padding-bottom:4px;text-align:right">📜 سجل الأحداث التفصيلي</h3>';
-    html += '<div style="background:rgba(0,0,0,0.4);border-radius:10px;padding:10px;max-height:45vh;overflow-y:auto;font-size:11.5px;line-height:1.6;text-align:right">';
-    
-    // نعرض الأحداث من الأحدث للأقدم
-    for (var j = state.actionLog.length - 1; j >= 0; j--) {
-      var e = state.actionLog[j];
-      var icon = '🔹';
-      if (e.action === 'draw') icon = '📥';
-      else if (e.action === 'drawDiscard') icon = '♻️';
-      else if (e.action === 'discard') icon = '🗑️';
-      else if (e.action === 'lay') icon = '🎯';
-      else if (e.action === 'hit') icon = '⚔️';
-      else if (e.action === 'turn') icon = '🔄';
-      else if (e.action === 'skip') icon = '⏭️';
-      else if (e.action === 'round') icon = '🏁';
-      
-      var isMine = (e.pid === app.myPlayerId || e.pid === app.viewerId);
-      var nameHtml = (e.name && e.action !== 'round' && e.action !== 'turn') ? '<span style="color:' + (isMine ? 'var(--green)' : 'var(--gold)') + ';font-weight:800">' + escapeHTML(e.name) + '</span> ' : '';
-      
-      html += '<div style="padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;gap:6px;align-items:baseline;' + (isMine ? 'background:rgba(244,185,66,0.05);border-radius:4px;padding:4px 6px;' : '') + '">';
-      html += '<span style="flex-shrink:0">' + icon + '</span>';
-      html += '<div>' + nameHtml + e.details + '</div>';
-      html += '</div>';
-    }
-    html += '</div>';
+  // 2. Discard Pile Counter (عداد البطاقات المرمية)
+  html += '<h3 style="color:var(--gold);font-size:13px;margin-bottom:8px;border-bottom:1px solid var(--border-1);padding-bottom:4px;text-align:right">🗑️ إحصائيات المهملات (العدّاد)</h3>';
+  
+  var discardCounts = {};
+  var maxColors = (state.specialCfg && state.specialCfg.spectrumMode) ? 7 : 4;
+  
+  for (var c = 0; c < maxColors; c++) {
+    discardCounts[c] = {};
+    for (var n = 1; n <= 12; n++) discardCounts[c][n] = 0;
   }
+  var wildCount = 0, skipCount = 0;
+  
+  for (var d = 0; d < state.discard.length; d++) {
+    var card = state.discard[d];
+    if (card.type === 'num' && discardCounts[card.col]) {
+      discardCounts[card.col][card.value]++;
+    } else if (card.type === 'wild') {
+      wildCount++;
+    } else if (card.type === 'skip') {
+      skipCount++;
+    }
+  }
+
+  html += '<div style="background:rgba(0,0,0,0.4);border-radius:10px;padding:10px;margin-bottom:16px;display:flex;flex-direction:column;gap:6px;">';
+  
+  var vibrantColors = ['#FF0000','#0044FF','#00CC00','#FFEA00','#FF6600','#9900FF','#1A237E','#D50000','#FF8F00','#C6FF00','#00B8D4','#FF007F'];
+
+  for (var col = 0; col < maxColors; col++) {
+    var colName = COLORS[col].name;
+    var colHex = vibrantColors[col] || colorHex(col);
+    var textColor = (col === 3 || col === 8 || col === 9) ? '#000000' : '#ffffff';
+
+    html += '<div style="display:flex; align-items:center; gap:8px; border-bottom:1px solid rgba(255,255,255,0.05); padding:6px 0;">';
+    html += '<span style="font-size:11.5px; font-weight:900; color:' + colHex + '; width:45px; flex-shrink:0; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">' + colName + '</span>';
+    html += '<div style="display:flex; gap:4px; flex-wrap:wrap; flex:1; align-items:center;">';
+    
+    var hasCards = false;
+    for (var num = 1; num <= 12; num++) {
+      var count = discardCounts[col][num];
+      for (var k = 0; k < count; k++) {
+        hasCards = true;
+        html += '<span style="display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:' + colHex + '; color:' + textColor + '; font-size:11px; font-weight:900; border:1.5px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.5); text-shadow: none;">' + num + '</span>';
+      }
+    }
+
+    if (!hasCards) {
+      html += '<span style="font-size:10px; opacity:0.3; font-style:italic;">فارغ</span>';
+    }
+    
+    html += '</div></div>';
+  }
+  
+  html += '<div style="display:flex; justify-content:space-around; margin-top:6px; padding-top:8px; border-top:1px dashed rgba(244,185,66,0.3);">';
+  html += '<span style="font-size:12px; font-weight:900; color:#f4b942;">Wild: ' + wildCount + '</span>';
+  html += '<span style="font-size:12px; font-weight:900; color:#4a69bd;">Skip: ' + skipCount + '</span>';
+  html += '</div>';
+
+  html += '</div>';
 
   if (html === '') {
     html = '<div style="text-align:center;padding:30px;opacity:0.6">لا يوجد سجل بعد، العب قليلاً!</div>';
@@ -13695,6 +14247,82 @@ window.addEventListener('appinstalled', () => {
   if (pwaInstallBtn) pwaInstallBtn.style.display = 'none';
   deferredPrompt = null;
 });
+
 </script>
+
+<script>
+  (function() {
+    let lastDrag = null;
+    let selectedCards = [];
+    const handContainer = document.querySelector('.hand'); // حاوية اليد
+
+    function trackDrag() {
+      const draggingCard = document.querySelector('.hand .card-slot.dragging');
+      
+      if (draggingCard) {
+        if (!lastDrag) {
+          lastDrag = draggingCard;
+          selectedCards = Array.from(document.querySelectorAll('.hand .card-slot')).filter(el => 
+            el !== draggingCard && el.querySelector('.p10-card.selected')
+          );
+          
+          // ✅ 1. السماح للكروت بالخروج من حدود اليد دون أن يتم قصها
+          if (handContainer) {
+            handContainer.style.overflow = 'visible';
+            handContainer.style.zIndex = '9990';
+          }
+
+          selectedCards.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            el.dataset.origX = rect.left;
+            el.dataset.origY = rect.top;
+            el.classList.add('multi-dragging');
+            
+            // ✅ 2. رفع الكروت المحددة فوق الكروت العادية (لكن أسفل الكرت المسحوب)
+            el.style.zIndex = '9998';
+            el.style.position = 'relative';
+          });
+        }
+        
+        if (selectedCards.length > 0) {
+          const dragRect = draggingCard.getBoundingClientRect();
+          
+          selectedCards.forEach((el, index) => {
+            const deltaX = dragRect.left - parseFloat(el.dataset.origX);
+            const deltaY = dragRect.top - parseFloat(el.dataset.origY);
+            
+            // إزاحة بسيطة لكل كرت ليظهر خلف الكرت الذي يليه كأنها مروحة
+            const offsetX = (index + 1) * -6; 
+            const offsetY = (index + 1) * 5;  
+            
+            el.style.transform = `translate(${deltaX + offsetX}px, ${deltaY + offsetY}px)`;
+          });
+        }
+      } else {
+        if (lastDrag) {
+          // ✅ 3. إعادة كل شيء لطبيعته عند إفلات الكرت
+          if (handContainer) {
+            handContainer.style.overflow = ''; // إرجاع خاصية القص الأصلية
+            handContainer.style.zIndex = '';
+          }
+
+          selectedCards.forEach(el => {
+            el.classList.remove('multi-dragging');
+            el.style.transform = '';
+            el.style.zIndex = '';
+            el.style.position = '';
+          });
+          lastDrag = null;
+          selectedCards = [];
+        }
+      }
+      
+      requestAnimationFrame(trackDrag);
+    }
+    
+    requestAnimationFrame(trackDrag);
+  })();
+</script>
+
 </body>
 </html>
